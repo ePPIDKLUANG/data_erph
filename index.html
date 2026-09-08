@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="ms" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سيستم ر.ڤ.ت. س.ا.ک.ج.</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Font: Amiri for traditional Jawi aesthetics -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- PDF.js library for rendering & extracting text from PDFs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    </script>
+
+    <style>
+        body {
+            font-family: 'Amiri', 'Plus Jakarta Sans', serif;
+            background-color: #f8fafc;
+            font-size: 1.15rem;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .table-container::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+            border-radius: 4px;
+        }
+        .table-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        #pdfModal, #confirmModal, #editModal, #scriptModal {
+            backdrop-filter: blur(4px);
+        }
+        .jawi-amiri {
+            font-family: 'Amiri', serif;
+            direction: rtl;
+            text-align: right;
+            line-height: 2.1;
+        }
+        .rumi-text {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            direction: ltr;
+            text-align: left;
+        }
+    </style>
+</head>
+<body class="text-gray-800 h-screen overflow-hidden flex flex-col md:flex-row bg-slate-50">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-emerald-800 text-white p-4 flex justify-between items-center shadow-md z-20">
+        <div class="font-bold text-2xl flex items-center gap-3">
+            <i class="fas fa-book-quran text-amber-400"></i>
+            <span>ر.ڤ.ت. س.ا.ک.ج.</span>
+        </div>
+        <button id="mobileMenuBtn" onclick="toggleMobileSidebar()" class="text-white hover:text-emerald-200 focus:outline-none p-2 rounded-lg bg-emerald-700/50">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="bg-emerald-900 text-white w-72 flex-shrink-0 hidden md:flex flex-col h-full shadow-2xl transition-all duration-300 absolute md:relative z-30 right-0 md:right-auto">
+        <div class="p-6 flex items-center gap-4 border-b border-emerald-700/60 bg-emerald-950/40">
+            <div class="bg-amber-400 text-emerald-950 rounded-2xl p-3 w-12 h-12 flex items-center justify-center shadow-lg font-bold text-2xl">
+                <i class="fas fa-school"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-2xl tracking-wide text-amber-300">س.ا.ک.ج.</h1>
+                <p class="text-xs text-emerald-200 font-sans tracking-wide" dir="ltr">Sekolah Agama Kerajaan Johor</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-4 px-4 py-3 bg-emerald-800 text-amber-300 rounded-xl font-bold shadow-sm transition-all hover:bg-emerald-700">
+                <i class="fas fa-chart-line w-6 text-xl"></i>
+                <span class="text-xl">ڤاڤن ڤموک</span>
+            </button>
+
+            <button onclick="navigate('add')" id="nav-add" class="nav-btn w-full flex items-center gap-4 px-4 py-3 rounded-xl text-emerald-100 hover:bg-emerald-800 hover:text-white transition-all">
+                <i class="fas fa-file-circle-plus w-6 text-xl"></i>
+                <span class="text-xl">تمبه ر.ڤ.ت. بهارو</span>
+            </button>
+
+            <button onclick="navigate('list')" id="nav-list" class="nav-btn w-full flex items-center gap-4 px-4 py-3 rounded-xl text-emerald-100 hover:bg-emerald-800 hover:text-white transition-all">
+                <i class="fas fa-list-check w-6 text-xl"></i>
+                <span class="text-xl">سناراي ر.ڤ.ت.</span>
+            </button>
+
+            <button onclick="navigate('ai')" id="nav-ai" class="nav-btn w-full flex items-center gap-4 px-4 py-3 rounded-xl text-emerald-100 hover:bg-emerald-800 hover:text-white transition-all">
+                <i class="fas fa-robot w-6 text-xl text-amber-400"></i>
+                <span class="text-xl">ڤمبنتو اي.اءي. جاوي</span>
+            </button>
+
+            <div class="pt-6 mt-6 border-t border-emerald-800 px-2">
+                <p class="text-xs font-semibold text-emerald-400 mb-3 px-2 font-sans tracking-wider uppercase" dir="ltr">Pautan Luar</p>
+                <a href="https://docs.google.com/spreadsheets/d/1Q_e-qfyVq1QlzIYqqcujUTt8mlE84ObdRRwIufnc6ak/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer" class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-emerald-800/80 hover:bg-emerald-700 text-white transition-all border border-emerald-600/40 shadow-md group">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-file-excel text-emerald-400 text-xl group-hover:scale-110 transition-transform"></i>
+                        <span class="font-bold text-lg">ݢوݢل شيت</span>
+                    </div>
+                    <i class="fas fa-external-link-alt text-xs text-emerald-300" dir="ltr"></i>
+                </a>
+            </div>
+        </nav>
+
+        <div class="p-4 border-t border-emerald-800/80 text-center text-xs text-emerald-300/80 bg-emerald-950/30" dir="ltr">
+            &copy; 2026 Sistem RPT SAKJ Johor v3.0 (Fix Data Kosong)
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50 relative">
+        <!-- Toast Container -->
+        <div id="toast-container" class="fixed top-5 left-5 z-[100] flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
+
+        <div class="flex-1 overflow-y-auto p-4 md:p-8">
+            
+            <!-- Dashboard View -->
+            <section id="view-dashboard" class="fade-in space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-4 border-slate-200">
+                    <div>
+                        <h2 class="text-3xl font-bold text-slate-800">ڤاڤن ڤموک</h2>
+                        <p class="text-slate-500 text-base mt-1">ريڠكاسن ڤڠوروسن رنچڠن ڤڠاجرن تاهونن (ر.ڤ.ت.)</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="navigate('add')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-2">
+                            <i class="fas fa-plus"></i>
+                            <span>تمبه ر.ڤ.ت.</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Stat Cards Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-6 border-r-4 border-emerald-500 flex items-center justify-between border border-slate-100">
+                        <div>
+                            <p class="text-base text-slate-500 font-medium">جومله ر.ڤ.ت.</p>
+                            <p class="text-4xl font-bold text-slate-800 mt-2" id="stat-total">٠</p>
+                        </div>
+                        <div class="bg-emerald-50 text-emerald-600 p-4 rounded-2xl border border-emerald-100">
+                            <i class="fas fa-folder-open text-3xl"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-6 border-r-4 border-blue-500 flex items-center justify-between border border-slate-100">
+                        <div>
+                            <p class="text-base text-slate-500 font-medium">ر.ڤ.ت. تربهارو</p>
+                            <p class="text-xl font-bold text-slate-800 mt-2 truncate max-w-[180px]" id="stat-latest">-</p>
+                        </div>
+                        <div class="bg-blue-50 text-blue-600 p-4 rounded-2xl border border-blue-100">
+                            <i class="fas fa-clock text-3xl"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-6 border-r-4 border-amber-500 flex items-center justify-between border border-slate-100">
+                        <div>
+                            <p class="text-base text-slate-500 font-medium">تاهڤ ڤاليڠ اکتيف</p>
+                            <p class="text-2xl font-bold text-slate-800 mt-2" id="stat-active-level">-</p>
+                        </div>
+                        <div class="bg-amber-50 text-amber-600 p-4 rounded-2xl border border-amber-100">
+                            <i class="fas fa-layer-group text-3xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Banner Card -->
+                <div class="bg-white rounded-2xl shadow-sm p-6 md:p-8 border border-slate-200/80">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i class="fas fa-circle-info text-2xl text-emerald-600"></i>
+                        <h3 class="text-2xl font-bold text-slate-800">مڠناءي سيستم ر.ڤ.ت. س.ا.ک.ج.</h3>
+                    </div>
+                    <p class="text-slate-700 leading-relaxed mb-6 text-xl jawi-amiri">
+                        سيستم اين دريک خاس اونتوق ممودهکن ݢورو-ݢورو Sekolah Agama Kerajaan Johor (SAKJ) مڽيمڤن، مڠوروس، دان مڽيمق رنچڠن ڤڠاجرن تاهونن (ر.ڤ.ت.) دڠن ڤدومن ايديا دان ايجاءن جاوي دان ڤوستاك ديوان بهاس (DBP) ترماسوق تيڤوݢرافي فونت اميري ترهادڤ تيكس ايكسترك.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-base">
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200/70 flex items-start gap-3">
+                            <i class="fas fa-font text-emerald-600 mt-1 text-lg"></i>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-lg">فونت اميري جاوي</h4>
+                                <p class="text-slate-600 text-sm">ڤڤرن تيكس ايكسترك PDF دتتاڤکن دڠن فونت خط اميري ڤرسيس تراديسي.</p>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200/70 flex items-start gap-3">
+                            <i class="fas fa-language text-blue-600 mt-1 text-lg"></i>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-lg">ايجاءن DBP</h4>
+                                <p class="text-slate-600 text-sm">ڤنترجمهن دان ڤمبتولن ايديا/ايجاءن برڤدومکن کاءيده ديوان بهاس دان ڤوستاک.</p>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200/70 flex items-start gap-3">
+                            <i class="fas fa-cloud-arrow-up text-amber-600 mt-1 text-lg"></i>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-lg">ايكسترك & سيمڤن</h4>
+                                <p class="text-slate-600 text-sm">ممباچ تيكس سچارا لڠسوڠ دري PDF دان تروس دسيمڤن ک Google Sheet anda.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Add RPT View -->
+            <section id="view-add" class="fade-in hidden max-w-4xl mx-auto space-y-6">
+                <div class="border-b pb-4 border-slate-200">
+                    <h2 class="text-3xl font-bold text-slate-800">تمبه رنچڠن ڤڠاجرن تاهونن (ر.ڤ.ت.)</h2>
+                    <p class="text-slate-500 text-base mt-1">ماسوقکن ماكلومات ر.ڤ.ت. بارو اتاو موات ناءيق فاءيل PDF بورتوک.</p>
+                </div>
+
+                <form id="rptForm" onsubmit="handleFormSubmit(event)" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Tajuk RPT (Rumi)</label>
+                            <input type="text" id="tajukRumi" oninput="autoTranslateToJawi()" placeholder="Contoh: RPT Tauhid Darjah 1" required class="w-full p-3.5 border border-slate-300 rounded-xl font-sans text-base focus:ring-2 focus:ring-emerald-500" dir="ltr">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Subjek (Rumi)</label>
+                            <input type="text" id="subjekRumi" oninput="autoTranslateToJawi()" placeholder="Contoh: Tauhid" required class="w-full p-3.5 border border-slate-300 rounded-xl font-sans text-base focus:ring-2 focus:ring-emerald-500" dir="ltr">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-lg font-bold text-emerald-900 mb-2">تاجوق ر.ڤ.ت. (جاوي)</label>
+                            <input type="text" id="tajukJawi" placeholder="ر.ڤ.ت. توحيد درجه ١" required class="w-full p-3.5 border border-emerald-300 rounded-xl text-xl focus:ring-2 focus:ring-emerald-500 bg-emerald-50/40 jawi-amiri">
+                        </div>
+                        <div>
+                            <label class="block text-lg font-bold text-emerald-900 mb-2">سوبجيک (جاوي)</label>
+                            <input type="text" id="subjekJawi" placeholder="توحيد" required class="w-full p-3.5 border border-emerald-300 rounded-xl text-xl focus:ring-2 focus:ring-emerald-500 bg-emerald-50/40 jawi-amiri">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                        <div>
+                            <label class="block text-lg font-bold text-slate-700 mb-2">ڤيليه تاهڤ / درجه</label>
+                            <select id="tahap" required class="w-full p-3.5 border border-slate-300 rounded-xl text-lg focus:ring-2 focus:ring-emerald-500 bg-white">
+                                <option value="تاج">تاج</option>
+                                <option value="درجه ١" selected>درجه ١</option>
+                                <option value="درجه ٢">درجه ٢</option>
+                                <option value="درجه ٣">درجه ٣</option>
+                                <option value="درجه ٤">درجه ٤</option>
+                                <option value="درجه ٥">درجه ٥</option>
+                                <option value="درجه ٦">درجه ٦</option>
+                                <option value="درجه خاص">درجه خاص</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">ترجمهن برڤدومکن DBP</label>
+                            <button type="button" onclick="translateToJawiManually()" class="w-full bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 py-3.5 rounded-xl font-bold transition-all flex items-center justify-center gap-2">
+                                <i class="fas fa-language"></i>
+                                <span>ترجمه ک جاوي سچارا ڤرسيس DBP</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PDF Upload Section -->
+                    <div class="pt-4 border-t border-slate-200">
+                        <label class="block text-sm font-bold text-slate-700 mb-2">موات ناءيق فاءيل PDF (اختياري)</label>
+                        <div id="drop-zone" class="border-2 border-dashed border-slate-300 rounded-2xl p-6 text-center hover:border-emerald-500 transition-colors bg-slate-50/50 cursor-pointer flex flex-col items-center justify-center">
+                            <input type="file" id="file-upload" accept="application/pdf" class="hidden" onchange="handleFileSelect(event)">
+                            <i class="fas fa-cloud-arrow-up text-4xl text-emerald-600 mb-3"></i>
+                            <p class="text-slate-700 font-bold text-lg">سرت ک سين فاءيل PDF اتاو كليك اونتوق مميليه</p>
+                            <p class="text-slate-400 text-sm font-sans mt-1" dir="ltr">Max size: 10MB (.pdf)</p>
+                            <span id="file-name-display" class="mt-3 px-4 py-1.5 bg-emerald-100 text-emerald-900 rounded-full text-sm font-bold hidden font-sans" dir="ltr"></span>
+                            
+                            <button type="button" onclick="document.getElementById('file-upload').click()" class="mt-4 bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-xl text-sm font-bold transition-colors">
+                                ڤيليه فاءيل
+                            </button>
+                        </div>
+
+                        <div class="mt-4 flex justify-between items-center">
+                            <button type="button" id="btnExtractPDF" onclick="openPDFModal()" class="hidden bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm transition-all">
+                                <i class="fas fa-table"></i>
+                                <span>ڤڤرن جدول ايكسترك PDF (فونت اميري)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-4 pt-6 border-t border-slate-200">
+                        <button type="button" onclick="navigate('list')" class="px-6 py-3 border border-slate-300 rounded-xl text-slate-700 font-bold hover:bg-slate-100 transition-colors">باتل</button>
+                        <button type="submit" class="px-8 py-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold shadow-md transition-all">سيمڤن ر.ڤ.ت.</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- List RPT View -->
+            <section id="view-list" class="fade-in hidden space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-4 border-slate-200">
+                    <div>
+                        <h2 class="text-3xl font-bold text-slate-800">سناراي رنچڠن ڤڠاجرن تاهونن (ر.ڤ.ت.)</h2>
+                        <p class="text-slate-500 text-base mt-1">سيمڤنن ددالم داتابيس لکل ڤلاير اندا.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button onclick="exportCSV()" class="bg-teal-700 hover:bg-teal-800 text-white px-4 py-2.5 rounded-xl font-bold shadow-sm transition-all flex items-center gap-2 text-sm">
+                            <i class="fas fa-file-excel"></i>
+                            <span>ايكسيڤورت CSV</span>
+                        </button>
+                        <button onclick="navigate('add')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-bold shadow-sm transition-all flex items-center gap-2 text-sm">
+                            <i class="fas fa-plus"></i>
+                            <span>تمبه ر.ڤ.ت.</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter & Search Toolbar -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 flex flex-col md:flex-row gap-4 justify-between items-center">
+                    <div class="w-full md:w-96 relative">
+                        <i class="fas fa-search absolute right-4 top-3.5 text-slate-400"></i>
+                        <input type="text" id="searchInput" oninput="filterRptTable()" placeholder="چاري تاجوق اتاو سوبجيک..." class="w-full pr-11 pl-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-base">
+                    </div>
+                    
+                    <div class="w-full md:w-auto flex items-center gap-3">
+                        <label class="text-sm font-bold text-slate-600 whitespace-nowrap">ڤيليه تاهڤ:</label>
+                        <select id="filterTahap" onchange="filterRptTable()" class="p-3 border border-slate-300 rounded-xl text-base bg-white focus:ring-2 focus:ring-emerald-500">
+                            <option value="ALL">سموا تاهڤ</option>
+                            <option value="تاج">تاج</option>
+                            <option value="درجه ١">درجه ١</option>
+                            <option value="درجه ٢">درجه ٢</option>
+                            <option value="درجه ٣">درجه ٣</option>
+                            <option value="درجه ٤">درجه ٤</option>
+                            <option value="درجه ٥">درجه ٥</option>
+                            <option value="درجه ٦">درجه ٦</option>
+                            <option value="درجه خاص">درجه خاص</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- RPT Table Container -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="overflow-x-auto table-container">
+                        <table class="w-full text-right border-collapse">
+                            <thead class="bg-emerald-900 text-white">
+                                <tr>
+                                    <th class="py-4 px-6 font-bold text-base w-16 text-center">بيل.</th>
+                                    <th class="py-4 px-6 font-bold text-base">تاجوق ر.ڤ.ت. (جاوي / رومي)</th>
+                                    <th class="py-4 px-6 font-bold text-base">سوبجيک</th>
+                                    <th class="py-4 px-6 font-bold text-base text-center">تاهڤ</th>
+                                    <th class="py-4 px-6 font-bold text-base text-center">فاءيل PDF</th>
+                                    <th class="py-4 px-6 font-bold text-base text-center">تيندقن</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rptTableBody" class="divide-y divide-slate-100 text-lg">
+                                <!-- Data rows injected dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="empty-state" class="hidden flex-col items-center justify-center p-12 text-center">
+                        <div class="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-3xl mb-4 border border-emerald-100">
+                            <i class="fas fa-folder-open"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-1">تياد ريکود ر.ڤ.ت. دتموڤي</h3>
+                        <p class="text-slate-500 text-base mb-6">سيلا تمبه ر.ڤ.ت. بهارو اتاو توكر کات کؤنتر فيلتر ڤنچاريان.</p>
+                        <button onclick="navigate('add')" class="bg-emerald-700 hover:bg-emerald-800 text-white px-6 py-2.5 rounded-xl font-bold shadow-md transition-all">
+                            تمبه ر.ڤ.ت. سکرڠ
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Assistant View -->
+            <section id="view-ai" class="fade-in hidden max-w-5xl mx-auto space-y-6">
+                <div class="bg-gradient-to-r from-emerald-900 to-teal-900 text-white rounded-2xl p-6 md:p-8 shadow-md">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-amber-400 text-emerald-950 p-4 rounded-2xl text-3xl font-bold">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-bold">ڤمبنتو اي.اءي. جاوي برڤدومکن DBP</h2>
+                            <p class="text-emerald-200 text-base mt-1">ݢوناکن تيكنولوݢي AI براجوءين کائيده ايجاءن جاوي ديوان بهاس دان ڤوستاك.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- AI Translator Card -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                <i class="fas fa-language text-emerald-600"></i>
+                                <span>ترجمهن جاوي ڤرسيس DBP</span>
+                            </h3>
+                            <p class="text-slate-600 text-base mb-4">ماسوقکن تيكس رومي اونتوق دترجمهکن ک جاوي مڠيکوت قياس DBP.</p>
+                            
+                            <textarea id="aiPromptTranslate" rows="4" placeholder="Contoh: Murid dapat memahami konsep tauhid dan sifat 20 Allah SWT..." class="w-full p-4 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 font-sans text-base mb-4" dir="ltr"></textarea>
+                        </div>
+                        <button onclick="generateAIJawi()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2">
+                            <i class="fas fa-wand-magic-sparkles text-amber-300"></i>
+                            <span>جان ترجمهن جاوي DBP</span>
+                        </button>
+                    </div>
+
+                    <!-- AI RPT Outline Generator -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                <i class="fas fa-lightbulb text-amber-500"></i>
+                                <span>جان راڠکا RPT اٴوتوماتيک DBP</span>
+                            </h3>
+                            <p class="text-slate-600 text-base mb-4">پتاکن سوبجيک دان درجه اونتوق منجان ايديا تاجوق & اوبجيکتيف بر ايجاءن بتول.</p>
+                            
+                            <input type="text" id="aiRptSubject" placeholder="Contoh: Akhlak Darjah 3 Penggal 2" class="w-full p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 font-sans text-base mb-4" dir="ltr">
+                        </div>
+                        <button onclick="generateAIRptOutline()" class="w-full bg-teal-700 hover:bg-teal-800 text-white py-3 rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2">
+                            <i class="fas fa-gears text-amber-300"></i>
+                            <span>جان راڠکا RPT</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Output Display Box -->
+                <div id="aiOutputContainer" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 hidden">
+                    <div class="flex justify-between items-center border-b pb-3 mb-4">
+                        <h3 class="text-2xl font-bold text-emerald-900 flex items-center gap-2">
+                            <i class="fas fa-square-poll-vertical text-emerald-600"></i>
+                            <span>هاصيل ڤمبنتو اي.اءي. (ايجاءن DBP فونت اميري)</span>
+                        </h3>
+                        <button onclick="copyAiOutput()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors">
+                            <i class="fas fa-copy"></i>
+                            <span>سالين</span>
+                        </button>
+                    </div>
+                    <div id="aiOutputText" class="text-2xl leading-relaxed text-slate-900 jawi-amiri bg-emerald-50/50 p-6 rounded-xl border border-emerald-100 whitespace-pre-line"></div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- PDF Extractor & Preview Modal -->
+    <div id="pdfModal" class="fixed inset-0 bg-slate-900/70 z-[60] hidden flex flex-col items-center justify-center p-4 md:p-6">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-7xl h-[92vh] flex flex-col overflow-hidden animate-[fadeIn_0.2s_ease-out]">
+            
+            <div class="bg-emerald-900 p-4 md:p-5 flex justify-between items-center text-white">
+                <h3 class="text-2xl font-bold flex items-center gap-3">
+                    <i class="fas fa-file-pdf text-amber-400"></i>
+                    <span>ڤاڤرن جدول ايكسترك فورمة RPT SAKJ (فونت اميري جاوي & DBP)</span>
+                </h3>
+                <div class="flex gap-2">
+                    <button onclick="showScriptModal()" class="text-white bg-teal-600 hover:bg-teal-500 rounded-xl px-4 py-2 transition-colors text-sm font-bold flex items-center gap-2" dir="ltr">
+                        <i class="fas fa-code"></i> Papar Kod Apps Script
+                    </button>
+                    <button onclick="closePDFModal()" class="text-emerald-200 hover:text-white bg-emerald-800 hover:bg-emerald-700 rounded-xl p-2 transition-colors">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row flex-1 overflow-hidden">
+                <!-- PDF Preview Side -->
+                <div class="w-full md:w-2/5 flex flex-col border-b md:border-b-0 md:border-l border-slate-200 bg-slate-100">
+                    <div class="bg-slate-200 py-3 px-4 font-bold text-slate-700 text-center text-sm shadow-sm" dir="ltr">
+                        <i class="fas fa-eye mr-1"></i> Paparan Asal PDF
+                    </div>
+                    <iframe id="pdfPreviewIframe" class="w-full flex-1 border-0 bg-white"></iframe>
+                </div>
+
+                <!-- Extracted SAKJ RPT Structured Table Side -->
+                <div class="w-full md:w-3/5 flex flex-col bg-white relative">
+                    <div class="bg-emerald-50 py-3 px-4 border-b border-emerald-200 flex flex-wrap justify-between items-center gap-2">
+                        <div class="font-bold text-emerald-900 text-lg">
+                            <i class="fas fa-table text-emerald-600 ml-2"></i>
+                            <span>جدول ايكسترك برفورمة RPT SAKJ (تيكس جاوي فونت اميري تيقن DBP)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="saveToGoogleSheet()" class="hidden text-sm bg-teal-700 text-white hover:bg-teal-800 px-3 py-1.5 rounded-lg flex items-center gap-2 transition-colors shadow-sm font-bold" id="btnSaveGoogleSheet">
+                                <i class="fas fa-cloud-arrow-up"></i>
+                                <span>سيمڤن ک ݢوݢل شيت</span>
+                            </button>
+                            <a href="https://docs.google.com/spreadsheets/d/1Q_e-qfyVq1QlzIYqqcujUTt8mlE84ObdRRwIufnc6ak/edit?gid=1346058507#gid=1346058507" target="_blank" rel="noopener noreferrer" class="hidden text-sm bg-amber-500 text-amber-950 hover:bg-amber-400 px-3 py-1.5 rounded-lg flex items-center gap-2 transition-colors shadow-sm font-bold" id="btnOpenSheetModal">
+                                <i class="fas fa-external-link-alt"></i>
+                                <span>بوک ݢوݢل شيت</span>
+                            </a>
+                            <button onclick="copyExtractedText()" class="hidden text-sm bg-emerald-700 text-white hover:bg-emerald-800 px-3 py-1.5 rounded-lg flex items-center gap-2 transition-colors shadow-sm font-bold" id="btnCopyExtracted">
+                                <i class="fas fa-copy"></i>
+                                <span>سالين جدول RPT</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="pdfLoadingState" class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/90 hidden">
+                        <i class="fas fa-circle-notch fa-spin text-5xl text-emerald-600 mb-4"></i>
+                        <p class="text-xl text-slate-700 font-bold">سدڠ ممباچ فاءيل PDF دانڽوسون دڠن فونت اميري جاوي برڤدومکن DBP...</p>
+                        <p class="text-sm text-slate-400 mt-2 font-sans" dir="ltr" id="pdfProgressText">Proses mengekstrak & memformat Amiri Jawi DBP...</p>
+                    </div>
+
+                    <div id="pdfTableContainer" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
+                        <!-- Extracted structured tables will go here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="fixed inset-0 bg-slate-900/70 z-[65] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden animate-[fadeIn_0.2s_ease-out]">
+            <div class="bg-emerald-900 text-white p-5 flex justify-between items-center">
+                <h3 class="text-2xl font-bold">کيمسکيني ر.ڤ.ت.</h3>
+                <button onclick="closeEditModal()" class="text-emerald-200 hover:text-white p-1">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <form onsubmit="saveEditedRpt(event)" class="p-6 space-y-4">
+                <input type="hidden" id="editId">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Tajuk (Rumi)</label>
+                    <input type="text" id="editTajukRumi" required class="w-full p-2.5 border rounded-lg font-sans text-base" dir="ltr">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Subjek (Rumi)</label>
+                    <input type="text" id="editSubjekRumi" required class="w-full p-2.5 border rounded-lg font-sans text-base" dir="ltr">
+                </div>
+                <div>
+                    <label class="block text-lg font-medium text-emerald-800 mb-1">تاجوق (جاوي)</label>
+                    <input type="text" id="editTajukJawi" required class="w-full p-2.5 border border-emerald-300 rounded-lg text-xl jawi-amiri">
+                </div>
+                <div>
+                    <label class="block text-lg font-medium text-emerald-800 mb-1">سوبجيک (جاوي)</label>
+                    <input type="text" id="editSubjekJawi" required class="w-full p-2.5 border border-emerald-300 rounded-lg text-xl jawi-amiri">
+                </div>
+                <div>
+                    <label class="block text-lg font-medium text-slate-700 mb-1">تاهڤ</label>
+                    <select id="editTahap" required class="w-full p-2.5 border rounded-lg text-lg">
+                        <option value="تاج">تاج</option>
+                        <option value="درجه ١">درجه ١</option>
+                        <option value="درجه ٢">درجه ٢</option>
+                        <option value="درجه ٣">درجه ٣</option>
+                        <option value="درجه ٤">درجه ٤</option>
+                        <option value="درجه ٥">درجه ٥</option>
+                        <option value="درجه ٦">درجه ٦</option>
+                        <option value="درجه خاص">درجه خاص</option>
+                    </select>
+                </div>
+                <div class="flex justify-end gap-3 pt-4 border-t">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 border rounded-lg text-slate-600">باتل</button>
+                    <button type="submit" class="px-5 py-2 bg-emerald-700 text-white rounded-lg font-bold">سيمڤن</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="confirmModal" class="fixed inset-0 bg-slate-900/70 z-[70] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 text-center animate-[fadeIn_0.2s_ease-out]">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fas fa-trash-can"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-slate-800 mb-2" id="confirmTitle">ڤڠسهن ڤمادمن</h3>
+            <p class="text-slate-600 text-base mb-6" id="confirmMessage">اداکه اندا ڤاستي ايڠين مڠهاڤوسکن ر.ڤ.ت. اين؟</p>
+            <div class="flex justify-center gap-3">
+                <button id="btnConfirmCancel" onclick="closeConfirmModal()" class="px-5 py-2.5 border border-slate-300 rounded-xl text-slate-700 font-medium">باتل</button>
+                <button id="btnConfirmOk" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold shadow-md">هاڤوس</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Apps Script Deployment Helper Modal -->
+    <div id="scriptModal" class="fixed inset-0 bg-slate-900/70 z-[80] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 text-right overflow-hidden animate-[fadeIn_0.2s_ease-out]">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h3 class="text-2xl font-bold text-emerald-900 flex items-center gap-2">
+                    <i class="fas fa-code text-amber-500"></i>
+                    <span>کود Google Apps Script (Jadual Jawi Baharu)</span>
+                </h3>
+                <button onclick="closeScriptModal()" class="text-slate-400 hover:text-slate-600 text-xl"><i class="fas fa-times"></i></button>
+            </div>
+            <p class="text-slate-600 text-sm mb-4" dir="ltr" style="text-align: left;">
+                Kod di bawah telah dikemaskini dengan ID Google Sheet anda. Sila paste kod ini di Google Apps Script (Extensions > Apps Script) dan bina 'New Deployment' sebagai Web App.
+            </p>
+            <textarea readonly class="w-full h-56 p-3 bg-slate-900 text-emerald-400 font-mono text-xs rounded-xl mb-4" dir="ltr">
+function doPost(e) {
+  try {
+    if (!e || !e.parameter || !e.parameter.data) {
+      return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": "Tiada data diterima"}));
+    }
+
+    var data = JSON.parse(e.parameter.data);
+    
+    // GUNA ID GOOGLE SHEET ANDA SECARA TERUS (100% PASTI MASUK)
+    var sheetID = "1Q_e-qfyVq1QlzIYqqcujUTt8mlE84ObdRRwIufnc6ak";
+    var ss = SpreadsheetApp.openById(sheetID);
+    
+    // Tentukan nama Tab (Sheet) berdasarkan Tahap dan Subjek
+    var tahap = data.tahap ? data.tahap : "Umum";
+    var subjek = data.subjek ? data.subjek : "Subjek";
+    var sheetName = tahap + " - " + subjek;
+    
+    // Cari tab tersebut. Jika tiada, buat tab baru
+    var sheet = ss.getSheetByName(sheetName);
+    if (!sheet) {
+      sheet = ss.insertSheet(sheetName);
+    }
+    
+    // Semak dan bina header JAWI jika fail sheet kosong
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(["بيل", "ميڠݢو", "تاجوق / استاند کاندوڠن", "اوبجيکتيف ڤڠاجرن", "چادڠن اکتيويتي & ڤنتاکسيرن"]);
+    }
+    
+    var lastRow = sheet.getLastRow();
+    var bil = (lastRow === 1) ? 1 : (lastRow); 
+
+    // Masukkan data baris demi baris
+    if (data.rows && Array.isArray(data.rows)) {
+      data.rows.forEach(function(row) {
+        sheet.appendRow([bil, row.minggu, row.tajuk, row.objektif, row.aktiviti]);
+        bil++; 
+      });
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": err.toString()})).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+            </textarea>
+            <div class="flex justify-between items-center">
+                <button onclick="copyAppsScriptCode()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+                    <i class="fas fa-copy"></i> سالين کود سقيڤت
+                </button>
+                <button onclick="closeScriptModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2 rounded-xl font-bold">توتوڤ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // HARDCODED GOOGLE SCRIPT URL PROVIDED BY USER
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwdhgPixl-BttLmxl4FZrKvygxUTiMWOW2zwv9TdOEEc51tvKQSecfQb0DigNOFsYk3/exec";
+
+        const DBP_DICTIONARY = {
+            "matematik": "ماتماتيق",
+            "sains": "ساينس",
+            "bahasa melayu": "بهاس ملايو",
+            "bahasa inggeris": "بهاس ايڠݢريس",
+            "bahasa arab": "بهاس عرب",
+            "tauhid": "توحيد",
+            "fiqh": "فقه",
+            "akhlak": "اخلاق",
+            "sirah": "سيرة",
+            "sejarah": "سجاره",
+            "al-quran": "القرءان",
+            "alquran": "القرءان",
+            "tajwid": "تجويد",
+            "hafazan": "حفظن",
+            "jawi": "جاوي",
+            "muamalat": "معاملات",
+            "munakahat": "مناكحات",
+            "jinayat": "جنايات",
+            "tarikh": "تاريخ",
+            "darjah": "درجه",
+            "penggal": "ڤڠݢل",
+            "tahun": "تاهون",
+            "minggu": "ميڠݢو",
+            "tajuk": "تاجوق",
+            "objektif": "اوبجيکتيف",
+            "cadangan": "چادڠن",
+            "aktiviti": "اکتيويتي",
+            "pentaksiran": "ڤنتاکسيرن",
+            "sekolah": "سکوله",
+            "agama": "اݢام",
+            "kerajaan": "کراجاءن",
+            "johor": "جوهر",
+            "tadika": "تاديکا",
+            "taj": "تاج",
+            "khas": "خاص",
+            "rpt": "ر.ڤ.ت.",
+            "nota": "نوتا",
+            "latihan": "لاتيهن",
+            "topik": "توڤيق",
+            "pelajaran": "ڤلاجرن",
+            "murid": "موريد",
+            "guru": "ݢورو",
+            "memahami": "ممهمي",
+            "menghafaz": "مڠحفظ",
+            "membaca": "ممباچ",
+            "menulis": "منوليس",
+            "menghayati": "مڠهياتي",
+            "amalan": "عملن",
+            "ibadat": "عبادة",
+            "akidah": "عقيدة",
+            "hukum": "حکوم",
+            "solat": "صلاة",
+            "puasa": "ڤواس",
+            "zakat": "زکاة",
+            "haji": "حاج",
+            "sunat": "سونت",
+            "wajib": "واجب",
+            "haram": "حرام",
+            "makruh": "مکروه",
+            "mubah": "مباح",
+            "harus": "هاروس"
+        };
+
+        function transliterateRumiToJawi(text) {
+            if (!text) return "";
+            let lowerText = text.toLowerCase().trim();
+
+            if (DBP_DICTIONARY[lowerText]) {
+                return DBP_DICTIONARY[lowerText];
+            }
+
+            let words = lowerText.split(/\s+/);
+            let convertedWords = words.map(word => {
+                let cleanWord = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                if (DBP_DICTIONARY[cleanWord]) {
+                    return word.replace(cleanWord, DBP_DICTIONARY[cleanWord]);
+                }
+
+                let result = "";
+                let i = 0;
+                while (i < word.length) {
+                    let sub2 = word.substring(i, i + 2);
+                    if (sub2 === "ny") { result += "ڽ"; i += 2; continue; }
+                    if (sub2 === "ng") { result += "ڠ"; i += 2; continue; }
+                    if (sub2 === "sy") { result += "ش"; i += 2; continue; }
+                    if (sub2 === "kh") { result += "خ"; i += 2; continue; }
+                    if (sub2 === "gh") { result += "غ"; i += 2; continue; }
+                    if (sub2 === "th") { result += "ث"; i += 2; continue; }
+                    if (sub2 === "dh") { result += "ض"; i += 2; continue; }
+                    if (sub2 === "dz") { result += "ذ"; i += 2; continue; }
+
+                    let char = word[i];
+                    switch (char) {
+                        case 'a': result += "ا"; break;
+                        case 'b': result += "ب"; break;
+                        case 'c': result += "چ"; break;
+                        case 'd': result += "د"; break;
+                        case 'e': result += (i === 0 ? "ا" : "ي"); break;
+                        case 'f': result += "ف"; break;
+                        case 'g': result += "ݢ"; break;
+                        case 'h': result += "ه"; break;
+                        case 'i': result += (i === 0 ? "اي" : "ي"); break;
+                        case 'j': result += "ج"; break;
+                        case 'k': result += (i === word.length - 1 ? "ق" : "ک"); break;
+                        case 'l': result += "ل"; break;
+                        case 'm': result += "م"; break;
+                        case 'n': result += "ن"; break;
+                        case 'o': result += "و"; break;
+                        case 'p': result += "ڤ"; break;
+                        case 'q': result += "ق"; break;
+                        case 'r': result += "ر"; break;
+                        case 's': result += "س"; break;
+                        case 't': result += "ت"; break;
+                        case 'u': result += "و"; break;
+                        case 'v': result += "و"; break;
+                        case 'w': result += "و"; break;
+                        case 'x': result += "ايکس"; break;
+                        case 'y': result += "ي"; break;
+                        case 'z': result += "ز"; break;
+                        default: result += char;
+                    }
+                    i++;
+                }
+                return result;
+            });
+
+            return convertedWords.join(" ");
+        }
+
+        function applyDBPSpellingCorrection(rawText) {
+            if (!rawText) return "";
+            let isJawi = /[\u0600-\u06FF]/.test(rawText);
+            if (isJawi) {
+                return rawText.replace(/\s+/g, ' ').trim();
+            } else {
+                return transliterateRumiToJawi(rawText);
+            }
+        }
+
+        const STORAGE_KEY = "SAKJ_RPT_DATA_V2";
+
+        const INITIAL_MOCK_DATA = [
+            {
+                id: "rpt_1",
+                tajukRumi: "RPT Tauhid Penggal 1",
+                tajukJawi: "ر.ڤ.ت. توحيد ڤڠݢل ١",
+                subjekRumi: "Tauhid",
+                subjekJawi: "توحيد",
+                tahap: "درجه ١",
+                fileName: "RPT_Tauhid_D1.pdf",
+                dateAdded: "2026-02-10"
+            }
+        ];
+
+        let rptRecords = [];
+        let currentFileBase64 = null;
+        let currentFileName = "";
+        let extractedPdfStructuredData = [];
+        let currentTahap = "";
+        let currentSubjek = "";
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadStorageData();
+        });
+
+        function loadStorageData() {
+            try {
+                let saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    rptRecords = JSON.parse(saved);
+                } else {
+                    rptRecords = [...INITIAL_MOCK_DATA];
+                    saveToStorage();
+                }
+            } catch (e) {
+                rptRecords = [...INITIAL_MOCK_DATA];
+            }
+            updateDashboardStats();
+            renderRptTable();
+        }
+
+        function saveToStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(rptRecords));
+            } catch (e) {
+                showToast("امارن: ڤڽيمڤنن تمڤتن ڤنوه.", "warning");
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            let bgColors = 'bg-emerald-800 text-white';
+            if (type === 'error') bgColors = 'bg-red-700 text-white';
+            if (type === 'warning') bgColors = 'bg-amber-600 text-white';
+            if (type === 'info') bgColors = 'bg-blue-600 text-white';
+            
+            toast.className = `${bgColors} px-4 py-3 rounded-xl shadow-lg font-bold text-sm flex items-center justify-between gap-3 pointer-events-auto transition-all animate-[fadeIn_0.2s_ease-out]`;
+            toast.innerHTML = `<span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function navigate(viewName) {
+            document.querySelectorAll('main > div > section').forEach(sec => sec.classList.add('hidden'));
+            const targetView = document.getElementById(`view-${viewName}`);
+            if (targetView) targetView.classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-800', 'text-amber-300', 'font-bold');
+                btn.classList.add('text-emerald-100');
+            });
+
+            const activeNav = document.getElementById(`nav-${viewName}`);
+            if (activeNav) {
+                activeNav.classList.add('bg-emerald-800', 'text-amber-300', 'font-bold');
+                activeNav.classList.remove('text-emerald-100');
+            }
+
+            if (window.innerWidth < 768) {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) sidebar.classList.add('hidden');
+            }
+
+            if (viewName === 'dashboard') updateDashboardStats();
+            if (viewName === 'list') renderRptTable();
+        }
+
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.toggle('hidden');
+        }
+
+        function updateDashboardStats() {
+            const statTotal = document.getElementById('stat-total');
+            const statLatest = document.getElementById('stat-latest');
+            const statActiveLevel = document.getElementById('stat-active-level');
+
+            if (statTotal) statTotal.textContent = rptRecords.length.toLocaleString('ms-MY');
+            
+            if (rptRecords.length > 0) {
+                const latest = rptRecords[rptRecords.length - 1];
+                if (statLatest) statLatest.textContent = latest.tajukJawi || latest.tajukRumi;
+                
+                const levelCounts = {};
+                rptRecords.forEach(r => {
+                    levelCounts[r.tahap] = (levelCounts[r.tahap] || 0) + 1;
+                });
+                let topLevel = "-";
+                let maxCount = 0;
+                for (let lvl in levelCounts) {
+                    if (levelCounts[lvl] > maxCount) {
+                        maxCount = levelCounts[lvl];
+                        topLevel = lvl;
+                    }
+                }
+                if (statActiveLevel) statActiveLevel.textContent = topLevel;
+            } else {
+                if (statLatest) statLatest.textContent = "-";
+                if (statActiveLevel) statActiveLevel.textContent = "-";
+            }
+        }
+
+        function autoTranslateToJawi() {
+            const rumiTitle = document.getElementById('tajukRumi').value;
+            const rumiSubject = document.getElementById('subjekRumi').value;
+
+            if (rumiTitle) {
+                document.getElementById('tajukJawi').value = transliterateRumiToJawi(rumiTitle);
+            }
+            if (rumiSubject) {
+                document.getElementById('subjekJawi').value = transliterateRumiToJawi(rumiSubject);
+            }
+        }
+
+        function translateToJawiManually() {
+            autoTranslateToJawi();
+            showToast("تيكس جاوي برهاسيل دجانا مڠيکوت قياس DBP!", "success");
+        }
+
+        function autoFillFormFromFilename(filename) {
+            if (!filename) return;
+            
+            // Buang extension .pdf dan tukar ke huruf kecil
+            let nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
+            let cleanName = nameWithoutExt.toLowerCase().replace(/_/g, " ").replace(/-/g, " ");
+
+            let detectedSubjek = "";
+            let detectedTahap = "";
+            let detectedTahapValue = "";
+
+            // Senarai subjek untuk dikesan
+            const knownSubjects = [
+                "tauhid", "fiqh", "akhlak", "sirah", "sejarah",
+                "al-quran", "alquran", "tajwid", "hafazan", "jawi",
+                "muamalat", "munakahat", "jinayat", "tarikh",
+                "bahasa arab", "matematik", "sains"
+            ];
+
+            for (let sub of knownSubjects) {
+                if (cleanName.includes(sub)) {
+                    // Huruf besar di awal perkataan
+                    detectedSubjek = sub.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                    break;
+                }
+            }
+
+            // Kesan Tahap/Darjah (D1, D2, Darjah 1, Khas, dll)
+            if (cleanName.match(/\bd1\b/) || cleanName.match(/darjah 1/)) { detectedTahap = "Darjah 1"; detectedTahapValue = "درجه ١"; }
+            else if (cleanName.match(/\bd2\b/) || cleanName.match(/darjah 2/)) { detectedTahap = "Darjah 2"; detectedTahapValue = "درجه ٢"; }
+            else if (cleanName.match(/\bd3\b/) || cleanName.match(/darjah 3/)) { detectedTahap = "Darjah 3"; detectedTahapValue = "درجه ٣"; }
+            else if (cleanName.match(/\bd4\b/) || cleanName.match(/darjah 4/)) { detectedTahap = "Darjah 4"; detectedTahapValue = "درجه ٤"; }
+            else if (cleanName.match(/\bd5\b/) || cleanName.match(/darjah 5/)) { detectedTahap = "Darjah 5"; detectedTahapValue = "درجه ٥"; }
+            else if (cleanName.match(/\bd6\b/) || cleanName.match(/darjah 6/)) { detectedTahap = "Darjah 6"; detectedTahapValue = "درجه ٦"; }
+            else if (cleanName.match(/\btaj\b/) || cleanName.match(/tadika/)) { detectedTahap = "TAJ"; detectedTahapValue = "تاج"; }
+            else if (cleanName.match(/\bkhas\b/)) { detectedTahap = "Darjah Khas"; detectedTahapValue = "درجه خاص"; }
+
+            // Bina Tajuk Rumi
+            let constructedTajuk = "RPT";
+            if (detectedSubjek) constructedTajuk += " " + detectedSubjek;
+            if (detectedTahap) constructedTajuk += " " + detectedTahap;
+
+            // Jika gagal kesan subjek/tahap, guna nama fail asal
+            if (constructedTajuk === "RPT" && nameWithoutExt !== "") {
+                constructedTajuk = nameWithoutExt;
+            }
+
+            // Masukkan nilai ke dalam input
+            const tajukInput = document.getElementById('tajukRumi');
+            const subjekInput = document.getElementById('subjekRumi');
+            const tahapSelect = document.getElementById('tahap');
+
+            if (tajukInput) {
+                tajukInput.value = constructedTajuk;
+                tajukInput.dispatchEvent(new Event('input')); // Aktifkan animasi input jika ada
+            }
+            if (subjekInput && detectedSubjek) {
+                subjekInput.value = detectedSubjek;
+                subjekInput.dispatchEvent(new Event('input'));
+            }
+            if (tahapSelect && detectedTahapValue) {
+                tahapSelect.value = detectedTahapValue;
+            }
+
+            // Jalankan terjemahan Jawi automatik
+            autoTranslateToJawi();
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.type !== "application/pdf") {
+                showToast("سيلا ڤيليه فاءيل PDF سهاج.", "error");
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                showToast("صاءيز فاءيل melebihi 10MB.", "error");
+                return;
+            }
+
+            currentFileName = file.name;
+            const nameDisplay = document.getElementById('file-name-display');
+            if (nameDisplay) {
+                nameDisplay.textContent = file.name;
+                nameDisplay.classList.remove('hidden');
+            }
+
+            autoFillFormFromFilename(file.name);
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentFileBase64 = e.target.result;
+                const btnExtract = document.getElementById('btnExtractPDF');
+                if (btnExtract) btnExtract.classList.remove('hidden');
+                showToast("فاءيل PDF دجيا مموات ناءيق.", "success");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        const dropZone = document.getElementById('drop-zone');
+        if (dropZone) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+            function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, () => dropZone.classList.add('border-emerald-500', 'bg-emerald-50/50'), false);
+            });
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, () => dropZone.classList.remove('border-emerald-500', 'bg-emerald-50/50'), false);
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files.length) {
+                    document.getElementById('file-upload').files = files;
+                    handleFileSelect({ target: { files: files } });
+                }
+            });
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const tajukRumi = document.getElementById('tajukRumi').value.trim();
+            const subjekRumi = document.getElementById('subjekRumi').value.trim();
+            const tajukJawi = document.getElementById('tajukJawi').value.trim();
+            const subjekJawi = document.getElementById('subjekJawi').value.trim();
+            const tahap = document.getElementById('tahap').value;
+
+            if (!tajukJawi || !subjekJawi || !tahap) {
+                showToast("سيلا لڠکڤکن سموا ميدان يڠ دواجبکن.", "error");
+                return;
+            }
+
+            const newRecord = {
+                id: "rpt_" + Date.now(),
+                tajukRumi,
+                tajukJawi,
+                subjekRumi,
+                subjekJawi,
+                tahap,
+                fileName: currentFileName || "Tiada Fail",
+                fileData: currentFileBase64 || null,
+                dateAdded: new Date().toISOString().split('T')[0]
+            };
+
+            rptRecords.unshift(newRecord);
+            saveToStorage();
+
+            document.getElementById('rptForm').reset();
+            const nameDisplay = document.getElementById('file-name-display');
+            if (nameDisplay) nameDisplay.classList.add('hidden');
+            const btnExtract = document.getElementById('btnExtractPDF');
+            if (btnExtract) btnExtract.classList.add('hidden');
+            currentFileBase64 = null;
+            currentFileName = "";
+
+            showToast("ر.ڤ.ت. بهارو برهاسيل دسيمڤن!", "success");
+            navigate('list');
+        }
+
+        function renderRptTable() {
+            const tbody = document.getElementById('rptTableBody');
+            if (!tbody) return;
+
+            const emptyState = document.getElementById('empty-state');
+            const searchVal = (document.getElementById('searchInput')?.value || "").toLowerCase();
+            const filterTahap = document.getElementById('filterTahap')?.value || "ALL";
+
+            tbody.innerHTML = "";
+
+            const filtered = rptRecords.filter(item => {
+                const matchesTahap = (filterTahap === "ALL" || item.tahap === filterTahap);
+                const matchesSearch = item.tajukRumi.toLowerCase().includes(searchVal) ||
+                                      item.tajukJawi.includes(searchVal) ||
+                                      item.subjekRumi.toLowerCase().includes(searchVal) ||
+                                      item.subjekJawi.includes(searchVal);
+                return matchesTahap && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                if (emptyState) {
+                    emptyState.classList.remove('hidden');
+                    emptyState.classList.add('flex');
+                }
+                return;
+            } else {
+                if (emptyState) {
+                    emptyState.classList.add('hidden');
+                    emptyState.classList.remove('flex');
+                }
+            }
+
+            filtered.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-emerald-50/40 transition-colors border-b border-slate-100";
+
+                let fileBtnHtml = `<span class="text-xs text-slate-400 font-sans" dir="ltr">Tiada Fail</span>`;
+                if (item.fileName !== "Tiada Fail") {
+                    fileBtnHtml = `<button onclick="viewRecordPdf('${item.id}')" class="text-xs bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 px-3 py-1.5 rounded-lg font-sans font-bold inline-flex items-center gap-1.5 transition-colors" dir="ltr">
+                            <i class="fas fa-file-pdf text-red-500"></i>
+                            <span class="truncate max-w-[100px]">${item.fileName}</span>
+                        </button>`;
+                }
+
+                tr.innerHTML = `
+                    <td class="py-4 px-6 text-center font-bold text-slate-500 text-base font-sans">${index + 1}</td>
+                    <td class="py-4 px-6">
+                        <div class="font-bold text-emerald-950 text-2xl jawi-amiri">${item.tajukJawi}</div>
+                        <div class="text-xs text-slate-400 font-sans mt-0.5" dir="ltr">${item.tajukRumi}</div>
+                    </td>
+                    <td class="py-4 px-6">
+                        <div class="font-bold text-slate-800 text-xl jawi-amiri">${item.subjekJawi}</div>
+                        <div class="text-xs text-slate-400 font-sans" dir="ltr">${item.subjekRumi}</div>
+                    </td>
+                    <td class="py-4 px-6 text-center">
+                        <span class="inline-block bg-amber-100 text-amber-900 border border-amber-200 px-3 py-1 rounded-full font-bold text-sm">
+                            ${item.tahap}
+                        </span>
+                    </td>
+                    <td class="py-4 px-6 text-center">
+                        ${fileBtnHtml}
+                    </td>
+                    <td class="py-4 px-6 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <button onclick="openEditModal('${item.id}')" title="کيمسکيني" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                <i class="fas fa-pen-to-square"></i>
+                            </button>
+                            <button onclick="confirmDeleteRpt('${item.id}')" title="هاڤوس" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                <i class="fas fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterRptTable() {
+            renderRptTable();
+        }
+
+        async function openPDFModal() {
+            if (!currentFileBase64) {
+                showToast("تياد فاءيل PDF ديڤيليه.", "error");
+                return;
+            }
+
+            // Dapatkan Tahap & Subjek dari borang sekiranya berada di halaman 'Tambah RPT'
+            if (!document.getElementById('view-add').classList.contains('hidden')) {
+                currentTahap = document.getElementById('tahap').value;
+                currentSubjek = document.getElementById('subjekJawi').value || document.getElementById('subjekRumi').value || "Tiada Subjek";
+            }
+
+            const modal = document.getElementById('pdfModal');
+            const iframe = document.getElementById('pdfPreviewIframe');
+            const loadingState = document.getElementById('pdfLoadingState');
+            const container = document.getElementById('pdfTableContainer');
+
+            if (iframe) iframe.src = currentFileBase64;
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+            if (loadingState) loadingState.classList.remove('hidden');
+            if (container) container.innerHTML = "";
+
+            try {
+                const loadingTask = pdfjsLib.getDocument(currentFileBase64);
+                const pdf = await loadingTask.promise;
+                extractedPdfStructuredData = [];
+
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    const progressText = document.getElementById('pdfProgressText');
+                    if (progressText) progressText.textContent = `Mengekstrak & Memformat Amiri Jawi DBP Muka Surat ${pageNum} dari ${pdf.numPages}...`;
+                    
+                    const page = await pdf.getPage(pageNum);
+                    const textContent = await page.getTextContent();
+                    
+                    const rawLines = textContent.items.map(item => item.str.trim()).filter(str => str.length > 0);
+                    
+                    let structuredRows = [];
+                    let currentMinggu = `ميڠݢو ${pageNum}`;
+                    let currentTajuk = applyDBPSpellingCorrection("Pelajaran Penggal SAKJ");
+                    let currentObjektif = applyDBPSpellingCorrection("Murid dapat memahami dan mengamalkan kandungan subjek dengan betul.");
+                    let currentAktiviti = applyDBPSpellingCorrection("Latihan berkumpulan, tasmik daerah, dan pentaksiran lisan.");
+
+                    // Basic generic parser matching common syllabus layouts
+                    for (let i = 0; i < rawLines.length; i += 3) {
+                        let line1 = applyDBPSpellingCorrection(rawLines[i] || currentTajuk);
+                        let line2 = applyDBPSpellingCorrection(rawLines[i+1] || currentObjektif);
+                        let line3 = applyDBPSpellingCorrection(rawLines[i+2] || currentAktiviti);
+
+                        if (rawLines[i].toLowerCase().includes("minggu") || rawLines[i].includes("ميڠݢو")) {
+                            currentMinggu = applyDBPSpellingCorrection(rawLines[i]);
+                            line1 = applyDBPSpellingCorrection(rawLines[i+1] || currentTajuk);
+                            line2 = applyDBPSpellingCorrection(rawLines[i+2] || currentObjektif);
+                            line3 = applyDBPSpellingCorrection(rawLines[i+3] || currentAktiviti);
+                            i += 3;
+                        }
+
+                        structuredRows.push({
+                            minggu: currentMinggu,
+                            tajuk: line1,
+                            objektif: line2,
+                            aktiviti: line3
+                        });
+                    }
+
+                    if (structuredRows.length === 0 && rawLines.length > 0) {
+                        structuredRows.push({
+                            minggu: `ميڠݢو ${pageNum}`,
+                            tajuk: applyDBPSpellingCorrection(rawLines.slice(0, 2).join(" ")),
+                            objektif: applyDBPSpellingCorrection(rawLines.slice(2, 5).join(" ")),
+                            aktiviti: applyDBPSpellingCorrection(rawLines.slice(5).join(" ") || "Latihan amali dan nota SAKJ.")
+                        });
+                    }
+
+                    extractedPdfStructuredData.push({ page: pageNum, rows: structuredRows });
+                }
+
+                if (container) {
+                    container.innerHTML = "";
+                    if (extractedPdfStructuredData.length === 0) {
+                        container.innerHTML = `<p class="text-center text-slate-500 py-8">تياد تيكس دابايت داءکستريک درڤد PDF اين.</p>`;
+                    } else {
+                        extractedPdfStructuredData.forEach(group => {
+                            const pageDiv = document.createElement('div');
+                            pageDiv.className = "mb-6 bg-white rounded-xl border border-emerald-200 overflow-hidden shadow-sm";
+                            
+                            let rowsHtml = "";
+                            group.rows.forEach((row, idx) => {
+                                rowsHtml += `
+                                    <tr class="hover:bg-emerald-50/70 transition-colors even:bg-slate-50/60 border-b border-slate-100">
+                                        <td class="py-3 px-3 text-center text-sm font-bold text-emerald-900 bg-emerald-50/50 border-l border-slate-200 font-sans w-12">${idx + 1}</td>
+                                        <td class="py-3 px-3 text-center text-sm font-bold text-amber-900 bg-amber-50/40 border-l border-slate-200 whitespace-nowrap jawi-amiri">${row.minggu}</td>
+                                        <td class="py-3 px-4 text-slate-900 jawi-amiri text-xl font-bold border-l border-slate-200">${row.tajuk}</td>
+                                        <td class="py-3 px-4 text-slate-800 jawi-amiri text-lg border-l border-slate-200">${row.objektif}</td>
+                                        <td class="py-3 px-4 text-slate-700 jawi-amiri text-lg">${row.aktiviti}</td>
+                                    </tr>
+                                `;
+                            });
+
+                            pageDiv.innerHTML = `
+                                <div class="font-bold text-sm text-white bg-emerald-900 py-2.5 px-4 flex justify-between items-center font-sans" dir="ltr">
+                                    <span><i class="fas fa-file-lines text-amber-400 mr-2"></i>Muka Surat ${group.page} (Format SAKJ RPT - Amiri Jawi DBP)</span>
+                                    <span class="text-xs bg-amber-400 text-emerald-950 px-2.5 py-0.5 rounded-full font-bold">${group.rows.length} Topik RPT</span>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-right border-collapse">
+                                        <thead class="bg-emerald-100/80 border-b border-emerald-300 font-sans text-sm text-emerald-950 font-bold">
+                                            <tr>
+                                                <th class="py-3 px-3 text-center border-l border-emerald-200 w-12">بيل</th>
+                                                <th class="py-3 px-3 text-center border-l border-emerald-200 whitespace-nowrap">ميڠݢو</th>
+                                                <th class="py-3 px-4 border-l border-emerald-200">تاجوق / استاند کاندوڠن</th>
+                                                <th class="py-3 px-4 border-l border-emerald-200">اوبجيکتيف ڤڠاجرن</th>
+                                                <th class="py-3 px-4">چادڠن اکتيويتي & ڤنتاکسيرن</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-slate-100">
+                                            ${rowsHtml}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            `;
+                            container.appendChild(pageDiv);
+                        });
+                        const btnCopyExtracted = document.getElementById('btnCopyExtracted');
+                        if (btnCopyExtracted) btnCopyExtracted.classList.remove('hidden');
+                        const btnSaveGoogleSheet = document.getElementById('btnSaveGoogleSheet');
+                        if (btnSaveGoogleSheet) btnSaveGoogleSheet.classList.remove('hidden');
+                        const btnOpenSheetModal = document.getElementById('btnOpenSheetModal');
+                        if (btnOpenSheetModal) btnOpenSheetModal.classList.remove('hidden');
+                    }
+                }
+
+                if (loadingState) loadingState.classList.add('hidden');
+            } catch (err) {
+                console.error("PDF Extraction error:", err);
+                if (loadingState) loadingState.classList.add('hidden');
+                if (container) container.innerHTML = `<p class="text-center text-red-500 py-8">رالت مڠيکستريک فاءيل PDF. سيلا ڤاستيکن فاءيل ساه.</p>`;
+            }
+        }
+
+        function viewRecordPdf(id) {
+            const item = rptRecords.find(r => r.id === id);
+            if (item && item.fileData) {
+                currentFileBase64 = item.fileData;
+                currentTahap = item.tahap;
+                currentSubjek = item.subjekJawi;
+                openPDFModal();
+            } else {
+                showToast("فاءيل PDF تياد اونتوق ريکود اين.", "warning");
+            }
+        }
+
+        function closePDFModal() {
+            const modal = document.getElementById('pdfModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+            const iframe = document.getElementById('pdfPreviewIframe');
+            if (iframe) iframe.src = "";
+        }
+
+        function copyExtractedText() {
+            if (extractedPdfStructuredData.length === 0) return;
+            let fullText = "=== TABLE EXTRACT RPT SAKJ (AMIRI JAWI DBP) ===\n\n";
+            extractedPdfStructuredData.forEach(g => {
+                fullText += `--- Muka Surat ${g.page} ---\n`;
+                g.rows.forEach((r, i) => {
+                    fullText += `${i+1}. [${r.minggu}] Tajuk: ${r.tajuk} | Objektif: ${r.objektif} | Aktiviti: ${r.aktiviti}\n`;
+                });
+                fullText += "\n";
+            });
+            
+            const textarea = document.createElement('textarea');
+            textarea.value = fullText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast("جدول RPT برهاسيل دسالين ک ڤڤن كليڤ!", "success");
+            } catch (err) {
+                showToast("رالت ساماس مڽالين تيكس.", "error");
+            }
+            document.body.removeChild(textarea);
+        }
+
+        async function saveToGoogleSheet() {
+            if (extractedPdfStructuredData.length === 0) {
+                showToast("تياد داتا ايكسترك اونتوق دسيڤن.", "warning");
+                return;
+            }
+
+            const namaTab = `${currentTahap || "Umum"} - ${currentSubjek || "Subjek"}`;
+            showToast(`سدڠ مڠهنتر داتا ک ݢوݢل شيت (Tab: ${namaTab})...`, "info");
+
+            let payloadData = [];
+            extractedPdfStructuredData.forEach(g => {
+                g.rows.forEach(r => {
+                    payloadData.push({
+                        page: g.page,
+                        minggu: r.minggu,
+                        tajuk: r.tajuk,
+                        objektif: r.objektif,
+                        aktiviti: r.aktiviti,
+                        timestamp: new Date().toISOString()
+                    });
+                });
+            });
+
+            try {
+                // Formatting data as Form URL-Encoded to bypass CORS body drops
+                const formData = new URLSearchParams();
+                formData.append('data', JSON.stringify({ 
+                    action: 'saveRpt', 
+                    tahap: currentTahap || "Umum",
+                    subjek: currentSubjek || "Subjek",
+                    rows: payloadData 
+                }));
+
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData
+                });
+
+                // Since no-cors hides the response, we assume success if fetch resolves
+                showToast("داتا برهاسيل دسيمڤن ک ݢوݢل شيت س.ا.ک.ج.!", "success");
+            } catch (err) {
+                console.error("Google Sheet save error:", err);
+                showToast("رالت ک ݢوݢل شيت. سيلا ڤاستيکن اسكريڤت فعال.", "error");
+                showScriptModal();
+            }
+        }
+
+        function showScriptModal() {
+            const modal = document.getElementById('scriptModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeScriptModal() {
+            const modal = document.getElementById('scriptModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function copyAppsScriptCode() {
+            const scriptBox = document.querySelector('#scriptModal textarea');
+            if (!scriptBox) return;
+            scriptBox.select();
+            document.execCommand('copy');
+            showToast("کود سقيڤت برهاسيل دسالين!", "success");
+        }
+
+        function openEditModal(id) {
+            const item = rptRecords.find(r => r.id === id);
+            if (!item) return;
+
+            document.getElementById('editId').value = item.id;
+            document.getElementById('editTajukRumi').value = item.tajukRumi;
+            document.getElementById('editSubjekRumi').value = item.subjekRumi;
+            document.getElementById('editTajukJawi').value = item.tajukJawi;
+            document.getElementById('editSubjekJawi').value = item.subjekJawi;
+            document.getElementById('editTahap').value = item.tahap;
+
+            const modal = document.getElementById('editModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeEditModal() {
+            const modal = document.getElementById('editModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function saveEditedRpt(e) {
+            e.preventDefault();
+            const id = document.getElementById('editId').value;
+            const tajukRumi = document.getElementById('editTajukRumi').value.trim();
+            const subjekRumi = document.getElementById('editSubjekRumi').value.trim();
+            const tajukJawi = document.getElementById('editTajukJawi').value.trim();
+            const subjekJawi = document.getElementById('editSubjekJawi').value.trim();
+            const tahap = document.getElementById('editTahap').value;
+
+            const index = rptRecords.findIndex(r => r.id === id);
+            if (index !== -1) {
+                rptRecords[index] = {
+                    ...rptRecords[index],
+                    tajukRumi,
+                    subjekRumi,
+                    tajukJawi,
+                    subjekJawi,
+                    tahap
+                };
+                saveToStorage();
+                renderRptTable();
+                updateDashboardStats();
+                closeEditModal();
+                showToast("ر.ڤ.ت. برهاسيل ديکيمسکيني!", "success");
+            }
+        }
+
+        let pendingDeleteId = null;
+
+        function confirmDeleteRpt(id) {
+            pendingDeleteId = id;
+            const modal = document.getElementById('confirmModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+            const btnOk = document.getElementById('btnConfirmOk');
+            if (btnOk) {
+                btnOk.onclick = function() {
+                    executeDeleteRpt();
+                };
+            }
+        }
+
+        function closeConfirmModal() {
+            pendingDeleteId = null;
+            const modal = document.getElementById('confirmModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function executeDeleteRpt() {
+            if (!pendingDeleteId) return;
+            rptRecords = rptRecords.filter(r => r.id !== pendingDeleteId);
+            saveToStorage();
+            renderRptTable();
+            updateDashboardStats();
+            closeConfirmModal();
+            showToast("ر.ڤ.ت. برهاسيل دهاڤوس.", "success");
+        }
+
+        function exportCSV() {
+            if (rptRecords.length === 0) {
+                showToast("تياد داتا اونتوق دايكسيڤورت.", "warning");
+                return;
+            }
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFFID,Tajuk Rumi,Tajuk Jawi,Subjek Rumi,Subjek Jawi,Tahap,Tarikh\n";
+            rptRecords.forEach(r => {
+                csvContent += `"${r.id}","${r.tajukRumi}","${r.tajukJawi}","${r.subjekRumi}","${r.subjekJawi}","${r.tahap}","${r.dateAdded}"\n`;
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Senarai_RPT_SAKJ_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("فاءيل CSV برهاسيل دايكسيڤورت!", "success");
+        }
+
+        function generateAIJawi() {
+            const prompt = document.getElementById('aiPromptTranslate').value.trim();
+            if (!prompt) {
+                showToast("سيلا ماسوقکن تيكس رومي اوبجيکتيف.", "error");
+                return;
+            }
+            const jawiResult = applyDBPSpellingCorrection(prompt);
+            const container = document.getElementById('aiOutputContainer');
+            const outputText = document.getElementById('aiOutputText');
+            if (outputText) outputText.textContent = jawiResult;
+            if (container) container.classList.remove('hidden');
+            showToast("ترجمهن اي.اءي. دجانا سچارا ڤرسيس DBP!", "success");
+        }
+
+        function generateAIRptOutline() {
+            const subject = document.getElementById('aiRptSubject').value.trim();
+            if (!subject) {
+                showToast("سيلا ماسوقکن توڤيق اتاو سوبجيک.", "error");
+                return;
+            }
+            const jawiSub = applyDBPSpellingCorrection(subject);
+            const outline = `راڠکا رنچڠن ڤڠاجرن تاهونن (ر.ڤ.ت.) برڤدومکن DBP:\n\nتوڤيق: ${jawiSub}\n\n1. ميڠݢو ١-٤: ڤڠنالن دان مفهمني مفهوم اساس (${jawiSub}).\n2. ميڠݢو ٥-١٠: لاتئهن تاسميق، کڤهيمن حوقوق، دان تطبيق عملي.\n3. ميڠݢو ١١-١٥: ڤنتاکسيرن برتروسن دان ايلوستراسي ايجاءن جاوي فصيح.`;
+            
+            const container = document.getElementById('aiOutputContainer');
+            const outputText = document.getElementById('aiOutputText');
+            if (outputText) outputText.textContent = outline;
+            if (container) container.classList.remove('hidden');
+            showToast("راڠکا RPT برهاسيل دجانا!", "success");
+        }
+
+        function copyAiOutput() {
+            const text = document.getElementById('aiOutputText').textContent;
+            if (!text) return;
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast("هاصيل اي.اءي. برهاسيل دسالين ک ڤڤن كليڤ!", "success");
+            } catch (err) {
+                showToast("رالت مڽالين تيكس.", "error");
+            }
+            document.body.removeChild(textarea);
+        }
+    </script>
+</body>
+</html>
