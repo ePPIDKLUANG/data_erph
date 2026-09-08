@@ -1241,47 +1241,65 @@ function doPost(e) {
                     const page = await pdf.getPage(pageNum);
                     const textContent = await page.getTextContent();
                     
-                    const rawLines = textContent.items.map(item => item.str.trim()).filter(str => str.length > 0);
+                    // Logik pengekstrakan PINTAR: Menggunakan koordinat menegak (Y) & mendatar (X)
+                    let rowsMap = {};
+                    textContent.items.forEach(item => {
+                        let str = item.str.trim();
+                        if (!str) return;
+                        
+                        // Kumpulan teks pada garisan yang sama (Toleransi 8 pixel untuk elak ayat senget)
+                        let y = Math.round(item.transform[5] / 8) * 8; 
+                        if (!rowsMap[y]) rowsMap[y] = [];
+                        
+                        // Simpan teks beserta kedudukan koordinat X
+                        rowsMap[y].push({ text: str, x: item.transform[4] });
+                    });
+
+                    // Susun kedudukan Y dari atas ke bawah (PDF bermula dari bawah ke atas, jadi kita reverse)
+                    let sortedY = Object.keys(rowsMap).map(Number).sort((a, b) => b - a);
                     
                     let structuredRows = [];
                     let currentMinggu = `ميڠݢو ${pageNum}`;
                     
-                    // Tapis dan singkirkan perkataan header jadual standard dari PDF asal
+                    // Senarai perkataan header jadual untuk diabaikan (Noise filtering)
                     const skipKeywords = ["minggu", "tajuk", "standard kandungan", "objektif", "objektif pengajaran", "cadangan", "aktiviti", "cadangan aktiviti", "pentaksiran", "bil", "bil.", "tajuk / standard kandungan", "cadangan aktiviti & pentaksiran"];
-                    const dataLines = rawLines.filter(line => {
-                        return !skipKeywords.includes(line.toLowerCase());
-                    });
 
-                    // Logik pengekstrakan berasaskan isi kandungan SEBENAR PDF (Tanpa teks rawak)
-                    let i = 0;
-                    while (i < dataLines.length) {
-                        let lineText = dataLines[i];
-                        let lowerText = lineText.toLowerCase();
+                    sortedY.forEach(y => {
+                        // Susun ayat dari Kiri ke Kanan berdasarkan koordinat X
+                        let rowItems = rowsMap[y].sort((a, b) => a.x - b.x).map(item => item.text);
+                        let rowText = rowItems.join(" ").toLowerCase();
 
-                        // Kesan sekiranya baris teks sebenar itu adalah penanda "Minggu X"
-                        if (lowerText.startsWith("minggu") || lineText.startsWith("ميڠݢو") || lowerText.match(/^m\d+$/)) {
-                            currentMinggu = applyDBPSpellingCorrection(lineText);
-                            i++;
-                            continue;
+                        // Abaikan baris header
+                        let isHeader = skipKeywords.some(kw => rowText === kw || (rowText.includes("standard") && rowText.includes("kandungan")));
+                        if (isHeader) return;
+
+                        // Kesan jika baris tersebut adalah penanda "Minggu X"
+                        if (rowText.startsWith("minggu") || rowText.includes("ميڠݢو") || rowText.match(/^m\d+/)) {
+                            currentMinggu = applyDBPSpellingCorrection(rowItems.join(" "));
+                            return;
                         }
 
-                        // Ekstrak blok teks sebenar dari PDF (Lajur 1, Lajur 2, Lajur 3)
-                        let textTajuk = dataLines[i] ? dataLines[i] : "";
-                        let textObjektif = dataLines[i + 1] ? dataLines[i + 1] : "";
-                        let textAktiviti = dataLines[i + 2] ? dataLines[i + 2] : "";
+                        // Auto-matching ke lajur jadual berdasarkan kedudukan fail PDF sebenar
+                        if (rowItems.length > 0) {
+                            let textTajuk = rowItems[0] || "-";
+                            let textObjektif = rowItems[1] || "-";
+                            // Gabungkan baki teks di kanan sebagai lajur aktiviti
+                            let textAktiviti = rowItems.slice(2).join(" ") || "-";
 
-                        if (textTajuk) {
+                            // Jika baris panjang tapi tidak terpecah lajur, ia diletakkan di Tajuk sahaja
+                            if (rowItems.length === 1) {
+                                textObjektif = "-";
+                                textAktiviti = "-";
+                            }
+
                             structuredRows.push({
                                 minggu: currentMinggu,
                                 tajuk: applyDBPSpellingCorrection(textTajuk),
-                                objektif: textObjektif ? applyDBPSpellingCorrection(textObjektif) : "-",
-                                aktiviti: textAktiviti ? applyDBPSpellingCorrection(textAktiviti) : "-"
+                                objektif: applyDBPSpellingCorrection(textObjektif),
+                                aktiviti: applyDBPSpellingCorrection(textAktiviti)
                             });
                         }
-                        
-                        // Bergerak 3 baris teks ke hadapan untuk baris jadual seterusnya
-                        i += 3;
-                    }
+                    });
 
                     extractedPdfStructuredData.push({ page: pageNum, rows: structuredRows });
                 }
