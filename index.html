@@ -473,8 +473,14 @@
                 <div class="w-full md:w-3/5 flex flex-col bg-white relative">
                     <div class="bg-emerald-50 py-3 px-4 border-b border-emerald-200 flex flex-wrap justify-between items-center gap-2">
                         <div class="font-bold text-emerald-900 text-lg">
-                            <i class="fas fa-table text-emerald-600 ml-2"></i>
-                            <span>جدول ايكسترك برفورمة RPT SAKJ (تيكس جاوي فونت اميري تيقن DBP)</span>
+                            <div>
+                                <i class="fas fa-table text-emerald-600 ml-2"></i>
+                                <span>جدول ايكسترك برفورمة RPT SAKJ</span>
+                            </div>
+                            <div class="text-sm text-emerald-700 font-sans mt-1 flex items-center gap-2" dir="ltr">
+                                <i class="fas fa-file-pdf text-red-500"></i>
+                                <span id="extracted-file-name-display" class="font-bold">Tiada Fail</span>
+                            </div>
                         </div>
                         <div class="flex items-center gap-2">
                             <button onclick="saveToGoogleSheet()" class="hidden text-sm bg-teal-700 text-white hover:bg-teal-800 px-3 py-1.5 rounded-lg flex items-center gap-2 transition-colors shadow-sm font-bold" id="btnSaveGoogleSheet">
@@ -1185,6 +1191,12 @@ function doPost(e) {
                 currentSubjek = document.getElementById('subjekJawi').value || document.getElementById('subjekRumi').value || "Tiada Subjek";
             }
 
+            // Kemaskini nama fail auto-matching pada paparan header jadual
+            const extractedFileNameDisplay = document.getElementById('extracted-file-name-display');
+            if (extractedFileNameDisplay) {
+                extractedFileNameDisplay.textContent = currentFileName || "Tiada Fail";
+            }
+
             const modal = document.getElementById('pdfModal');
             const iframe = document.getElementById('pdfPreviewIframe');
             const loadingState = document.getElementById('pdfLoadingState');
@@ -1214,39 +1226,42 @@ function doPost(e) {
                     
                     let structuredRows = [];
                     let currentMinggu = `ميڠݢو ${pageNum}`;
-                    let currentTajuk = applyDBPSpellingCorrection("Pelajaran Penggal SAKJ");
-                    let currentObjektif = applyDBPSpellingCorrection("Murid dapat memahami dan mengamalkan kandungan subjek dengan betul.");
-                    let currentAktiviti = applyDBPSpellingCorrection("Latihan berkumpulan, tasmik daerah, dan pentaksiran lisan.");
+                    
+                    // Tapis dan singkirkan perkataan header jadual standard dari PDF asal
+                    const skipKeywords = ["minggu", "tajuk", "standard kandungan", "objektif", "objektif pengajaran", "cadangan", "aktiviti", "cadangan aktiviti", "pentaksiran", "bil", "bil.", "tajuk / standard kandungan", "cadangan aktiviti & pentaksiran"];
+                    const dataLines = rawLines.filter(line => {
+                        return !skipKeywords.includes(line.toLowerCase());
+                    });
 
-                    // Basic generic parser matching common syllabus layouts
-                    for (let i = 0; i < rawLines.length; i += 3) {
-                        let line1 = applyDBPSpellingCorrection(rawLines[i] || currentTajuk);
-                        let line2 = applyDBPSpellingCorrection(rawLines[i+1] || currentObjektif);
-                        let line3 = applyDBPSpellingCorrection(rawLines[i+2] || currentAktiviti);
+                    // Logik pengekstrakan berasaskan isi kandungan SEBENAR PDF (Tanpa teks rawak)
+                    let i = 0;
+                    while (i < dataLines.length) {
+                        let lineText = dataLines[i];
+                        let lowerText = lineText.toLowerCase();
 
-                        if (rawLines[i].toLowerCase().includes("minggu") || rawLines[i].includes("ميڠݢو")) {
-                            currentMinggu = applyDBPSpellingCorrection(rawLines[i]);
-                            line1 = applyDBPSpellingCorrection(rawLines[i+1] || currentTajuk);
-                            line2 = applyDBPSpellingCorrection(rawLines[i+2] || currentObjektif);
-                            line3 = applyDBPSpellingCorrection(rawLines[i+3] || currentAktiviti);
-                            i += 3;
+                        // Kesan sekiranya baris teks sebenar itu adalah penanda "Minggu X"
+                        if (lowerText.startsWith("minggu") || lineText.startsWith("ميڠݢو") || lowerText.match(/^m\d+$/)) {
+                            currentMinggu = applyDBPSpellingCorrection(lineText);
+                            i++;
+                            continue;
                         }
 
-                        structuredRows.push({
-                            minggu: currentMinggu,
-                            tajuk: line1,
-                            objektif: line2,
-                            aktiviti: line3
-                        });
-                    }
+                        // Ekstrak blok teks sebenar dari PDF (Lajur 1, Lajur 2, Lajur 3)
+                        let textTajuk = dataLines[i] ? dataLines[i] : "";
+                        let textObjektif = dataLines[i + 1] ? dataLines[i + 1] : "";
+                        let textAktiviti = dataLines[i + 2] ? dataLines[i + 2] : "";
 
-                    if (structuredRows.length === 0 && rawLines.length > 0) {
-                        structuredRows.push({
-                            minggu: `ميڠݢو ${pageNum}`,
-                            tajuk: applyDBPSpellingCorrection(rawLines.slice(0, 2).join(" ")),
-                            objektif: applyDBPSpellingCorrection(rawLines.slice(2, 5).join(" ")),
-                            aktiviti: applyDBPSpellingCorrection(rawLines.slice(5).join(" ") || "Latihan amali dan nota SAKJ.")
-                        });
+                        if (textTajuk) {
+                            structuredRows.push({
+                                minggu: currentMinggu,
+                                tajuk: applyDBPSpellingCorrection(textTajuk),
+                                objektif: textObjektif ? applyDBPSpellingCorrection(textObjektif) : "-",
+                                aktiviti: textAktiviti ? applyDBPSpellingCorrection(textAktiviti) : "-"
+                            });
+                        }
+                        
+                        // Bergerak 3 baris teks ke hadapan untuk baris jadual seterusnya
+                        i += 3;
                     }
 
                     extractedPdfStructuredData.push({ page: pageNum, rows: structuredRows });
