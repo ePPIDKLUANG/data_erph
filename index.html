@@ -581,12 +581,12 @@
             <div class="flex justify-between items-center border-b pb-3 mb-4">
                 <h3 class="text-2xl font-bold text-emerald-900 flex items-center gap-2">
                     <i class="fas fa-code text-amber-500"></i>
-                    <span>کود Google Apps Script (Jadual 7 Lajur Baharu)</span>
+                    <span>کود Google Apps Script (Versi 43 Minggu)</span>
                 </h3>
                 <button onclick="closeScriptModal()" class="text-slate-400 hover:text-slate-600 text-xl"><i class="fas fa-times"></i></button>
             </div>
             <p class="text-slate-600 text-sm mb-4" dir="ltr" style="text-align: left;">
-                Sistem kini menggunakan 7 lajur (Mata Pelajaran, Tarikh/Masa, Minggu, Tajuk, Std Kandungan, Std Pembelajaran, Catatan). Sila kemaskini <strong>Google Apps Script</strong> anda dengan kod di bawah untuk menyokong format lajur baru ini. JANGAN LUPA buat <strong>New Deployment</strong>.
+                Sistem kini menggunakan format rasmi <strong>4 Lajur & 43 Minggu Tetap</strong>. Sila kemaskini <strong>Google Apps Script</strong> anda dengan kod di bawah untuk menyokong format ini. JANGAN LUPA buat <strong>New Deployment</strong>.
             </p>
             <textarea readonly class="w-full h-56 p-3 bg-slate-900 text-emerald-400 font-mono text-xs rounded-xl mb-4" dir="ltr">
 function doPost(e) {
@@ -608,22 +608,33 @@ function doPost(e) {
     var sheet = ss.getSheetByName(sheetName);
     if (!sheet) {
       sheet = ss.insertSheet(sheetName);
+    } else {
+      // Bersihkan data lama supaya 43 minggu baru tidak bertindih (duplicate)
+      sheet.clearContents();
     }
     
-    // Semak dan bina 8 header JAWI jika fail sheet kosong
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(["بيل", "مات ڤلاجرن", "تاريخ / ماس", "ميڠݢو", "تاجوق", "ستندرد کاندوڠن", "ستندرد ڤمبلاجرن", "چاتتن"]);
-    }
+    // Bina Header 4 Lajur (+1 Lajur Tarikh untuk rujukan)
+    sheet.appendRow(["ميڠݢو", "تاجوق", "ستندرد کاندوڠن", "ستندرد ڤمبلاجرن", "Tarikh Kemaskini"]);
     
-    var lastRow = sheet.getLastRow();
-    var bil = (lastRow === 1) ? 1 : (lastRow); 
-
-    // Masukkan data baris demi baris mengikut 7 lajur
+    // Cantikkan Header secara automatik
+    sheet.getRange(1, 1, 1, 5).setFontWeight("bold").setBackground("#dcfce7").setHorizontalAlignment("center");
+    
+    // Masukkan set 43 minggu secara Pukal (Lebih Pantas)
     if (data.rows && Array.isArray(data.rows)) {
+      var insertData = [];
       data.rows.forEach(function(row) {
-        sheet.appendRow([bil, row.mataPelajaran, row.tarikhMasa, row.minggu, row.tajuk, row.stdKandungan, row.stdPembelajaran, row.catatan]);
-        bil++; 
+        insertData.push([
+          row.minggu, 
+          row.tajuk, 
+          row.stdKandungan, 
+          row.stdPembelajaran,
+          row.timestamp || new Date().toISOString()
+        ]);
       });
+      
+      if(insertData.length > 0) {
+         sheet.getRange(2, 1, insertData.length, 5).setValues(insertData);
+      }
     }
     
     return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
@@ -643,144 +654,58 @@ function doPost(e) {
 
     <script>
         // HARDCODED GOOGLE SCRIPT URL PROVIDED BY USER
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwdhgPixl-BttLmxl4FZrKvygxUTiMWOW2zwv9TdOEEc51tvKQSecfQb0DigNOFsYk3/exec";
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6ljeWUWS_WcXzjNutTpUp7eRiRY9s0gJ3nH7Fk3wVB5bZqnN6tJ_MnEnnA__85CJ4/exec";
 
         const DBP_DICTIONARY = {
             // Subjek & Agama
-            "matematik": "ماتماتيک",
-            "sains": "ساءينس",
-            "bahasa melayu": "بهاس ملايو",
-            "bahasa inggeris": "بهاس ايڠݢريس",
-            "bahasa arab": "بهاس عرب",
-            "tauhid": "توحيد",
-            "fiqh": "فقه",
-            "akhlak": "اخلاق",
-            "sirah": "سيرة",
-            "sejarah": "سجاره",
-            "al-quran": "القرءان",
-            "alquran": "القرءان",
-            "tajwid": "تجويد",
-            "hafazan": "حفظن",
-            "jawi": "جاوي",
-            "muamalat": "معاملات",
-            "munakahat": "مناكحات",
-            "jinayat": "جنايات",
-            "faraid": "فرائض",
-            "pendidikan islam": "ڤنديديقن إسلام",
-            "fardu ain": "فرض عين",
-            "amali": "عملي",
+            "matematik": "ماتماتيک", "sains": "ساءينس", "bahasa melayu": "بهاس ملايو", "bahasa inggeris": "بهاس ايڠݢريس",
+            "bahasa arab": "بهاس عرب", "tauhid": "توحيد", "fiqh": "فقه", "feqah": "فقه", "akhlak": "اخلاق", "sirah": "سيرة",
+            "sejarah": "سجاره", "al-quran": "القرءان", "alquran": "القرءان", "tajwid": "تجويد", "hafazan": "حفظن",
+            "jawi": "جاوي", "muamalat": "معاملات", "munakahat": "مناكحات", "jinayat": "جنايات", "faraid": "فرائض",
+            "pendidikan islam": "ڤنديديقن إسلام", "fardu ain": "فرض عين", "amali": "عملي",
             
             // Terminologi RPT & Sekolah
-            "tarikh": "تاريخ",
-            "masa": "ماس",
-            "hari": "هاري",
-            "darjah": "درجه",
-            "penggal": "ڤڠݢل",
-            "tahun": "تاهون",
-            "minggu": "ميڠݢو",
-            "tajuk": "تاجوق",
-            "standard": "ستندرد",
-            "kandungan": "کاندوڠن",
-            "pembelajaran": "ڤمبلاجرن",
-            "pengajaran": "ڤڠاجرن",
-            "objektif": "اوبجيکتيف",
-            "cadangan": "چادڠن",
-            "aktiviti": "اکتيويتي",
-            "pentaksiran": "ڤنتاکسيرن",
-            "catatan": "چاتتن",
-            "mata pelajaran": "مات ڤلاجرن",
-            "matapelajaran": "مات ڤلاجرن",
-            "sekolah": "سکوله",
-            "agama": "اݢام",
-            "kerajaan": "کراجاءن",
-            "johor": "جوهر",
-            "tadika": "تاديکا",
-            "taj": "تاج",
-            "khas": "خاص",
-            "rpt": "ر.ڤ.ت.",
-            "nota": "نوتا",
-            "latihan": "لاتيهن",
-            "topik": "توڤيق",
-            "pelajaran": "ڤلاجرن",
-            "murid": "موريد",
-            "guru": "ݢورو",
-            "kssr": "ک.س.س.ر.",
-            "kurikulum": "کوريکولوم",
-            "silibus": "سيلبوس",
-            "unit": "اونيت",
-            "bab": "باب",
-            "kemahiran": "کماهيرن",
-            "asas": "اساس",
-            "konsep": "کونسيڤ",
-            "pengenalan": "ڤڠنلن",
-            "penilaian": "ڤنيلاين",
-            "kriteria": "کريتريا",
-            "kejayaan": "کجاياءن",
+            "tarikh": "تاريخ", "masa": "ماس", "hari": "هاري", "darjah": "درجه", "penggal": "ڤڠݢل", "tahun": "تاهون",
+            "minggu": "ميڠݢو", "tajuk": "تاجوق", "standard": "ستندرد", "kandungan": "کاندوڠن", "pembelajaran": "ڤمبلاجرن",
+            "pengajaran": "ڤڠاجرن", "objektif": "اوبجيکتيف", "cadangan": "چادڠن", "aktiviti": "اکتيويتي", "pentaksiran": "ڤنتاکسيرن",
+            "catatan": "چاتتن", "mata pelajaran": "مات ڤلاجرن", "matapelajaran": "مات ڤلاجرن", "sekolah": "سکوله",
+            "agama": "اݢام", "kerajaan": "کراجاءن", "johor": "جوهر", "tadika": "تاديکا", "taj": "تاج", "khas": "خاص",
+            "rpt": "ر.ڤ.ت.", "nota": "نوتا", "latihan": "لاتيهن", "topik": "توڤيق", "pelajaran": "ڤلاجرن", "murid": "موريد",
+            "guru": "ݢورو", "kssr": "ک.س.س.ر.", "kurikulum": "کوريکولوم", "silibus": "سيلبوس", "unit": "اونيت", "bab": "باب",
+            "kemahiran": "کماهيرن", "asas": "اساس", "konsep": "کونسيڤ", "pengenalan": "ڤڠنلن", "penilaian": "ڤنيلاين",
+            "kriteria": "کريتريا", "kejayaan": "کجاياءن", "pbd": "ڤ.ب.د.", "kbat": "ک.ب.ا.ت.", "bbm": "ب.ب.م.",
 
-            // Kata Kerja (Taksonomi Bloom dll)
-            "memahami": "ممهمي",
-            "menghafaz": "مڠحفظ",
-            "membaca": "ممباچ",
-            "menulis": "منوليس",
-            "menghayati": "مڠهياتي",
-            "menyatakan": "مڽتاکن",
-            "menerangkan": "منرڠکن",
-            "menjelaskan": "منجلسکن",
-            "mengenal": "مڠنل",
-            "pasti": "ڤستي",
-            "mengenal pasti": "مڠنل ڤستي",
-            "menyenaraikan": "مڽنارايکن",
-            "membezakan": "ممبيزاکن",
-            "mengaplikasi": "مڠاڤليکاسي",
-            "dapat": "داڤت",
-            "mampu": "ممڤو",
-            "memberi": "ممبري",
-            "contoh": "چونتوه",
+            // Kata Kerja (Taksonomi Bloom dll) - Imbuhan MeN-
+            "memahami": "ممهمي", "menghafaz": "مڠحفظ", "membaca": "ممباچ", "menulis": "منوليس", "menghayati": "مڠهياتي",
+            "menyatakan": "مڽتاکن", "menerangkan": "منرڠکن", "menjelaskan": "منجلسکن", "mengenal": "مڠنل", "pasti": "ڤستي",
+            "mengenal pasti": "مڠنل ڤستي", "menyenaraikan": "مڽنارايکن", "membezakan": "ممبيزاکن", "mengaplikasi": "مڠاڤليکاسي",
+            "dapat": "داڤت", "mampu": "ممڤو", "memberi": "ممبري", "contoh": "چونتوه", "menghubungkaitkan": "مڠهوبوڠکاءيتکن",
+            "menyebut": "مڽبوت", "mengamalkan": "مڠعملکن", "menilai": "منيلاي", "menganalisis": "مڠاناليسيس",
+            "mencipta": "منچيڤتا", "melukis": "ملوکيس", "melengkapkan": "ملڠکڤکن", "membina": "ممبينا", "beriman": "برايمان",
+            "menyakini": "ميقيني", "meyakini": "ميقيني", "melakukan": "ملاکوکن", "melaksanakan": "ملقساناکن", "menggunakan": "مڠݢوناکن",
+
+            // Kata Dasar Umum
+            "baca": "باچ", "tulis": "توليس", "sebut": "سبوت", "hafal": "حفظ", "hafaz": "حفظ", "ingat": "ايڠت",
+            "tahu": "تاهو", "faham": "فهم", "amal": "عمل", "yakin": "يقين", "iman": "ايمان", "cara": "چارا",
 
             // Istilah Agama
-            "amalan": "عملن",
-            "ibadat": "عبادة",
-            "akidah": "عقيدة",
-            "hukum": "حکوم",
-            "solat": "صلاة",
-            "puasa": "ڤواس",
-            "zakat": "زکاة",
-            "haji": "حاج",
-            "sunat": "سونت",
-            "wajib": "واجب",
-            "haram": "حرام",
-            "makruh": "مکروه",
-            "mubah": "مباح",
-            "harus": "هاروس",
-            "rukun": "روکون",
-            "syarat": "شرط",
-            "sah": "صح",
-            "batal": "بطل",
-            "allah": "الله",
-            "muhammad": "محمد",
-            "rasulullah": "رسول الله",
-            "nabi": "نبي",
-            "malaikat": "ملائکة",
+            "amalan": "عملن", "ibadat": "عبادة", "ibadah": "عبادة", "akidah": "عقيدة", "hukum": "حکوم", "solat": "صلاة",
+            "puasa": "ڤواس", "zakat": "زکاة", "haji": "حاج", "sunat": "سونت", "wajib": "واجب", "haram": "حرام",
+            "makruh": "مکروه", "mubah": "مباح", "harus": "هاروس", "rukun": "روکون", "syarat": "شرط", "sah": "صح",
+            "batal": "بطل", "allah": "الله", "muhammad": "محمد", "rasulullah": "رسول الله", "nabi": "نبي", "malaikat": "ملائکة",
+            "dalil": "دليل", "naqli": "نقلي", "aqli": "عقلي", "hadis": "حديث", "ayat": "اية", "surah": "سورة", "tuhan": "توهن",
 
             // Kata Sendi & Hubung (Tatabahasa)
-            "dan": "دان",
-            "atau": "اتاو",
-            "yang": "يڠ",
-            "ini": "اين",
-            "itu": "ايت",
-            "dengan": "دڠن",
-            "pada": "ڤد",
-            "untuk": "اونتوق",
-            "oleh": "اوليه",
-            "di": "د",
-            "ke": "ک",
-            "dari": "دري",
-            "daripada": "درڤد",
-            "kepada": "کڤد",
-            "dalam": "دالم",
-            "tentang": "تنتڠ",
-            "sebagai": "سباݢاي",
-            "seperti": "سڤرتي"
+            "dan": "دان", "atau": "اتاو", "yang": "يڠ", "ini": "اين", "itu": "ايت", "dengan": "دڠن", "pada": "ڤد",
+            "untuk": "اونتوق", "oleh": "اوليه", "di": "د", "ke": "ک", "dari": "دري", "daripada": "درڤد", "kepada": "کڤد",
+            "dalam": "دالم", "tentang": "تنتڠ", "sebagai": "سباݢاي", "seperti": "سڤرتي", "bagi": "باݢي", "supaya": "سوڤايا",
+            "agar": "اݢر", "serta": "سرتا", "akan": "اکن", "telah": "تله", "sedang": "سدڠ", "boleh": "بوليه", "secara": "سچارا",
+            "betul": "بتول", "tepat": "تڤت", "salah": "ساله", "baik": "باءيق", "sempurna": "سمڤورنا", "lancar": "لنچر",
+
+            // Numbers/Angka Rumi (Nombor Jawi menggunakan angka Arab, tetapi ejaan perkataan diubah ke Jawi)
+            "satu": "ساتو", "dua": "دوا", "tiga": "تيݢ", "empat": "امڤت", "lima": "ليم", "enam": "انم",
+            "tujuh": "توجوه", "lapan": "لاڤن", "sembilan": "سمبيلن", "sepuluh": "سڤولوه", "pertama": "ڤرتام",
+            "kedua": "کدوا", "ketiga": "کتيݢ", "keempat": "کأمڤت", "ayat": "اية", "akhir": "اخير"
         };
 
         function transliterateRumiToJawi(text) {
@@ -793,7 +718,7 @@ function doPost(e) {
 
             let words = lowerText.split(/\s+/);
             let convertedWords = words.map(word => {
-                let cleanWord = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                let cleanWord = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()0-9]/g,"");
                 if (DBP_DICTIONARY[cleanWord]) {
                     return word.replace(cleanWord, DBP_DICTIONARY[cleanWord]);
                 }
@@ -810,20 +735,29 @@ function doPost(e) {
                     if (sub2 === "th") { result += "ث"; i += 2; continue; }
                     if (sub2 === "dh") { result += "ض"; i += 2; continue; }
                     if (sub2 === "dz") { result += "ذ"; i += 2; continue; }
+                    if (sub2 === "ch") { result += "چ"; i += 2; continue; }
 
                     let char = word[i];
+                    
+                    // Pedoman vokal di awal suku kata/perkataan
+                    if (i === 0) {
+                        if (char === 'a') { result += "ا"; i++; continue; }
+                        if (char === 'i' || char === 'e') { result += "اي"; i++; continue; }
+                        if (char === 'u' || char === 'o') { result += "او"; i++; continue; }
+                    }
+
                     switch (char) {
-                        case 'a': result += "ا"; break;
+                        case 'a': result += "ا"; break; 
                         case 'b': result += "ب"; break;
                         case 'c': result += "چ"; break;
                         case 'd': result += "د"; break;
-                        case 'e': result += (i === 0 ? "ا" : "ي"); break;
+                        case 'e': result += "ي"; break; // Dianggap e-taling sebagai lalai jika tiada dlm kamus
                         case 'f': result += "ف"; break;
                         case 'g': result += "ݢ"; break;
                         case 'h': result += "ه"; break;
-                        case 'i': result += (i === 0 ? "اي" : "ي"); break;
+                        case 'i': result += "ي"; break;
                         case 'j': result += "ج"; break;
-                        case 'k': result += (i === word.length - 1 ? "ق" : "ک"); break;
+                        case 'k': result += (i === word.length - 1 ? "ق" : "ک"); break; // 'K' di akhir ditukar ke Qaf (ق)
                         case 'l': result += "ل"; break;
                         case 'm': result += "م"; break;
                         case 'n': result += "ن"; break;
@@ -834,7 +768,7 @@ function doPost(e) {
                         case 's': result += "س"; break;
                         case 't': result += "ت"; break;
                         case 'u': result += "و"; break;
-                        case 'v': result += "و"; break;
+                        case 'v': result += "ۏ"; break; // Va
                         case 'w': result += "و"; break;
                         case 'x': result += "ايکس"; break;
                         case 'y': result += "ي"; break;
@@ -1007,7 +941,6 @@ function doPost(e) {
         function autoFillFormFromFilename(filename) {
             if (!filename) return;
             
-            // Buang extension .pdf dan tukar ke huruf kecil
             let nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
             let cleanName = nameWithoutExt.toLowerCase().replace(/_/g, " ").replace(/-/g, " ");
 
@@ -1015,7 +948,6 @@ function doPost(e) {
             let detectedTahap = "";
             let detectedTahapValue = "";
 
-            // Senarai subjek untuk dikesan
             const knownSubjects = [
                 "tauhid", "fiqh", "akhlak", "sirah", "sejarah",
                 "al-quran", "alquran", "tajwid", "hafazan", "jawi",
@@ -1025,13 +957,11 @@ function doPost(e) {
 
             for (let sub of knownSubjects) {
                 if (cleanName.includes(sub)) {
-                    // Huruf besar di awal perkataan
                     detectedSubjek = sub.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
                     break;
                 }
             }
 
-            // Kesan Tahap/Darjah (D1, D2, Darjah 1, Khas, dll)
             if (cleanName.match(/\b(d1|darjah 1|tahun 1)\b/)) { detectedTahap = "Darjah 1"; detectedTahapValue = "درجه ١"; }
             else if (cleanName.match(/\b(d2|darjah 2|tahun 2)\b/)) { detectedTahap = "Darjah 2"; detectedTahapValue = "درجه ٢"; }
             else if (cleanName.match(/\b(d3|darjah 3|tahun 3)\b/)) { detectedTahap = "Darjah 3"; detectedTahapValue = "درجه ٣"; }
@@ -1041,42 +971,36 @@ function doPost(e) {
             else if (cleanName.match(/\b(taj|tadika)\b/)) { detectedTahap = "TAJ"; detectedTahapValue = "تاج"; }
             else if (cleanName.match(/\bkhas\b/)) { detectedTahap = "Darjah Khas"; detectedTahapValue = "درجه خاص"; }
 
-            // LOGIK TAMBAHAN (FALLBACK PINTAR): Jika tiada subjek rasmi dijumpai, teka dari baki perkataan pada nama fail
             if (!detectedSubjek) {
                 let sisaTeks = cleanName.replace(/\b(rpt|darjah|tahun|d[1-6]|taj|khas|penggal|minggu|pdf)\b/g, "").trim();
-                sisaTeks = sisaTeks.replace(/[0-9]/g, "").trim(); // Buang nombor (cth: 2026)
+                sisaTeks = sisaTeks.replace(/[0-9]/g, "").trim(); 
                 if (sisaTeks.length > 2) {
-                    // Ambil baki perkataan sebagai tekaan subjek (maksimum 2 patah perkataan)
                     let words = sisaTeks.split(/\s+/);
                     detectedSubjek = words.slice(0, 2).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
                 }
             }
 
-            // Bina Tajuk Rumi
             let constructedTajuk = "RPT";
             if (detectedSubjek) constructedTajuk += " " + detectedSubjek;
             if (detectedTahap) constructedTajuk += " " + detectedTahap;
 
-            // Jika gagal kesan subjek/tahap, guna nama fail asal
             if (constructedTajuk === "RPT" && nameWithoutExt !== "") {
                 constructedTajuk = nameWithoutExt;
             }
 
-            // Masukkan nilai ke dalam input
             const tajukInput = document.getElementById('tajukRumi');
             const subjekInput = document.getElementById('subjekRumi');
             const tahapSelect = document.getElementById('tahap');
 
             if (tajukInput) {
                 tajukInput.value = constructedTajuk;
-                tajukInput.dispatchEvent(new Event('input')); // Aktifkan animasi input jika ada
+                tajukInput.dispatchEvent(new Event('input')); 
             }
             
             if (subjekInput) {
                 subjekInput.value = detectedSubjek;
                 subjekInput.dispatchEvent(new Event('input'));
                 
-                // Fokus kepada ruangan subjek jika ia masih kosong, supaya pengguna perasan ia wajib diisi
                 if (!detectedSubjek) {
                     setTimeout(() => subjekInput.focus(), 100);
                     showToast("Sila lengkapkan kotak Subjek (Rumi) sebelum simpan.", "warning");
@@ -1087,7 +1011,6 @@ function doPost(e) {
                 tahapSelect.value = detectedTahapValue;
             }
 
-            // Jalankan terjemahan Jawi automatik
             autoTranslateToJawi();
         }
 
@@ -1270,6 +1193,30 @@ function doPost(e) {
             renderRptTable();
         }
 
+        // Fungsi pintar untuk mengekstrak dan menukar teks minggu kepada senarai angka yang tepat (1 hingga 43)
+        function extractWeekNumbers(text) {
+            if (!text) return [];
+            // Tukar nombor Jawi kepada nombor Arab/Rumi jika ada
+            const jawiToArab = {'٠':'0', '١':'1', '٢':'2', '٣':'3', '٤':'4', '٥':'5', '٦':'6', '٧':'7', '٨':'8', '٩':'9'};
+            let str = text.replace(/[٠-٩]/g, m => jawiToArab[m]);
+            
+            // Cari semua nombor dalam teks
+            let nums = str.match(/\d+/g);
+            if (!nums) return [];
+            nums = nums.map(Number);
+            
+            // Pengecaman Julat (Contoh: "1-3" atau "1 hingga 3")
+            if (str.includes('-') || str.toLowerCase().includes('hingga') || str.includes('–')) {
+                if (nums.length >= 2 && nums[0] < nums[1]) {
+                    let range = [];
+                    for (let i = nums[0]; i <= nums[1] && i <= 43; i++) range.push(i);
+                    return range;
+                }
+            }
+            // Buang nombor pelik yang melebihi 43
+            return nums.filter(n => n >= 1 && n <= 43);
+        }
+
         async function openPDFModal() {
             if (!currentFileBase64) {
                 showToast("تياد فاءيل PDF ديڤيليه.", "error");
@@ -1302,11 +1249,11 @@ function doPost(e) {
             try {
                 const loadingTask = pdfjsLib.getDocument(currentFileBase64);
                 const pdf = await loadingTask.promise;
-                extractedPdfStructuredData = [];
+                let allRawRows = []; // Pengumpulan data mentah dari semua muka surat
 
                 for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                     const progressText = document.getElementById('pdfProgressText');
-                    if (progressText) progressText.textContent = `Mengekstrak & Memformat Amiri Jawi DBP Muka Surat ${pageNum} dari ${pdf.numPages}...`;
+                    if (progressText) progressText.textContent = `Mengekstrak & Memformat Muka Surat ${pageNum} dari ${pdf.numPages}...`;
                     
                     const page = await pdf.getPage(pageNum);
                     const textContent = await page.getTextContent();
@@ -1325,12 +1272,12 @@ function doPost(e) {
                         if (x < minX) minX = x;
                         if (x + width > maxX) maxX = x + width;
 
-                        // Algoritma Kluster Y (Pemetaan Mendatar Pintar) dengan toleransi 8 koordinat
                         let matched = false;
                         for (let r of rowsMap) {
-                            if (Math.abs(r.y - y) < 8) {
+                            // Toleransi paksi-Y dinaikkan ke 12 supaya ayat berbilang baris (multiline) dikesan dengan tepat
+                            if (Math.abs(r.y - y) < 12) {
                                 r.items.push({ text: str, x: x });
-                                r.y = (r.y + y) / 2; // Puratakan Y untuk kestabilan baris
+                                r.y = (r.y + y) / 2; 
                                 matched = true;
                                 break;
                             }
@@ -1343,73 +1290,57 @@ function doPost(e) {
                     let pageWidth = maxX - minX;
                     if (pageWidth <= 0) pageWidth = 1;
 
-                    // Susunan Y dari atas ke bawah (PDF koordinat bermula di bawah)
                     rowsMap.sort((a, b) => b.y - a.y);
                     
                     let logicalRows = [];
                     let currentRow = null;
                     let currentMingguFallback = `ميڠݢو ${pageNum}`;
 
-                    // Buang perkataan "Header" yang berulang pada PDF
-                    const skipKeywords = ["mata pelajaran", "matapelajaran", "tarikh", "masa", "tarikh masa", "minggu", "tajuk", "standard kandungan", "standard pembelajaran", "catatan", "bil", "bil.", "emk", "bbm"];
-
                     rowsMap.forEach(rowGroup => {
                         let items = rowGroup.items.sort((a, b) => a.x - b.x);
                         let rowTextRaw = items.map(i => i.text).join(" ").toLowerCase();
                         
-                        let isHeader = skipKeywords.some(kw => rowTextRaw === kw) || 
+                        // Pembersihan Header secara agresif supaya tidak mengganggu auto-matching
+                        let isHeader = (rowTextRaw.includes("minggu") && (rowTextRaw.includes("tajuk") || rowTextRaw.includes("standard"))) ||
                                        (rowTextRaw.includes("standard") && rowTextRaw.includes("kandungan")) ||
-                                       (rowTextRaw.includes("standard") && rowTextRaw.includes("pembelajaran")) ||
-                                       (rowTextRaw.includes("tarikh") && rowTextRaw.includes("masa")) ||
-                                       (rowTextRaw.includes("mata") && rowTextRaw.includes("pelajaran"));
+                                       (rowTextRaw.includes("standard") && rowTextRaw.includes("pembelajaran"));
                         if(isHeader) return;
 
-                        // Agihan Teks Kepada 7 Lajur Berdasarkan Koordinat X (Ditala untuk PDF RPT SAKJ Landskap & Form)
-                        let cols = ["", "", "", "", "", "", ""];
+                        let cols = ["", "", "", ""];
                         
                         items.forEach(item => {
                             let relativeX = (item.x - minX) / pageWidth;
                             
-                            // Penetapan 7 Zon Lajur Automatik yang dikemaskini
+                            // Pelarasan Peratusan Zon X untuk menepati kotak jadual PDF SAKJ secara mutlak
                             if (relativeX < 0.12) cols[0] += item.text + " "; 
-                            else if (relativeX < 0.22) cols[1] += item.text + " ";
-                            else if (relativeX < 0.28) cols[2] += item.text + " ";
-                            else if (relativeX < 0.48) cols[3] += item.text + " ";
-                            else if (relativeX < 0.68) cols[4] += item.text + " ";
-                            else if (relativeX < 0.86) cols[5] += item.text + " ";
-                            else cols[6] += item.text + " ";
+                            else if (relativeX < 0.38) cols[1] += item.text + " ";
+                            else if (relativeX < 0.68) cols[2] += item.text + " ";
+                            else cols[3] += item.text + " ";
                         });
 
                         cols = cols.map(c => c.trim());
 
-                        // Deteksi baris baru yang lebih tepat
-                        let hasMinggu = cols[2] && (cols[2].toLowerCase().includes("minggu") || cols[2].toLowerCase().includes("m") || /\d/.test(cols[2]));
-                        let hasMataPelajaranBaru = cols[0] && cols[3]; // Jika ada Mata Pelajaran & Tajuk serentak
-                        let isNewRow = hasMinggu || (currentRow && hasMataPelajaranBaru);
+                        // Pengecaman Nombor Minggu Pintar
+                        let hasMinggu = cols[0] && /\d/.test(cols[0]);
+                        let hasTajukBaru = cols[1] && !currentRow;
+                        let isNewRow = hasMinggu || hasTajukBaru;
 
                         if (isNewRow || !currentRow) {
                             if (currentRow && (currentRow.tajuk || currentRow.stdKandungan || currentRow.stdPembelajaran)) {
                                 logicalRows.push(currentRow);
                             }
                             currentRow = {
-                                mataPelajaran: cols[0],
-                                tarikhMasa: cols[1],
-                                minggu: cols[2] || currentMingguFallback,
-                                tajuk: cols[3],
-                                stdKandungan: cols[4],
-                                stdPembelajaran: cols[5],
-                                catatan: cols[6]
+                                minggu: cols[0] || "",
+                                tajuk: cols[1],
+                                stdKandungan: cols[2],
+                                stdPembelajaran: cols[3]
                             };
-                            if(cols[2]) currentMingguFallback = cols[2]; 
                         } else {
-                            // Cantuman perenggan teks pelbagai baris ke dalam sel yang sama (dengan kemas)
-                            if(cols[0]) currentRow.mataPelajaran += (currentRow.mataPelajaran ? " " : "") + cols[0];
-                            if(cols[1]) currentRow.tarikhMasa += (currentRow.tarikhMasa ? " " : "") + cols[1];
-                            if(cols[2]) currentRow.minggu += (currentRow.minggu ? " " : "") + cols[2];
-                            if(cols[3]) currentRow.tajuk += (currentRow.tajuk ? " " : "") + cols[3];
-                            if(cols[4]) currentRow.stdKandungan += (currentRow.stdKandungan ? " " : "") + cols[4];
-                            if(cols[5]) currentRow.stdPembelajaran += (currentRow.stdPembelajaran ? " " : "") + cols[5];
-                            if(cols[6]) currentRow.catatan += (currentRow.catatan ? " " : "") + cols[6];
+                            // Gunakan "\n" untuk mengekalkan format perenggan dan point (bullet) asal PDF
+                            if(cols[0]) currentRow.minggu += (currentRow.minggu ? " " : "") + cols[0];
+                            if(cols[1]) currentRow.tajuk += (currentRow.tajuk ? "\n" : "") + cols[1];
+                            if(cols[2]) currentRow.stdKandungan += (currentRow.stdKandungan ? "\n" : "") + cols[2];
+                            if(cols[3]) currentRow.stdPembelajaran += (currentRow.stdPembelajaran ? "\n" : "") + cols[3];
                         }
                     });
 
@@ -1417,73 +1348,91 @@ function doPost(e) {
                         logicalRows.push(currentRow);
                     }
 
-                    let structuredRows = logicalRows.map(r => ({
-                        mataPelajaran: applyDBPSpellingCorrection(r.mataPelajaran),
-                        tarikhMasa: applyDBPSpellingCorrection(r.tarikhMasa),
-                        minggu: applyDBPSpellingCorrection(r.minggu),
-                        tajuk: applyDBPSpellingCorrection(r.tajuk),
-                        stdKandungan: applyDBPSpellingCorrection(r.stdKandungan),
-                        stdPembelajaran: applyDBPSpellingCorrection(r.stdPembelajaran),
-                        catatan: applyDBPSpellingCorrection(r.catatan)
-                    }));
-
-                    if (structuredRows.length > 0) {
-                        extractedPdfStructuredData.push({ page: pageNum, rows: structuredRows });
-                    }
+                    // Himpunkan baris dari muka surat ini ke dalam koleksi utama
+                    allRawRows.push(...logicalRows);
                 }
+
+                // POST-PROCESSING: MEMBINA TEMPLAT KEKAL 43 MINGGU
+                let final43Weeks = Array.from({length: 43}, (_, i) => ({
+                    minggu: (i + 1).toString(),
+                    tajuk: "",
+                    stdKandungan: "",
+                    stdPembelajaran: ""
+                }));
+
+                let currentActiveWeeks = [];
+
+                // Proses dan letakkan data PDF ke dalam slot 43 minggu
+                allRawRows.forEach(r => {
+                    let parsedWeeks = extractWeekNumbers(r.minggu);
+                    if (parsedWeeks.length > 0) {
+                        currentActiveWeeks = parsedWeeks;
+                    }
+                    
+                    let tajuk = applyDBPSpellingCorrection(r.tajuk);
+                    let stdK = applyDBPSpellingCorrection(r.stdKandungan);
+                    let stdP = applyDBPSpellingCorrection(r.stdPembelajaran);
+
+                    if (currentActiveWeeks.length > 0) {
+                        currentActiveWeeks.forEach(wNum => {
+                            if (wNum >= 1 && wNum <= 43) {
+                                let idx = wNum - 1;
+                                // Gabungkan ayat jika terdapat tajuk bersambung di minggu yang sama
+                                if (tajuk) final43Weeks[idx].tajuk += (final43Weeks[idx].tajuk ? "\n" : "") + tajuk;
+                                if (stdK) final43Weeks[idx].stdKandungan += (final43Weeks[idx].stdKandungan ? "\n" : "") + stdK;
+                                if (stdP) final43Weeks[idx].stdPembelajaran += (final43Weeks[idx].stdPembelajaran ? "\n" : "") + stdP;
+                            }
+                        });
+                    }
+                });
+
+                // Set struktur baru ke dalam pembolehubah paparan
+                extractedPdfStructuredData = [{ page: 'Keseluruhan', rows: final43Weeks }];
 
                 if (container) {
                     container.innerHTML = "";
-                    if (extractedPdfStructuredData.length === 0) {
+                    if (allRawRows.length === 0) {
                         container.innerHTML = `<p class="text-center text-slate-500 py-8">تياد تيكس دابايت داءکستريک درڤد PDF اين.</p>`;
                     } else {
-                        extractedPdfStructuredData.forEach(group => {
-                            const pageDiv = document.createElement('div');
-                            pageDiv.className = "mb-6 bg-white rounded-xl border border-emerald-200 overflow-hidden shadow-sm";
-                            
-                            let rowsHtml = "";
-                            group.rows.forEach((row, idx) => {
-                                rowsHtml += `
-                                    <tr class="hover:bg-emerald-50/70 transition-colors even:bg-slate-50/60 border-b border-slate-100">
-                                        <td class="py-3 px-2 text-center text-sm font-bold text-emerald-900 bg-emerald-50/50 border-l border-slate-200 font-sans align-top">${idx + 1}</td>
-                                        <td class="py-3 px-2 text-center text-slate-800 jawi-amiri text-lg border-l border-slate-200 align-top">${row.mataPelajaran}</td>
-                                        <td class="py-3 px-2 text-center text-slate-800 jawi-amiri text-lg border-l border-slate-200 align-top">${row.tarikhMasa}</td>
-                                        <td class="py-3 px-2 text-center text-sm font-bold text-amber-900 bg-amber-50/40 border-l border-slate-200 whitespace-nowrap jawi-amiri align-top">${row.minggu}</td>
-                                        <td class="py-3 px-3 text-slate-900 jawi-amiri text-xl font-bold border-l border-slate-200 align-top">${row.tajuk}</td>
-                                        <td class="py-3 px-3 text-slate-800 jawi-amiri text-lg border-l border-slate-200 align-top">${row.stdKandungan}</td>
-                                        <td class="py-3 px-3 text-slate-800 jawi-amiri text-lg border-l border-slate-200 align-top">${row.stdPembelajaran}</td>
-                                        <td class="py-3 px-3 text-slate-600 jawi-amiri text-lg align-top">${row.catatan}</td>
-                                    </tr>
-                                `;
-                            });
-
-                            pageDiv.innerHTML = `
-                                <div class="font-bold text-sm text-white bg-emerald-900 py-2.5 px-4 flex justify-between items-center font-sans" dir="ltr">
-                                    <span><i class="fas fa-file-lines text-amber-400 mr-2"></i>Muka Surat ${group.page} (${currentFileName})</span>
-                                    <span class="text-xs bg-amber-400 text-emerald-950 px-2.5 py-0.5 rounded-full font-bold">${group.rows.length} Topik RPT</span>
-                                </div>
-                                <div class="overflow-x-auto">
-                                    <table class="w-full text-right border-collapse min-w-[1000px]">
-                                        <thead class="bg-emerald-100/80 border-b border-emerald-300 font-sans text-sm text-emerald-950 font-bold">
-                                            <tr>
-                                                <th class="py-3 px-2 text-center border-l border-emerald-200 w-[5%]">بيل</th>
-                                                <th class="py-3 px-2 text-center border-l border-emerald-200 w-[12%]">مات ڤلاجرن</th>
-                                                <th class="py-3 px-2 text-center border-l border-emerald-200 w-[12%]">تاريخ / ماس</th>
-                                                <th class="py-3 px-2 text-center border-l border-emerald-200 w-[8%]">ميڠݢو</th>
-                                                <th class="py-3 px-3 border-l border-emerald-200 w-[15%]">تاجوق</th>
-                                                <th class="py-3 px-3 border-l border-emerald-200 w-[18%]">ستندرد کاندوڠن</th>
-                                                <th class="py-3 px-3 border-l border-emerald-200 w-[18%]">ستندرد ڤمبلاجرن</th>
-                                                <th class="py-3 px-3 w-[12%]">چاتتن</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="divide-y divide-slate-100">
-                                            ${rowsHtml}
-                                        </tbody>
-                                    </table>
-                                </div>
+                        // Hasilkan satu paparan jadual tunggal (43 Baris)
+                        const pageDiv = document.createElement('div');
+                        pageDiv.className = "mb-6 bg-white rounded-xl border border-emerald-200 overflow-hidden shadow-sm";
+                        
+                        let rowsHtml = "";
+                        extractedPdfStructuredData[0].rows.forEach((row) => {
+                            rowsHtml += `
+                                <tr class="hover:bg-emerald-50/70 transition-colors even:bg-slate-50/60 border-b border-slate-100">
+                                    <td class="py-3 px-2 text-center text-lg font-bold text-emerald-900 bg-emerald-50/40 border-l border-slate-200 whitespace-nowrap font-sans align-top">${row.minggu}</td>
+                                    <td class="py-3 px-3 text-slate-900 jawi-amiri text-xl font-bold border-l border-slate-200 align-top whitespace-pre-line leading-relaxed">${row.tajuk}</td>
+                                    <td class="py-3 px-3 text-slate-800 jawi-amiri text-lg border-l border-slate-200 align-top whitespace-pre-line leading-relaxed">${row.stdKandungan}</td>
+                                    <td class="py-3 px-3 text-slate-800 jawi-amiri text-lg border-l border-slate-200 align-top whitespace-pre-line leading-relaxed">${row.stdPembelajaran}</td>
+                                </tr>
                             `;
-                            container.appendChild(pageDiv);
                         });
+
+                        pageDiv.innerHTML = `
+                            <div class="font-bold text-sm text-white bg-emerald-900 py-3 px-4 flex justify-between items-center font-sans shadow-md" dir="ltr">
+                                <span><i class="fas fa-calendar-check text-amber-400 mr-2"></i>Jadual RPT Lengkap (Set 43 Minggu)</span>
+                                <span class="text-xs bg-amber-400 text-emerald-950 px-2.5 py-1 rounded-full font-bold shadow-sm">${currentFileName}</span>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-right border-collapse min-w-[800px]">
+                                    <thead class="bg-emerald-100/80 border-b border-emerald-300 font-sans text-sm text-emerald-950 font-bold">
+                                        <tr>
+                                            <th class="py-3 px-2 text-center border-l border-emerald-200 w-[10%] shadow-sm">ميڠݢو</th>
+                                            <th class="py-3 px-3 border-l border-emerald-200 w-[30%] shadow-sm">تاجوق</th>
+                                            <th class="py-3 px-3 border-l border-emerald-200 w-[30%] shadow-sm">ستندرد کاندوڠن</th>
+                                            <th class="py-3 px-3 w-[30%] shadow-sm">ستندرد ڤمبلاجرن</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-100">
+                                        ${rowsHtml}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `;
+                        container.appendChild(pageDiv);
+                        
                         const btnCopyExtracted = document.getElementById('btnCopyExtracted');
                         if (btnCopyExtracted) btnCopyExtracted.classList.remove('hidden');
                         const btnSaveGoogleSheet = document.getElementById('btnSaveGoogleSheet');
@@ -1525,12 +1474,9 @@ function doPost(e) {
 
         function copyExtractedText() {
             if (extractedPdfStructuredData.length === 0) return;
-            let fullText = "=== TABLE EXTRACT RPT SAKJ 7-LAJUR (AMIRI JAWI DBP) ===\n\n";
-            extractedPdfStructuredData.forEach(g => {
-                fullText += `--- Muka Surat ${g.page} ---\n`;
-                g.rows.forEach((r, i) => {
-                    fullText += `${i+1}. [${r.minggu}]\nMata Pelajaran: ${r.mataPelajaran}\nTarikh Masa: ${r.tarikhMasa}\nTajuk: ${r.tajuk}\nStd Kandungan: ${r.stdKandungan}\nStd Pembelajaran: ${r.stdPembelajaran}\nCatatan: ${r.catatan}\n\n`;
-                });
+            let fullText = "=== JADUAL EXTRACT RPT SAKJ (43 MINGGU LENGKAP) ===\n\n";
+            extractedPdfStructuredData[0].rows.forEach((r) => {
+                fullText += `[Minggu ${r.minggu}]\nTajuk: ${r.tajuk || '-'}\nStd Kandungan: ${r.stdKandungan || '-'}\nStd Pembelajaran: ${r.stdPembelajaran || '-'}\n\n`;
             });
             
             const textarea = document.createElement('textarea');
@@ -1539,7 +1485,7 @@ function doPost(e) {
             textarea.select();
             try {
                 document.execCommand('copy');
-                showToast("جدول 7-Lajur RPT برهاسيل دسالين ک ڤڤن كليڤ!", "success");
+                showToast("جدول 4-Lajur RPT برهاسيل دسالين ک ڤڤن كليڤ!", "success");
             } catch (err) {
                 showToast("رالت ساماس مڽالين تيكس.", "error");
             }
@@ -1560,13 +1506,10 @@ function doPost(e) {
                 g.rows.forEach(r => {
                     payloadData.push({
                         page: g.page,
-                        mataPelajaran: r.mataPelajaran,
-                        tarikhMasa: r.tarikhMasa,
                         minggu: r.minggu,
                         tajuk: r.tajuk,
                         stdKandungan: r.stdKandungan,
                         stdPembelajaran: r.stdPembelajaran,
-                        catatan: r.catatan,
                         timestamp: new Date().toISOString()
                     });
                 });
