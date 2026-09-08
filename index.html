@@ -948,7 +948,7 @@ function doPost(e) {
                 "tauhid", "fiqh", "akhlak", "sirah", "sejarah",
                 "al-quran", "alquran", "tajwid", "hafazan", "jawi",
                 "muamalat", "munakahat", "jinayat", "tarikh",
-                "bahasa arab", "matematik", "sains"
+                "bahasa arab", "matematik", "sains", "pendidikan islam", "fardu ain", "ibadat", "amali"
             ];
 
             for (let sub of knownSubjects) {
@@ -960,14 +960,25 @@ function doPost(e) {
             }
 
             // Kesan Tahap/Darjah (D1, D2, Darjah 1, Khas, dll)
-            if (cleanName.match(/\bd1\b/) || cleanName.match(/darjah 1/)) { detectedTahap = "Darjah 1"; detectedTahapValue = "درجه ١"; }
-            else if (cleanName.match(/\bd2\b/) || cleanName.match(/darjah 2/)) { detectedTahap = "Darjah 2"; detectedTahapValue = "درجه ٢"; }
-            else if (cleanName.match(/\bd3\b/) || cleanName.match(/darjah 3/)) { detectedTahap = "Darjah 3"; detectedTahapValue = "درجه ٣"; }
-            else if (cleanName.match(/\bd4\b/) || cleanName.match(/darjah 4/)) { detectedTahap = "Darjah 4"; detectedTahapValue = "درجه ٤"; }
-            else if (cleanName.match(/\bd5\b/) || cleanName.match(/darjah 5/)) { detectedTahap = "Darjah 5"; detectedTahapValue = "درجه ٥"; }
-            else if (cleanName.match(/\bd6\b/) || cleanName.match(/darjah 6/)) { detectedTahap = "Darjah 6"; detectedTahapValue = "درجه ٦"; }
-            else if (cleanName.match(/\btaj\b/) || cleanName.match(/tadika/)) { detectedTahap = "TAJ"; detectedTahapValue = "تاج"; }
+            if (cleanName.match(/\b(d1|darjah 1|tahun 1)\b/)) { detectedTahap = "Darjah 1"; detectedTahapValue = "درجه ١"; }
+            else if (cleanName.match(/\b(d2|darjah 2|tahun 2)\b/)) { detectedTahap = "Darjah 2"; detectedTahapValue = "درجه ٢"; }
+            else if (cleanName.match(/\b(d3|darjah 3|tahun 3)\b/)) { detectedTahap = "Darjah 3"; detectedTahapValue = "درجه ٣"; }
+            else if (cleanName.match(/\b(d4|darjah 4|tahun 4)\b/)) { detectedTahap = "Darjah 4"; detectedTahapValue = "درجه ٤"; }
+            else if (cleanName.match(/\b(d5|darjah 5|tahun 5)\b/)) { detectedTahap = "Darjah 5"; detectedTahapValue = "درجه ٥"; }
+            else if (cleanName.match(/\b(d6|darjah 6|tahun 6)\b/)) { detectedTahap = "Darjah 6"; detectedTahapValue = "درجه ٦"; }
+            else if (cleanName.match(/\b(taj|tadika)\b/)) { detectedTahap = "TAJ"; detectedTahapValue = "تاج"; }
             else if (cleanName.match(/\bkhas\b/)) { detectedTahap = "Darjah Khas"; detectedTahapValue = "درجه خاص"; }
+
+            // LOGIK TAMBAHAN (FALLBACK PINTAR): Jika tiada subjek rasmi dijumpai, teka dari baki perkataan pada nama fail
+            if (!detectedSubjek) {
+                let sisaTeks = cleanName.replace(/\b(rpt|darjah|tahun|d[1-6]|taj|khas|penggal|minggu|pdf)\b/g, "").trim();
+                sisaTeks = sisaTeks.replace(/[0-9]/g, "").trim(); // Buang nombor (cth: 2026)
+                if (sisaTeks.length > 2) {
+                    // Ambil baki perkataan sebagai tekaan subjek (maksimum 2 patah perkataan)
+                    let words = sisaTeks.split(/\s+/);
+                    detectedSubjek = words.slice(0, 2).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                }
+            }
 
             // Bina Tajuk Rumi
             let constructedTajuk = "RPT";
@@ -988,10 +999,18 @@ function doPost(e) {
                 tajukInput.value = constructedTajuk;
                 tajukInput.dispatchEvent(new Event('input')); // Aktifkan animasi input jika ada
             }
-            if (subjekInput && detectedSubjek) {
+            
+            if (subjekInput) {
                 subjekInput.value = detectedSubjek;
                 subjekInput.dispatchEvent(new Event('input'));
+                
+                // Fokus kepada ruangan subjek jika ia masih kosong, supaya pengguna perasan ia wajib diisi
+                if (!detectedSubjek) {
+                    setTimeout(() => subjekInput.focus(), 100);
+                    showToast("Sila lengkapkan kotak Subjek (Rumi) sebelum simpan.", "warning");
+                }
             }
+            
             if (tahapSelect && detectedTahapValue) {
                 tahapSelect.value = detectedTahapValue;
             }
