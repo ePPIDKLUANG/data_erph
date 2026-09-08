@@ -119,7 +119,7 @@
         </nav>
 
         <div class="p-4 border-t border-emerald-800/80 text-center text-xs text-emerald-300/80 bg-emerald-950/30" dir="ltr">
-            &copy; 2026 Sistem RPT SAKJ Johor v3.0 (Fix Data Kosong)
+            &copy; 2026 Sistem RPT SAKJ Johor v3.1 (Kamus DBP Lengkap)
         </div>
     </aside>
 
@@ -612,7 +612,7 @@ function doPost(e) {
     
     // Semak dan bina 8 header JAWI jika fail sheet kosong
     if (sheet.getLastRow() === 0) {
-      sheet.appendRow(["بيل", "مات ڤلاجرن", "تاريخ / ماس", "ميڠݢو", "تاجوق", "استاند کاندوڠن", "استاند ڤمبلاجرن", "چاتتن"]);
+      sheet.appendRow(["بيل", "مات ڤلاجرن", "تاريخ / ماس", "ميڠݢو", "تاجوق", "ستندرد کاندوڠن", "ستندرد ڤمبلاجرن", "چاتتن"]);
     }
     
     var lastRow = sheet.getLastRow();
@@ -643,11 +643,12 @@ function doPost(e) {
 
     <script>
         // HARDCODED GOOGLE SCRIPT URL PROVIDED BY USER
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-OlDrArZrCR3oNS_SXSyk6NF7xoRoDuDBRuvMF1vcDbVdQYxtumEPFIIeL1J3PLkK/exec";
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwdhgPixl-BttLmxl4FZrKvygxUTiMWOW2zwv9TdOEEc51tvKQSecfQb0DigNOFsYk3/exec";
 
         const DBP_DICTIONARY = {
-            "matematik": "ماتماتيق",
-            "sains": "ساينس",
+            // Subjek & Agama
+            "matematik": "ماتماتيک",
+            "sains": "ساءينس",
             "bahasa melayu": "بهاس ملايو",
             "bahasa inggeris": "بهاس ايڠݢريس",
             "bahasa arab": "بهاس عرب",
@@ -664,16 +665,24 @@ function doPost(e) {
             "muamalat": "معاملات",
             "munakahat": "مناكحات",
             "jinayat": "جنايات",
+            "faraid": "فرائض",
+            "pendidikan islam": "ڤنديديقن إسلام",
+            "fardu ain": "فرض عين",
+            "amali": "عملي",
+            
+            // Terminologi RPT & Sekolah
             "tarikh": "تاريخ",
             "masa": "ماس",
+            "hari": "هاري",
             "darjah": "درجه",
             "penggal": "ڤڠݢل",
             "tahun": "تاهون",
             "minggu": "ميڠݢو",
             "tajuk": "تاجوق",
-            "standard": "استاند",
+            "standard": "ستندرد",
             "kandungan": "کاندوڠن",
             "pembelajaran": "ڤمبلاجرن",
+            "pengajaran": "ڤڠاجرن",
             "objektif": "اوبجيکتيف",
             "cadangan": "چادڠن",
             "aktiviti": "اکتيويتي",
@@ -695,11 +704,40 @@ function doPost(e) {
             "pelajaran": "ڤلاجرن",
             "murid": "موريد",
             "guru": "ݢورو",
+            "kssr": "ک.س.س.ر.",
+            "kurikulum": "کوريکولوم",
+            "silibus": "سيلبوس",
+            "unit": "اونيت",
+            "bab": "باب",
+            "kemahiran": "کماهيرن",
+            "asas": "اساس",
+            "konsep": "کونسيڤ",
+            "pengenalan": "ڤڠنلن",
+            "penilaian": "ڤنيلاين",
+            "kriteria": "کريتريا",
+            "kejayaan": "کجاياءن",
+
+            // Kata Kerja (Taksonomi Bloom dll)
             "memahami": "ممهمي",
             "menghafaz": "مڠحفظ",
             "membaca": "ممباچ",
             "menulis": "منوليس",
             "menghayati": "مڠهياتي",
+            "menyatakan": "مڽتاکن",
+            "menerangkan": "منرڠکن",
+            "menjelaskan": "منجلسکن",
+            "mengenal": "مڠنل",
+            "pasti": "ڤستي",
+            "mengenal pasti": "مڠنل ڤستي",
+            "menyenaraikan": "مڽنارايکن",
+            "membezakan": "ممبيزاکن",
+            "mengaplikasi": "مڠاڤليکاسي",
+            "dapat": "داڤت",
+            "mampu": "ممڤو",
+            "memberi": "ممبري",
+            "contoh": "چونتوه",
+
+            // Istilah Agama
             "amalan": "عملن",
             "ibadat": "عبادة",
             "akidah": "عقيدة",
@@ -713,7 +751,36 @@ function doPost(e) {
             "haram": "حرام",
             "makruh": "مکروه",
             "mubah": "مباح",
-            "harus": "هاروس"
+            "harus": "هاروس",
+            "rukun": "روکون",
+            "syarat": "شرط",
+            "sah": "صح",
+            "batal": "بطل",
+            "allah": "الله",
+            "muhammad": "محمد",
+            "rasulullah": "رسول الله",
+            "nabi": "نبي",
+            "malaikat": "ملائکة",
+
+            // Kata Sendi & Hubung (Tatabahasa)
+            "dan": "دان",
+            "atau": "اتاو",
+            "yang": "يڠ",
+            "ini": "اين",
+            "itu": "ايت",
+            "dengan": "دڠن",
+            "pada": "ڤد",
+            "untuk": "اونتوق",
+            "oleh": "اوليه",
+            "di": "د",
+            "ke": "ک",
+            "dari": "دري",
+            "daripada": "درڤد",
+            "kepada": "کڤد",
+            "dalam": "دالم",
+            "tentang": "تنتڠ",
+            "sebagai": "سباݢاي",
+            "seperti": "سڤرتي"
         };
 
         function transliterateRumiToJawi(text) {
@@ -1297,19 +1364,19 @@ function doPost(e) {
                                        (rowTextRaw.includes("mata") && rowTextRaw.includes("pelajaran"));
                         if(isHeader) return;
 
-                        // Agihan Teks Kepada 7 Lajur Berdasarkan Koordinat X (Lebar Halaman dilaras tepat)
+                        // Agihan Teks Kepada 7 Lajur Berdasarkan Koordinat X (Ditala untuk PDF RPT SAKJ Landskap & Form)
                         let cols = ["", "", "", "", "", "", ""];
                         
                         items.forEach(item => {
                             let relativeX = (item.x - minX) / pageWidth;
                             
-                            // Penetapan 7 Zon Lajur Automatik (Ditala untuk PDF RPT SAKJ Landskap)
-                            if (relativeX < 0.14) cols[0] += item.text + " "; 
-                            else if (relativeX < 0.25) cols[1] += item.text + " ";
-                            else if (relativeX < 0.33) cols[2] += item.text + " ";
-                            else if (relativeX < 0.50) cols[3] += item.text + " ";
+                            // Penetapan 7 Zon Lajur Automatik yang dikemaskini
+                            if (relativeX < 0.12) cols[0] += item.text + " "; 
+                            else if (relativeX < 0.22) cols[1] += item.text + " ";
+                            else if (relativeX < 0.28) cols[2] += item.text + " ";
+                            else if (relativeX < 0.48) cols[3] += item.text + " ";
                             else if (relativeX < 0.68) cols[4] += item.text + " ";
-                            else if (relativeX < 0.85) cols[5] += item.text + " ";
+                            else if (relativeX < 0.86) cols[5] += item.text + " ";
                             else cols[6] += item.text + " ";
                         });
 
@@ -1404,8 +1471,8 @@ function doPost(e) {
                                                 <th class="py-3 px-2 text-center border-l border-emerald-200 w-[12%]">تاريخ / ماس</th>
                                                 <th class="py-3 px-2 text-center border-l border-emerald-200 w-[8%]">ميڠݢو</th>
                                                 <th class="py-3 px-3 border-l border-emerald-200 w-[15%]">تاجوق</th>
-                                                <th class="py-3 px-3 border-l border-emerald-200 w-[18%]">استاند کاندوڠن</th>
-                                                <th class="py-3 px-3 border-l border-emerald-200 w-[18%]">استاند ڤمبلاجرن</th>
+                                                <th class="py-3 px-3 border-l border-emerald-200 w-[18%]">ستندرد کاندوڠن</th>
+                                                <th class="py-3 px-3 border-l border-emerald-200 w-[18%]">ستندرد ڤمبلاجرن</th>
                                                 <th class="py-3 px-3 w-[12%]">چاتتن</th>
                                             </tr>
                                         </thead>
