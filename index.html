@@ -532,40 +532,47 @@
 
             paparModal("سدڠ مپيمڤن...", "Data sedang dihantar ke Google Sheets. Sila tunggu sebentar...", "loading");
 
-            const data = {
-                guru: guru,
-                sekolah: sekolah,
-                minggu: minggu,
-                subjek: subjek,
-                kelas: kelas,
-                tarikh: tarikh,
-                masa: masa,
-                tajuk: tajuk,
-                sk: sk,
-                sp: sp,
-                objektif: objektif,
-                aktiviti: aktivitiStr,
-                penilaian: penilaian,
-                bbm: bbm,
-                refleksi: refleksi
-            };
+            // Menggunakan fungsi Form Data untuk mengelakkan halangan CORS
+            const formData = new URLSearchParams();
+            formData.append("guru", guru);
+            formData.append("sekolah", sekolah);
+            formData.append("minggu", minggu);
+            formData.append("subjek", subjek);
+            formData.append("kelas", kelas);
+            formData.append("tarikh", tarikh);
+            formData.append("masa", masa);
+            formData.append("tajuk", tajuk);
+            formData.append("sk", sk);
+            formData.append("sp", sp);
+            formData.append("objektif", objektif);
+            formData.append("aktiviti", aktivitiStr);
+            formData.append("penilaian", penilaian);
+            formData.append("bbm", bbm);
+            formData.append("refleksi", refleksi);
 
-            const webAppUrl = "https://script.google.com/macros/s/AKfycbxFDqZnRfRVvHdESHNo0AHmy3X2OxlFXYVfWf9n8hcvMaB0Y7XzH9BoK29N3MA28d-2/exec"; 
+            const webAppUrl = "https://script.google.com/macros/s/AKfycbxEZeKPAMDLKmFnBYGbvPgVeQBfHUne0XQB5UX-iX0qGBejBxmgD-CQxqV5IWqCLswD/exec"; 
 
             try {
-                const response = await fetch(webAppUrl, {
+                fetch(webAppUrl, {
                     method: 'POST',
-                    mode: 'no-cors', // Penting untuk mengelakkan ralat CORS Google
-                    headers: {
-                        'Content-Type': 'text/plain;charset=utf-8'
-                    },
-                    body: JSON.stringify(data)
+                    mode: 'no-cors',
+                    body: formData
+                }).then(() => {
+                    paparModal("برجایا (Berjaya)!", "Data e-RPH anda telah berjaya disimpan ke dalam Google Sheets!", "success");
+                    
+                    // Reset borang selepas berjaya simpan
+                    document.querySelector('form').reset();
+                    const objSelect = document.getElementById('erph-objektif');
+                    if(objSelect) objSelect.innerHTML = '<option value="">ڤيليه اوبجيكتيف...</option>';
+                    
+                    setTimeout(() => tutupModal(), 3000);
+                }).catch((error) => {
+                    console.error('Error!', error.message);
+                    paparModal("رالت (Ralat)", "Gagal menyimpan data. Sila pastikan capaian internet anda stabil.", "error");
                 });
-                
-                paparModal("برجایا (Berjaya)!", "Data e-RPH anda telah berjaya disimpan ke dalam Google Sheets!", "success");
             } catch (error) {
                 console.error('Error!', error.message);
-                paparModal("رالت (Ralat)", "Gagal menyimpan data. Sila pastikan capaian internet anda stabil.", "error");
+                paparModal("رالت (Ralat)", "Gagal menyimpan data.", "error");
             }
         }
 
@@ -822,7 +829,47 @@
         }
 
         function autoFillRPT() {
-            // ... (Fungsi autoFillRPT sedia ada)
+            const minggu = document.getElementById('erph-minggu').value;
+            const subjek = document.getElementById('erph-subjek').value;
+            const tahap = currentTahap;
+
+            if (!minggu || !subjek) return;
+
+            // Pastikan data wujud
+            if (rptDatabase[tahap] && rptDatabase[tahap][subjek]) {
+                const dataMinggu = rptDatabase[tahap][subjek].find(item => item.minggu == minggu);
+
+                if (dataMinggu) {
+                    // Buang tag HTML untuk input tarikh
+                    let tarikhBersih = stripHTML(dataMinggu.tarikh);
+                    document.getElementById('erph-tarikh').value = tarikhBersih;
+                    
+                    // Bersihkan tajuk dari nombor depan (contoh "١. ")
+                    let tajukBersih = dataMinggu.stdKandungan.replace(/^[٠-٩0-9]+[\.\-\)\s]+/, '').trim();
+                    document.getElementById('erph-tajuk').value = tajukBersih;
+                    
+                    document.getElementById('erph-sk').value = dataMinggu.stdKandungan;
+                    document.getElementById('erph-sp').value = dataMinggu.stdPembelajaran;
+
+                    // Jana pilihan objektif secara automatik berdasarkan Standard Pembelajaran
+                    const objSelect = document.getElementById('erph-objektif');
+                    objSelect.innerHTML = '<option value="">ڤيليه اوبجيكتيف...</option>';
+                    let spBersih = dataMinggu.stdPembelajaran.replace(/^[٠-٩0-9]+[\.\-\)\s]+/, '').trim();
+                    let opt = document.createElement('option');
+                    opt.value = spBersih;
+                    opt.innerText = spBersih;
+                    objSelect.appendChild(opt);
+                    objSelect.selectedIndex = 1; // Auto pilih objektif tersebut
+
+                    // Papar Notifikasi Berjaya
+                    paparModal("برجایا (Berjaya)", `Maklumat RPT Minggu ${minggu} berjaya dimuat turun ke dalam borang.`, "success");
+                    
+                    // Tutup modal secara automatik selepas 2 saat
+                    setTimeout(() => {
+                        tutupModal();
+                    }, 2000);
+                }
+            }
         }
 
         function switchTab(tabId) {
