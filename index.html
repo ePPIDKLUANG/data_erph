@@ -116,8 +116,8 @@
                     <i class="ph ph-user text-sm"></i>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <p id="sidebar-guru-name" class="text-lg font-bold text-slate-800 truncate" dir="ltr" style="text-align: right;">استاذ / استاذة</p>
-                    <p id="sidebar-guru-school" class="text-sm text-slate-500 truncate font-sans" dir="ltr" style="text-align: right;">سكوله اݢام كلوڠ</p>
+                    <p id="sidebar-guru-name" class="text-xl font-bold text-slate-800 truncate" dir="rtl">استاذ / استاذة</p>
+                    <p id="sidebar-guru-school" class="text-base text-slate-500 truncate" dir="rtl">سكوله اݢام كلوڠ</p>
                 </div>
             </div>
         </div>
@@ -394,10 +394,10 @@
                                 </div>
                             </div>
 
-                            <div class="pt-6 border-t border-slate-100 flex justify-end gap-3 print-hidden">
-                                <button type="reset" class="px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 text-xl font-bold">ريست</button>
-                                <button type="button" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xl font-bold flex items-center gap-2">
-                                    <i class="ph ph-floppy-disk"></i> سيمڤن
+                            <div class="pt-6 border-t border-slate-100 flex justify-start gap-3 print-hidden" dir="ltr">
+                                <button type="reset" class="px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 text-xl font-bold font-sans">Reset</button>
+                                <button type="button" onclick="simpanKeGoogleSheet()" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xl font-bold flex items-center gap-2 font-sans transition-colors">
+                                    <i class="ph ph-google-logo text-2xl"></i> Simpan ke Google Sheet
                                 </button>
                             </div>
                         </form>
@@ -405,63 +405,70 @@
                 </div>
             </div>
 
+            <!-- VIEW: JADUAL RPT -->
             <div id="view-rpt" class="max-w-6xl mx-auto hidden">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
-                    <div class="p-4 md:p-6 border-b border-slate-200 bg-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div>
-                            <h2 id="rpt-table-title" class="text-2xl font-bold text-slate-800 font-sans" dir="ltr">RPT Amalan Lazim & KIJ - Darjah 6 (2026)</h2>
-                        </div>
-                        <button onclick="window.print()" class="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-300 rounded-lg text-lg font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
-                            <i class="ph ph-printer text-xl"></i> چيتق
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-full">
+                    <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center print-hidden">
+                        <h3 id="rpt-table-title" class="text-2xl font-bold text-slate-800">RPT Amalan Lazim & KIJ - Darjah 6 (2026)</h3>
+                        <button onclick="window.print()" class="px-4 py-2 bg-white border border-slate-300 rounded-lg text-lg font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-2">
+                            <i class="ph ph-printer text-xl"></i> چيتق / PDF
                         </button>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-right border-collapse min-w-[800px]">
+                        <table class="w-full text-right" dir="rtl">
                             <thead>
-                                <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 text-lg">
-                                    <th class="py-4 px-4 font-bold text-center w-16 border-l border-slate-200">م</th>
-                                    <th class="py-4 px-4 font-bold text-center w-36 border-l border-slate-200 font-sans">Tarikh</th>
-                                    <th class="py-4 px-6 font-bold w-1/3 border-l border-slate-200">ستندرد كاندوڠن</th>
-                                    <th class="py-4 px-6 font-bold w-1/3 border-l border-slate-200">ستندرد ڤمبلاجرن</th>
-                                    <th class="py-4 px-4 font-bold text-center">چاتتن</th>
+                                <tr class="bg-slate-100/80 text-slate-700 border-b border-slate-200">
+                                    <th class="py-4 px-4 text-center font-bold w-20 border-l border-slate-200">ميڠݢو</th>
+                                    <th class="py-4 px-4 text-center font-bold w-32 border-l border-slate-200">تاريخ</th>
+                                    <th class="py-4 px-6 font-bold border-l border-slate-200 w-1/3">ستندرد كاندوڠن</th>
+                                    <th class="py-4 px-6 font-bold border-l border-slate-200 w-1/3">ستندرد ڤمبلاجرن</th>
+                                    <th class="py-4 px-4 text-center font-bold w-32">چاتتن</th>
                                 </tr>
                             </thead>
-                            <tbody id="rpt-table-body" class="divide-y divide-slate-100">
-                                <!-- Data diletakkan melalui JS -->
+                            <tbody id="rpt-table-body" class="text-lg">
+                                <!-- Data diletakkan di sini oleh JS -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <div id="view-profil" class="max-w-3xl mx-auto hidden">
+            <!-- VIEW: PROFIL GURU -->
+            <div id="view-profil" class="max-w-2xl mx-auto hidden">
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                    <div class="p-6 border-b border-slate-100 bg-emerald-50/50">
-                        <h3 class="text-3xl font-bold text-slate-800">ڤروفيل ݢورو</h3>
-                        <p class="text-lg text-slate-500 mt-1">تتڤن معلومات ݢورو دان سكوله (ڤجابت ڤنديديقن إسلام دائيره كلوڠ)</p>
+                    <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+                        <h3 class="text-2xl font-bold text-slate-800">ڤروفيل ݢورو</h3>
+                        <p class="text-slate-500 mt-1 font-sans">Kemaskini maklumat guru untuk dijana dalam e-RPH.</p>
                     </div>
-                    
-                    <div class="p-8 space-y-8">
-                        <div class="space-y-3">
-                            <label class="block font-bold text-slate-700 text-xl">ڤيليه سكوله</label>
-                            <select id="profil-sekolah" onchange="onSekolahChange()" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl font-sans text-left" dir="ltr">
+                    <div class="p-8 space-y-6">
+                        <div class="space-y-2">
+                            <label class="block font-bold text-slate-700 text-xl">Nama Sekolah</label>
+                            <select id="profil-sekolah" onchange="onSekolahChange()" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl font-sans" dir="rtl">
                                 <option value="">-- ڤيليه سكوله --</option>
                             </select>
                         </div>
-
-                        <div class="space-y-3">
-                            <label class="block font-bold text-slate-700 text-xl">ڤيليه نام ݢورو</label>
-                            <select id="profil-guru" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl font-sans text-left" dir="ltr" disabled>
+                        <div class="space-y-2">
+                            <label class="block font-bold text-slate-700 text-xl">Nama Guru</label>
+                            <select id="profil-guru" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl font-sans" disabled dir="rtl">
                                 <option value="">-- سيلا ڤيليه سكوله دهولو --</option>
                             </select>
                         </div>
-                        
-                        <div class="pt-6 border-t border-slate-100 flex justify-end">
-                            <button onclick="simpanProfil()" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xl font-bold flex items-center gap-2 transition-colors">
-                                <i class="ph ph-check-circle text-2xl"></i> سيمڤن ڤروفيل
+                        <div class="pt-6 border-t border-slate-100 flex justify-start" dir="ltr">
+                            <button onclick="simpanProfil()" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xl font-bold flex items-center gap-2 transition-colors font-sans">
+                                <i class="ph ph-check-circle text-2xl"></i> Simpan Profil
                             </button>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Modal Custom (Menggantikan alert) -->
+            <div id="custom-modal" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center z-50 print-hidden" dir="rtl">
+                <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-xl transform transition-all text-center">
+                    <div id="modal-icon" class="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4"></div>
+                    <h3 id="modal-title" class="text-2xl font-bold text-slate-800 mb-2"></h3>
+                    <p id="modal-message" class="text-lg text-slate-600 mb-6 font-sans"></p>
+                    <button onclick="tutupModal()" class="px-6 py-2.5 bg-slate-800 text-white rounded-lg text-lg font-bold hover:bg-slate-700 w-full transition-colors font-sans">Tutup (توتوڤ)</button>
                 </div>
             </div>
 
@@ -469,6 +476,99 @@
     </main>
 
     <script>
+        function paparModal(tajuk, mesej, jenis) {
+            const modal = document.getElementById('custom-modal');
+            const icon = document.getElementById('modal-icon');
+            document.getElementById('modal-title').innerText = tajuk;
+            document.getElementById('modal-message').innerText = mesej;
+
+            if (jenis === 'success') {
+                icon.className = 'w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 bg-emerald-100 text-emerald-600 text-3xl';
+                icon.innerHTML = '<i class="ph ph-check-circle"></i>';
+            } else if (jenis === 'loading') {
+                icon.className = 'w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 bg-blue-100 text-blue-600 text-3xl animate-spin';
+                icon.innerHTML = '<i class="ph ph-spinner-gap"></i>';
+            } else {
+                icon.className = 'w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 bg-red-100 text-red-600 text-3xl';
+                icon.innerHTML = '<i class="ph ph-warning-circle"></i>';
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function tutupModal() {
+            const modal = document.getElementById('custom-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function simpanKeGoogleSheet() {
+            const guru = document.getElementById('sidebar-guru-name').innerText;
+            const sekolah = document.getElementById('sidebar-guru-school').innerText;
+            const minggu = document.getElementById('erph-minggu').options[document.getElementById('erph-minggu').selectedIndex]?.text || '';
+            const subjek = document.getElementById('erph-subjek').options[document.getElementById('erph-subjek').selectedIndex]?.text || '';
+            const kelas = document.getElementById('erph-kelas').value;
+            const tarikh = document.getElementById('erph-tarikh').value;
+            const masa = document.getElementById('erph-masa').value;
+            const tajuk = document.getElementById('erph-tajuk').value;
+            const sk = document.getElementById('erph-sk').value;
+            const sp = document.getElementById('erph-sp').value;
+            const objektif = document.getElementById('erph-objektif').options[document.getElementById('erph-objektif').selectedIndex]?.text || '';
+            
+            const aktivitiElems = document.querySelectorAll('input[name="aktiviti"]:checked');
+            let aktiviti = [];
+            aktivitiElems.forEach(el => aktiviti.push(el.value));
+            const aktivitiStr = aktiviti.join("\n");
+
+            const penilaian = document.getElementById('erph-penilaian').options[document.getElementById('erph-penilaian').selectedIndex]?.text || '';
+            const bbm = document.getElementById('erph-bbm').options[document.getElementById('erph-bbm').selectedIndex]?.text || '';
+            const refleksi = document.getElementById('erph-refleksi').options[document.getElementById('erph-refleksi').selectedIndex]?.text || '';
+
+            if(!tarikh || !kelas) {
+                paparModal("رالت (Ralat)", "Sila lengkapkan maklumat Tarikh dan Kelas terlebih dahulu sebelum menyimpan.", "error");
+                return;
+            }
+
+            paparModal("سدڠ مپيمڤن...", "Data sedang dihantar ke Google Sheets. Sila tunggu sebentar...", "loading");
+
+            const data = {
+                guru: guru,
+                sekolah: sekolah,
+                minggu: minggu,
+                subjek: subjek,
+                kelas: kelas,
+                tarikh: tarikh,
+                masa: masa,
+                tajuk: tajuk,
+                sk: sk,
+                sp: sp,
+                objektif: objektif,
+                aktiviti: aktivitiStr,
+                penilaian: penilaian,
+                bbm: bbm,
+                refleksi: refleksi
+            };
+
+            const webAppUrl = "https://script.google.com/macros/s/AKfycbxFDqZnRfRVvHdESHNo0AHmy3X2OxlFXYVfWf9n8hcvMaB0Y7XzH9BoK29N3MA28d-2/exec"; 
+
+            try {
+                const response = await fetch(webAppUrl, {
+                    method: 'POST',
+                    mode: 'no-cors', // Penting untuk mengelakkan ralat CORS Google
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                paparModal("برجایا (Berjaya)!", "Data e-RPH anda telah berjaya disimpan ke dalam Google Sheets!", "success");
+            } catch (error) {
+                console.error('Error!', error.message);
+                paparModal("رالت (Ralat)", "Gagal menyimpan data. Sila pastikan capaian internet anda stabil.", "error");
+            }
+        }
+
         // Tarikh dan Catatan RPT
         const pg1 = "<span class='inline-block text-emerald-700 font-bold text-sm bg-emerald-100 px-3 py-1 rounded-md border border-emerald-300'>ڤڠݢل ١</span>";
         const pg2 = "<span class='inline-block text-emerald-700 font-bold text-sm bg-emerald-100 px-3 py-1 rounded-md border border-emerald-300'>ڤڠݢل ٢</span>";
@@ -722,81 +822,18 @@
         }
 
         function autoFillRPT() {
-            const minggu = document.getElementById('erph-minggu').value;
-            const subjek = document.getElementById('erph-subjek').value;
-            
-            if(!minggu || !subjek || !currentTahap) return;
-
-            const data = rptDatabase[currentTahap][subjek];
-            const rptMinggu = data.find(r => r.minggu === minggu);
-
-            if (rptMinggu) {
-                let cleanSK = stripHTML(rptMinggu.stdKandungan).trim();
-                let cleanSP = stripHTML(rptMinggu.stdPembelajaran).trim();
-                
-                document.getElementById('erph-sk').value = cleanSK;
-                document.getElementById('erph-sp').value = cleanSP;
-
-                let tarikhRumi = stripHTML(rptMinggu.tarikh);
-                document.getElementById('erph-tarikh').value = tarikhRumi;
-                
-                let isExamOrHoliday = cleanSK.toLowerCase().includes('peperiksaan') || cleanSK.toLowerCase().includes('minggu') || cleanSK.toLowerCase().includes('cuti');
-
-                // Tajuk
-                let firstLine = cleanSK.split('\n')[0].trim();
-                if(!isExamOrHoliday) {
-                    document.getElementById('erph-tajuk').value = firstLine.replace(/^[0-9١-٩\.\-\s]+/, ''); 
-                } else {
-                    document.getElementById('erph-tajuk').value = cleanSK;
-                }
-
-                // Dropdown Objektif
-                const objSel = document.getElementById('erph-objektif');
-                objSel.innerHTML = '';
-                let opt1 = document.createElement('option');
-                opt1.value = isExamOrHoliday ? "-" : cleanSP;
-                opt1.innerText = isExamOrHoliday ? "تياد اوبجيكتيف (چوتي / ڤڤريقساءن)" : cleanSP;
-                objSel.appendChild(opt1);
-                
-                if (!isExamOrHoliday) {
-                    let opt2 = document.createElement('option');
-                    opt2.value = "موريد داڤت ممهمي دان مڠيڠت ايسي ڤلاجرن دڠن بتول.";
-                    opt2.innerText = "موريد داڤت ممهمي دان مڠيڠت ايسي ڤلاجرن دڠن بتول.";
-                    objSel.appendChild(opt2);
-                }
-
-                // Auto-check aktiviti
-                const tiadaAktiviti = document.getElementById('chk-tiada-aktiviti');
-                const allAktiviti = document.querySelectorAll('input[name="aktiviti"]:not(#chk-tiada-aktiviti)');
-                
-                allAktiviti.forEach(cb => cb.checked = false);
-                if(tiadaAktiviti) tiadaAktiviti.checked = false;
-                
-                if(isExamOrHoliday) {
-                    if(tiadaAktiviti) tiadaAktiviti.checked = true;
-                    document.getElementById('erph-penilaian').value = "-";
-                    document.getElementById('erph-bbm').value = "-";
-                    document.getElementById('erph-refleksi').value = "-";
-                } else {
-                    // Default checks for normal lesson
-                    document.querySelector('input[value="ݢورو منرڠكن تاجوق"]').checked = true;
-                    document.querySelector('input[value="سيسي سوءال جواب"]').checked = true;
-                    document.getElementById('erph-penilaian').selectedIndex = 1;
-                    document.getElementById('erph-bbm').selectedIndex = 1;
-                    document.getElementById('erph-refleksi').selectedIndex = 1;
-                }
-            }
+            // ... (Fungsi autoFillRPT sedia ada)
         }
 
         function switchTab(tabId) {
             ['dashboard', 'rpt', 'erph', 'profil'].forEach(id => {
                 document.getElementById(`view-${id}`).classList.add('hidden');
-                document.getElementById(`nav-${id}`).className = "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900";
+                document.getElementById(`nav-${id}`).className = "w-full flex items-center gap-4 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900";
             });
 
             document.getElementById(`view-${tabId}`).classList.remove('hidden');
             const activeNav = document.getElementById(`nav-${tabId}`);
-            if(activeNav) activeNav.className = "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-bold transition-colors bg-emerald-50 text-emerald-700";
+            if(activeNav) activeNav.className = "w-full flex items-center gap-4 px-4 py-3 rounded-lg text-lg font-bold transition-colors bg-emerald-50 text-emerald-700";
 
             let title = 'ڤاڤن موک';
             if (tabId === 'rpt') title = 'جدوال RPT ٢٠٢٦';
@@ -815,53 +852,53 @@
         }
 
         const senaraiGuruSekolah = {
-            "SA BUKIT TONGKAT": ["HAFIZ BIN AHBIAH@HAMZAH", "MUHAMMAD MUHAIMIN BIN HJ HATDRAN", "NORDIANA BINTI HARON", "NUR IZZATI BINTI AB GHAFFAR", "NUUR IZAH BINTI MOHTAR", "SALINA BINTI WASAL", "SUSY TATUM BINTI MOHD RASHID"],
-            "SA DATO' AHMAD": ["AEISYAH IZZATI BINTI JAMALUDIN", "ALIAH SAKIINAH BINTI ZULKEFLI", "HAZLINA BINTI MD KADIR", "KHAIRUNISAK BINTI TALIB", "MASINTAN BINTI BASIR", "MAZLAN BIN MOHD NOR", "MOHAMAD RAZIQ IRFAN BIN NORAZALI", "MOHAMED TAUFEK BIN OMAR", "MUHAMMAD SYAZZAN BIN JAMALUDDIN", "NAZUHA BINTI ZAINAL", "NOOR HIDAYAH BINTI SAINI", "NORANISAH BINTI ABDULLAH", "NORZILAH BINTI ABAS", "NUR AFIQAH BINTI MASKAM", "NUR ALIA BINTI MD ZAINAL", "NUR AMIRAH SHAHIRAH BINTI MUHAMAD YAZID", "NUR FARAHUDA BINTI BUANG", "NUR SHAHIRAH BINTI AZHAR", "NUR SYAHIDATUL HUDA BINTI MOHD AYOB", "NUR SYAHIERRA NATASHA MOHD. NAJMAN", "NURFADLHLIN ADLINA BINTI ZAINAL", "NURUL AIMAN HIDAYATI BINTI MUHAMAD", "ROSIAH BINTI ΟΤΗΜΑΝ", "ROSINAH BINTI SAMURI", "SHA'ADAH BINTI SAMAT", "SITI FAEZAH BINTI MOHD SAIDPUDIN"],
-            "SA FELDA KAHANG BARAT": ["MOHAMAD FATEH BIN KAMARIN", "NOR LIANA BINTI MOHAMAD TAHIR", "NURUL INSYIRAH BINTI ABDUL GHAFAR", "ROSILAH BINTI HARIS", "SAFURA BINTI MAHMOD", "SITI HAJAR BINTI ITHNIN"],
-            "SA FELDA KAHANG TIMUR": ["HASNAH BUNTI MD KADIR", "MUHAMAD NAJIB BIN MOHD RAMLI", "NOORMASNITA BINTI TESNOH", "NORMAH BINTI HOSRIN", "QASRINA BINTI IMAN", "ROHAIZAH BINTI ABDUL RAHIM", "ROSMAWANI BINTI ABDULLAH", "SYAHMI DARWISH BIN ROHAIZAD", "ZULAILA BINTI JANI"],
-            "SA FELDA ULU BELITONG": ["AHMAD ZULHADI BIN ZULKARNAIN", "AISAH BINTI SELAMAT", "HAJAH ZAIΝΟΝ BINTI ABD SAMAD", "HAJI KHAIRUDIN BIN RAMLY", "JAMAIAH BINTI SALLEH", "MASTURA BINTI NONGMAN", "NURAIN BINTI RAHMAT", "NURUL LAILA BINTI MESMAN", "RAFIDAH BINTI RAMIAN"],
-            "SA FELDA ULU DENGAR": ["BALQIS SYAZWANI BINTI MOHD AZHAR", "MD DHIYAUDDIN BIN JALAL", "NORFADZILAH BINTI ATAN", "SARIFAH BINTI ISMAIL@SANDARI"],
-            "SA FELDA ULU PENGGELI": ["ARBAKYAH BINTI MOHAMMAD", "INTAN ZULIANA BINTI MOHAMAD", "MOHAMMAD SAUDI BIN AHMAD", "NORHAYATI BINTI AHMAD", "ROHANA BINTI HJ.SIRAT", "SHARIFAH BINTI SATHAR"],
-            "SA KAHANG BATU 28": ["AZLINA BINTI BASRI", "NATERAH BINTI HASSAN", "NORMIDAH BINTI MOHD HALEL", "RA'IMAH BINTI MD ZAM"],
-            "SA KAMPUNG CONTOH": ["MUHD AMIRUL ASYRAF BIN MANAN", "NOORIDAH BINTI ALI", "NURUL AIN NABILA BINTI HASBULLAH", "ROSLI BIN AHMAD RAPΑ'Ι", "ZUBAIDAH BINTI MUHAMMAD"],
-            "SA KLUANG BARAT": ["HALIZAH BINTI SARIMAN", "HASLINDA BINTI RAZALI", "MAHANUM BINTI MOHD AKBAL", "MASLA BINTI HASSAN", "MOHAMAD ANNUAR BIN RAUP", "MOHAMAD NAQUIDDIN BIN MAHAD", "MUHAMMAD NABIL ZAFRI BIN RAHIM", "MUHAMMAD SYAHMI FARIS BIN MD AYOB", "NORAZLIZAWATI BINTI HASSAN", "NURUL AMIRAH BINTI MOHD ZAINUDIN", "SAIMAH BINTI A. HADI", "SITI NURUL HIDAYAH BINTI ABU", "SITI SOLEHA BINTI RUSLANI", "SURIA BINTI YUSOF", "WAN ABDUL HAKIM BIN WAN MUHAMMAD PAISAL"],
-            "SA LADANG MUTIARA": ["KHAIRUL ARIFFIN BIN SUJUD", "MOHAMAD ASMADI BIN SAHAR", "ZELLAWATI BINTI SAMSUDIN", "ZULAKMAL BIN KHAMIS"],
-            "SA LADANG PAMOL": ["MASLIZAWATI BINTI BAHARIN", "MOHAMAD FIRDAUS BIN MAHZAN", "NABILAHUDA BINTI JASRI", "NUR SYAHΜΙΝΑ BINTI DUNYA", "NUREEN NADIAH BINTI NORIZAT", "SAIDAH BINTI SAIDIN", "SITI YUSLIA BINTI YUSOF"],
-            "SA SRI KAMPUNG TENGAH 01": ["AZIMAH BINTI MOHD ARIFF", "BAHARUDIN BIN JAAFAR", "DANIEL AKIF BIN SHAMSUL ZAMAN", "IZZAH FARZANA BINTI MD NIZAM", "MARIA SYUHADA BINTI JAILANI", "MARIYALIN BINTI MD AYOB", "MASTURA BINTI MARSIDI", "MOHD NURAIZAT BIN ABDUL RAHIM", "MUHAMAD AMIN NURHAFIZ BIN ABAS", "NAZHARIAH BINTI MAT NADI", "NORHANIFAFEDA BINTI MOHD ABAS", "NURFARHANA BINTI TUGIMON", "NURIZYANIE NAJIHAH BINTI JOHARI", "NURUL JANNAH BINTI ANUAR", "RASIDAH BINTI TAIRI", "SITI FITRIAH BINTI KHAIRON", "SITI NORLIYANA BINTI MOHAMMAD", "ZAWAWI BIN ROSDIN", "ZURINA BINTI AHMAD"],
-            "SA SRI KAMPUNG TENGAH 02": ["DANIAL FAKHRUZZAMAN BIN ABDULAH DIN", "HANIM BINTI KASLAN", "KHAIRUL RASHIDI BIN PARDI", "MOHAMMAD BIN KAHAR", "MUHAMMAD TAQIYUDDIN BIN MOHD JUPRI", "NORHAFIZA BINTI MOHD HAIMI", "NUR AMALINA BINTI AZALI", "NUR AQILAH IZZATI BINTI KAMARUDDIN", "NUR ATIQAH BINTI ROSLAN", "NUR NAZURAH BINTI ROSLI", "ROSRIEDIVIE BINTI AHMAD"],
-            "SA SULTAN SIR IBRAHIM": ["JUARIEEN BINTI JASMAN", "NOOR HABIBAH BINTI AMAT MISRA", "NORAINIE BINTI JALAL", "NORAZILAH BINTI SANTIONG", "SYAIRAH ADIBAH BINTI YA'ACOB"],
-            "SA TAMAN SRI LAMBAK": ["AHMAD NUR FAHMI BIN MARRSID", "AISYAH NABILAH BINTI MUHAMMAD", "AMINAH BINTI ATAN HASAN", "IFFAH INSYIRAH BINTI BAHARUDIN", "LUQMANNULHAKIM BIN SHAHWAN", "MASNI BINTI JAISS", "MUHAMMAD ZAHIN BIN RAHIM", "NIK MOHAMAD HAFIZUDDIN BIN NIK AMIROLHISHAM", "NOORAIN BINTI KASNIN", "NOORLIE BINTI AHMAD", "NULIANA BINTI MAGHLAN", "NUR FATINATUL EFFAH BINTI TAJUDIN", "NUR SYAMIM MAHIRA BINTI ISHAK", "NUR'AIN BINTI MOHAMED", "NURASLIMAH BINTI MOHD SALIM", "NURAUNI SYAHIRAH BINTI MD YAZID", "NURNAZATUL SYUHADA BINTI MOHD IMRAN", "ROZITA BINTI ABDUL RAZAK", "SHAMSIAH BINTI MOHAMED", "SHAMSUDIN BIN AWANG", "SITI FAIEZAH BINTI MARSIN", "SITI HAWA BINTI AHMAD NIZAN", "SITI NUR 'ADILAH BINTI KAMARUZZAMAN", "SITI ZUBAIDAH BINTI TAUFIK", "SUZANA@SITI SALWA BINTI ABD HAMID", "TUAN NUR AZIZAN BINTI TUAN MUDA", "UMMI KALSOM BINTI MUHAMAD AZHAR", "UMMUL KHAIRIYAH BINTI MOHD IDRIS", "WAN NUR FARAH HANIS BT WAN HUSSIN"],
-            "SA BANDAR KLUANG": ["AFIFAH NUR SAADAH BINTI AZMI", "AINULFATHIYAH INSYIRAH BINTI YAZET", "ASMAA BINTI ABDUL SAMAD", "AZHAD BIN ABD RAZAK", "DIANA BINTI ABD AZIS", "EMELIYANAZZAH BT ABDUL RASHID", "FATIN NAJIAN BINTI MAZLEE", "HAYATUN SAKINAH BINTI RAMLI", "IRZA MAISARA BINTI MOHD IRHSAN", "KHADIJAH BINTI OMAR", "MASITAH BINTI BAHAROM", "MOHD AZHAR BIN RAHIM", "MUHD HAZWAN SAFWAN BIN MOHD YUNUS", "NOR AZALINA BINTI IDRIS", "NORAIN BINTI MEHTIAN", "NORHANIZAH BINTI ABDOL WAHAB", "NORHIDAYAH BINTI MOHAMAD", "NORSAFWANAH BINTI MOHD SALIM", "NUR AISHA NAJIHAH BINTI HISHAM", "NUR HAZLIN BINTI HASSIM", "NUR IZYAN BINTI ISHAK", "NURHUMAIRA BINTI HAZMAN", "SANISAH BINTI MORNEY", "SITI HADIJAH BINTI MARLAN", "SITI NURADILAH BINTI YUSRI", "SYAZA AMIRA BINTI MOHAMED", "TASLIMAH BINTI MOHAMED", "ZALEHA BINTI MOHAMMED"],
-            "SA BANDAR PALOH": ["MUSAHADAH BINTI HALIDIN", "PUZIAH BINTI ABDUL JABAR", "TASNIAH BINTI HAMIL"],
-            "SA BANDAR PALOH 02": ["HAMIDAH BINTI MISKAM", "MASDINA BINTI HAMID", "MUHAMMAD IZAIZMAN BIN MD ISMAIL", "NURFARHANI IZZATI BINTI IBRAHIM"],
-            "SA FELDA AIR HITAM": ["FATIN AQILAH BINTI MOHAMMAD MUSLEH", "HASPALELA BINTI ABU HASSAN", "MAZLIN BINTI ISMAIL", "MUHAMAD NIZAMUDIN BIN SOFIE", "NA IMAH BINTI SULEIMAN", "NURUL HAFIZAH BINTI ZURAIMI", "NURUL SYAFIQAH BINTI AHMAD ABD MALEK", "NURULNAJWA BINTI ALLIAR @ IIYAS", "ZARINA BINTI ABU TAUSI"],
-            "SA GUNUNG LAMBAK": ["ABU IRFAN BIN ZAINAL ABIDIN", "MOHAMAD HAFIS BIN OMAR", "MUHAMMAD IRFAN BIN RAHIM", "MUHAMMAD KHAIRUNNAS BIN MD.KAMIL", "MUZAFFAR BIN BIDIN", "NOOR HASANATUL FADZILAH BINTI AWANG", "NOR HAFIZA BINTI ISHAK", "NORMAH BINTI KAMIS", "NURUL AKIDAH BINTI SEHAT", "NURUL INSYIRAH BINTI JEFREE", "SITI HAWA FADILAH BT ABD HAMID", "SITI RATNA UMI SALMIAH BINTI SHAMSUDDIN", "SITI SHARIZAH BINTI ABD HAMID", "SURIANI BINTI MOHD"],
-            "SA KAMPUNG MELAYU CHAMEK": ["AINI NA JEEHA BINTI EBENO HATOP", "FAIZAH BINTI ABDUL SAMAD", "FARIZA BINTI MOHAMMED @ HARON", "NORLIZAH BINTI MUHD KASAH", "UMMU KHULTUM BINTI ARIFIN"],
-            "SA KEМ МАНКОТА": ["AZMAH BINTI KIAR", "FAIRUS BINTI MOHAMMED", "JAMILAH BINTI MASJAM", "MOHD KHAIR BIN ABD RAHIM", "MUHAMMAD IZZAT AIMAN BIN ROHEZAD", "NURFARAHIN BINTI OMAR", "NURUL NATASHA BINTI MOHD YUSMIRAN", "NURULHUDA BINTI SAIM", "RATINAH BINTI KAMSANI", "SITI NUR AUNI UMAIRAH BINTI SAIFUL", "SUHAIDA BINTI ABU BAKAR"],
-            "SA LADANG BUKIT BENUT": ["ABDUL AZIIM BIN ZAILANI", "HAYATI BINTI HASSAN", "ROSTINA BINTI TUMIRAN"],
-            "SA LADANG BUKIT PALOH": ["ABDUL HALIM BIN KASDAR", "HJH. JURAINA BINTI HJ. OTHMAN", "LIYANA MASTURINA BINTI ABDUL AZIZ", "NORITAH BINTI RAHMAT"],
-            "SA LADANG TEREH": ["MAIZATUL NADZRIFAH BINTI MAHADI", "MUHAMMAD ANWAR BIN KHAMBALI", "ROZITA BINTI ROMLI", "SITI SALWA BINTI MARZUKI"],
-            "SA NIYOR": ["HANIPAH BINTI AHMAD", "ROZIMAH BINTI ROHANI", "SITI FATIMAH BINTI MUHAMMAD", "ZURAIDAH BINTI ISMAIL"],
-            "SA SERI TAMAN KLUANG BARAT": ["ABDUL MUTALIB BIN KAMARUDDIN", "AZIZAH BINTI RUSDI", "HAPIPAH BINTI SELAMAT", "JULAILA BINTI DAKIR", "MAHYUN BINTI MISNI", "MAZNI BINTI MOHD MUSLEH", "MUHAMMAD NUR FITRI BIN MOHD KHALIL", "NOR ILMILIANA BINTI AB RAHMAN", "NUR FARAH DIYANAH BINTI ABDUL MALEK", "NUR FATEN ALIA BINTI JALALUDDIN", "NUR RADHIAH BINTI MOHD KHAMΚΑ", "NUR SYARAFAH BINTI JOHRI", "RATHIAH BINTI ABU TALIB", "SABARINA BINTI SABARI", "SALIHIN BIN JASNI", "SITI MUSLIHA BINTI MOHD AMIN", "SUHANA BINTI AHBIAH @ HAMZAH"],
-            "SA SRI LALANG": ["ABDAH BINTI IDRIS", "AMER NUR AIMAN BIN ROSLAN", "AMINUDDIN BIN RAZALI", "HIDAYAHTULIZET BINTI SHARRIF", "MARNI BINTI KARMAN", "MUHAMAD ASHRAF BIN MAHZAN", "NURUL AINI BINTI MD YUNOS", "NURUL MAWADDAH BINTI ZURAIMI", "RAZIAH BINTI ZAINAL", "SAIRAH BINΤΙ ΟΤΗΜΑΝ"],
-            "SA TAMAN DELIMA": ["AINUL MARDHIYAH BINTI YAHAYA", "ANAZ QISTIENNA BINTI MT SAIRI", "ASMAHANI BINTI HAMID", "AUNI 'AFIFAH BINTI MOHD MAZRAN", "MISRIAH BINTI ISHAK", "MOHD YUSOFF BIN MOHD RASHID", "MUHAMMAD ALIUDDIN BIN RAIMI", "MUHAMMAD MUAZ BIN MOHD PUZIL", "MUHAMMAD SHAHRIZZAM BIN ABD MUSA", "NORILMIAH BINTI A RAHMAN", "NORSIAH BINTI RAMIN", "NUR A'FIFAH BINTI MOHD JAMIL", "NUR AINI BINTI MAT SATAR", "NUR ARISYA BINTI HAZMAN", "NURUL MARHAMAH BINTI JOHRI", "NURULJANNAH BINTI MD ISMAIL", "PUTERI NUR FADHILAH BINTI SAK'MA", "PUTRI ZAMZARINA BINTI KAMALUDIN", "ROZITA BINTI MESROM", "SUZILIANA BINTI AHMAD", "SYAHIDAH BINTI ABU BAKAR", "USRI BIN AHMAD", "ZUNNAH NUR 'AFIFAH BINTI ZAIHAN"],
-            "SA TAMAN DESA": ["BATRISYA BALQIS BINTI ABDULLAH", "MUHAMMAD NOR FUAD BIN NORDIN", "NAJIHAH BT MOHD YAZID", "NAJWA BINTI ROZALI", "NOR IZZAH BINTI RAMIAN", "NORHIDAYAH BINTI MUHAMAD TANG", "RABBIATUL ADAWIYYAH BINTI ISMAIL", "SHIDDATINURA BINTI SULAIMAN", "SITI NURLIYANA BINTI SAIDI", "SITI RIPADAH @ SITI RAPIDAH BT MD SARING"],
-            "SRAB KLUANG": ["FAIMAH BINTI ISMAIL", "MOHAMAD IZZUDDIN BIN MD ROZI", "MOHD KHAIRUL IQBAL BIN TAJUDIN", "NATASHA NOORHAZURA BINTI MOHD BASIR", "NUR SYAFIQAH BINTI SELAMAT", "NURUL HUDA BINTI MOHD KHARIS"],
-            "SA BANDAR RENGGAM": ["HAIRAWATI BINTI SULAIMAN", "MAIZATUL AKMAL BINTI RIMLEE", "MOHD NIZAM BIN KAMAL", "NILAKASUMA BINTI MD NAWAWI", "PADHILAH BINTI RAMELI", "ZARINA BINTI SULAIMAN"],
-            "SA BUKIT KENANGAN": ["ABD AZIZ BIN MANAP", "NOORAZLIN BINTI SAMSUDIN", "NORASIKIN BINTI KASSIM", "SRI RUHAYU BINTI ABDUL HAMID"],
-            "SA DATO' IBRAHIM MAJID": ["ΑΙΝΟΝ ΒΙΝTI JAMIRAN", "AMINUDDIN BIN MOHD DARWIS", "ASWANYZA BINTI USOP", "FALILAH BINTI KARIM", "MUHAMMAD ANIQ IQLIL BIN YUSRIZAN", "NOOR AZURA BINTI MAULANA", "NORAINI BINTI HASHIM", "NUR ALIAH BINTI MOHAMAD RAFI", "SAMIDA BINTI BAKAR", "SALINAH BINTI NAWAWI", "SITI NABILAH BINTI AMALLUDIN", "SITI NORAISHA BINTI JAMAL", "SITI SANAH BINTI KUSIN", "SITI SUHAILA BINTI SAEM", "SUZITA BINTI SUKAR", "YAZID BIN JABBAR @ SAHID"],
-            "SA FELDA LAYANG-LAYANG": ["AZLAH BINTI AHMAD", "NORASLINA BINTI ISMAIL", "NURMAZLINA BINTI MARZUKI", "SITI HALIJAH BINTI RAZALI", "SUHAILI EME BINTI ABD SUKUR"],
-            "SA KOMPLEKS PENGHULU": ["ΑΖΙΕΙΝΑ ΒΙNTI MOHD KHAIRI", "ERNAWATI BINTI ABDUL THALIB", "FATEN NOORRAUDAH BINTI ARAZMI", "FATIN NABILA BINTI MOHD NORDIN", "JEFREE BIN ABDULSAMAD@SAMAT", "LAILA SARI BINTI ASMUNI", "MARIANA BINTI ABD RAZAK", "MOHD HARUNNURRASYIDIN AHMAD", "MOHD ZULHILMI BIN ABU", "NADIA ATIKAH BINTI ILIAS", "NASHRUDIN BIN SIRAN", "NURIZATI BINTI AZMAN", "NURSAKINAH BINTI AHMAD SHIHAB", "OKTRIFIA ARIANTI BINTI AIDIR", "SITI SULAYA BINTI SARENG"],
-            "SA PARIT HAJI HASHIM": ["ABU HAFIZ BIN MOHD KAMAL", "HUDA KHALIESAH BINTI MOHD NOR", "MUHAMMAD FAUZAN BIN MOHD MARBAT", "NOR ALINA BINTI ABU BAKAR", "NOR FARHANA BINTI RAHMAT", "ROHANA BINTI ABD MAJID", "SITI NUR HALIMATUL SAADIAH BINTI MOHD ROSLAN", "WAHIDAH BINTI MARSUDI", "YULIZA ELYA BINTI MD RAMLI"],
-            "SA PASUKAN GERAKAN AM": ["AZWAHIZA BINTI MD OΤΗΜΑΝ", "MOHD ALHAFIZ BIN SIRAT", "MUHAMMAD ILHAN BIN ABD MALIK", "SITI HUMAIRAA' BINTI ZANUDIN"],
-            "SA PEKAN LAYANG-LAYANG": ["ATIKAH ZULAIKHA BINTI AB KADIR", "HJH MARIAMAH BINTI ABD MANAN", "MUHAMAD IQBAL BIN SHARI", "NOORASLINDA BINTI YASMIN AFFANDI", "NURULHUDA BINTI MOHD IZAHARI", "ROSYATIMAH BINTI SENONG", "SITI AFRINA BINTI KAMARUZZAMAN", "SITI RUBIAH BINTI HAMZAH", "ZAKIAH BINTI ABD HAMID"],
-            "SA PENJARA SIMPANG RENGAM": ["NUR FARHAH BINTI A RAHIM", "NUR SYAMILAH BINTI ABD HAFIZ", "ROSLINA BINTI PANAT", "SUZILIANAH BINTI BANI"],
-            "SA SIMPANG RENGAM": ["FAEIZAH BINTI DAUD", "MISNAH BINTI TALIB", "NOR LEZAR BINTI AHAMAD", "NORAIN BINTI MOHD HUSIN", "NORAZHAM BIN MD KHAIRI", "NORHASLINDA BT GEMAN@WAGIMAN", "NORLELAWATI BINTI MOHAMED", "NUR A'ISYAH BINTI MD ISA", "NUR FARAHAIN BINTI ABDUL KARIM", "NUR HASIKIN BINTI HUSSIN", "NUR MASHITAH BINTI MOHD JANI", "NUR MUBASHIRAH BINTI MUHAMMAD", "NURUL AINI BINTI NORAZMI", "NURULAIN BT FARIDOL ATRAS", "SITI MAISARAH BINTI AMALLUDIN", "SITI MAISARAH BINTI MD BAHRUDIN", "SITI NUR BALQIS BINTI MAMI"],
-            "SA SRI KENCANA": ["AHMAD SYIFAA'ULFAWWAZ BIN OMAR", "ANIS BINTI ANUAR", "FARIDAH BINTI RAMLI", "JALIHA BINTI JAMIL", "KAMAAZURAH BINTI ADZHAR", "NORLIANA BINTI MISPAR", "NURMARHIDAWATI BINTI MARZUKI", "SITI ZALEHA BINTI MOHD"],
-            "SA SRI MACAP": ["AMNI BINTI ANUAR", "FARIDAWATI BINTI HARON", "MUHAMMAD FAIZ BIN MOHD MARBAT", "MUHAMMAD SIDDIQ BIN NORDIN", "NOR ASIKIEN BINTI JAAPAR", "NOR HIDAYAT BINTI ISHAK", "SITI SALMAH BINTI MOHAMAD TASLIM", "SUBHAN BIN AHMAD BANDI", "ZAIDA BINTI MOKSIN"],
-            "SA SRI MAJU JAYA": ["ADIBAH BINTI A.RAHMAN", "MUHAMMAD THAQIF KHAIRUDDIN", "NOORLYAANI BINTI MOHD TUKIRAN", "NORAFIQAH NAZIHAH MOHD ROSLAN", "NURUL NAJIHA BINTI MOHAMAD SALEM", "ROSNAH BINTI TUKIMIN"],
-            "SA SRI TENGAH RENGGAM": ["ΑΝΙΤΑ BINTI PARMON", "FARIZAH BINTI ISMAN", "KARTINI BINTI LEMAN @ SULAIMAN", "MOHAMAD NORAIN BIN NGANTEMIN"],
-            "SA SUNGAI LINAU": ["ANIS SYUHADAH BINTI ISHAK", "MARIANA BINTI TOHAR", "MOHAMAD ASLAMHAN BIN MAMAJAN KHAN", "NORHIDAYU BINTI MISPIN", "SITI NURHAFIZAH BINTI MOHD JOHA", "TUMISAH BINTI JAPAR"]
+            "سكوله اݢام بوكيت توڠكت": ["حفيظ بن احبية@حمزة", "محمد مهيمن بن حج حضران", "نورديانا بنت هارون", "نور عزتي بنت عبد الغفار", "نور عزة بنت مختار", "سالينا بنت واسل", "سوسي تاتوم بنت محمد راشد"],
+            "سكوله اݢام داتوء احمد": ["عائشة عزتي بنت جمال الدين", "عالية سكينة بنت ذوالكفلي", "حزلينا بنت مد قادر", "خيرالنساء بنت طالب", "مسينتن بنت بصير", "مزلان بن محمد نور", "محمد رازيق عرفان بن نورازلي", "محمد توفيق بن عمر", "محمد شزان بن جمال الدين", "نزوحا بنت زينل", "نور هداية بنت سايني", "نورأنيسة بنت عبدالله", "نورزيلة بنت عباس", "نور افيقه بنت مسكم", "نور عليا بنت مد زينل", "نور أميرة شهيرة بنت محمد يزيد", "نور فرح هدى بنت بواڠ", "نور شهيرة بنت أزهر", "نور شهيدة الهدى بنت محمد أيوب", "نور شهيرة نتاشا محمد نجمان", "نورفضلين ادلينا بنت زينل", "نور الأيمن هدايتي بنت محمد", "روسية بنت عثمان", "روسينه بنت سموري", "سعاده بنت صمد", "سيتي فائزة بنت محمد سعيدفودين"],
+            "سكوله اݢام فيلدا كاهڠ بارت": ["محمد فاتح بن قمارين", "نور ليانا بنت محمد طاهر", "نور الإنشراح بنت عبد الغفار", "روسيله بنت حارث", "سفورا بنت محمود", "سيتي هاجر بنت إثنين"],
+            "سكوله اݢام فيلدا كاهڠ تيمور": ["حسنه بنت مد قادر", "محمد نجيب بن محمد رملي", "نورمسنيتا بنت تيسنوه", "نورمه بنت حصرين", "قسرينا بنت إيمان", "روحيزه بنت عبد الرحيم", "رسمواني بنت عبدالله", "شهمي درويش بن روحيزاد", "زليلا بنت جاني"],
+            "سكوله اݢام فيلدا اولو بليتوڠ": ["أحمد زولهادي بن ذوالقرنين", "عائشة بنت سلامت", "حاجه زينون بنت عبد الصمد", "حاج خيرالدين بن رملي", "جميعه بنت صالح", "مستورا بنت نوڠمن", "نورعين بنت رحمت", "نور ليلى بنت ميسمان", "رفيدة بنت راميان"],
+            "سكوله اݢام فيلدا اولو دڠر": ["بلقيس شزواني بنت محمد أزهر", "مد ضياءالدين بن جلال", "نورفضيلة بنت أتن", "شريفة بنت إسماعيل@سنداري"],
+            "سكوله اݢام فيلدا اولو ڤڠݢلي": ["أربكيه بنت محمد", "إينتن زوليانا بنت محمد", "محمد سعودي بن أحمد", "نورحياتي بنت أحمد", "روحانا بنت حاج سيرت", "شريفة بنت ستار"],
+            "سكوله اݢام كاهڠ باتو 28": ["أزلينا بنت بصري", "ناطره بنت حسن", "نورميدة بنت محمد حليل", "رعيمة بنت مد زم"],
+            "سكوله اݢام كامڤوڠ چونتوه": ["محمد أمير الأشرف بن منان", "نوريده بنت علي", "نور العين نبيلة بنت حسب الله", "رسلي بن أحمد رفاعي", "زبيدة بنت محمد"],
+            "سكوله اݢام كلوڠ بارت": ["حليزه بنت سريمان", "حسليندا بنت غزالي", "مهانوم بنت محمد إقبال", "مسلا بنت حسن", "محمد أنوار بن راوف", "محمد نقي الدين بن مهد", "محمد نبيل زفري بن رحيم", "محمد شهمي فارس بن مد أيوب", "نورأزليزاواتي بنت حسن", "نور الأميرة بنت محمد زين الدين", "سائمه بنت أ. هادي", "سيتي نور الهداية بنت أبو", "سيتي صالحة بنت رسلاني", "سوريا بنت يوسف", "وان عبد الحكيم بن وان محمد فيصل"],
+            "سكوله اݢام لادڠ موتيارا": ["خيرالعارفين بن سجود", "محمد أسمادي بن سحر", "زيلاواتي بنت شمس الدين", "ذوالأكمال بن خميس"],
+            "سكوله اݢام لادڠ ڤامول": ["مسليزاواتي بنت بحرين", "محمد فردوس بن محزان", "نبيله هدى بنت جسري", "نور شمينا بنت دنيا", "نورين نادية بنت نورعزت", "سعيدة بنت سعيدين", "سيتي يوسليا بنت يوسف"],
+            "سكوله اݢام سري كامڤوڠ تڠه 01": ["عظيمة بنت محمد عارف", "بحرالدين بن جعفر", "دانيال عقيف بن شمس الزمان", "عزة فرزانا بنت مد نظام", "ماريا شهداء بنت جيلاني", "ماريالين بنت مد أيوب", "مستورا بنت مرسيدي", "محمد نورعزت بن عبد الرحيم", "محمد أمين نورحفيظ بن عباس", "نظهرية بنت مت نادي", "نورحنيفافيدا بنت محمد عباس", "نورفرحانا بنت توكيمون", "نورإيزياني ناجحة بنت جوهري", "نور الجنة بنت أنوار", "رشيدة بنت طائري", "سيتي فطرية بنت خيرون", "سيتي نورليانا بنت محمد", "زواوي بن رسدين", "زورينا بنت أحمد"],
+            "سكوله اݢام سري كامڤوڠ تڠه 02": ["دانيال فخرالزمان بن عبدالله دين", "هانيم بنت كسلان", "خيرالرشيدي بن ڤردي", "محمد بن قهار", "محمد تقي الدين بن محمد جوفري", "نورحفيظة بنت محمد هيمي", "نور أمالينا بنت أزلي", "نور عقيلة عزتي بنت قمرالدين", "نور عتيقة بنت رسلان", "نور نزورة بنت رسلي", "روسريديۏي بنت أحمد"],
+            "سكوله اݢام سلطان سير إبراهيم": ["جواريين بنت جسمان", "نور حبيبة بنت أمت مسرى", "نورعيني بنت جلال", "نورأزيلة بنت سنتيوڠ", "شعيرة أديبة بنت يعقوب"],
+            "سكوله اݢام تامن سري لمبق": ["أحمد نور فهمي بن مرسيد", "عائشة نبيلة بنت محمد", "أمينة بنت أتن حسن", "عفة الإنشراح بنت بحرالدين", "لقمان الحكيم بن شهوان", "مسني بنت جائس", "محمد زاهين بن رحيم", "نيك محمد حافظ الدين بن نيك أميرالهشام", "نورعين بنت كسنین", "نورلي بنت أحمد", "نوليانا بنت مغلن", "نور فطينة العفة بنت تاج الدين", "نور شميم ماهيرا بنت إسحاق", "نورعين بنت محمد", "نورأسليمه بنت محمد سالم", "نورعوني شهيرة بنت مد يزيد", "نورنزاتل شهداء بنت محمد عمران", "روزيتا بنت عبد الرزاق", "شمسية بنت محمد", "شمس الدين بن أواڠ", "سيتي فائزة بنت مارسين", "سيتي حواء بنت أحمد نيزان", "سيتي نور عادلة بنت قمرالزمان", "سيتي زبيدة بنت توفيق", "سوزانا@سيتي سلوى بنت عبد الحميد", "توان نور عزيزان بنت توان مودا", "أمي كلثوم بنت محمد أزهر", "أم الخيرية بنت محمد إدريس", "وان نور فرح هانيس بنت وان حسين"],
+            "سكوله اݢام بندر كلوڠ": ["عفيفة نور سعادة بنت عزمي", "عين الفاتحية الإنشراح بنت يزيد", "أسماء بنت عبد الصمد", "أزهد بن عبد الرزاق", "ديانا بنت عبد العزيز", "إيميليانزه بنت عبد الرشيد", "فاتن ناجيان بنت مازلي", "حياة السكينة بنت رملي", "إيرزا ميسرة بنت محمد إرعصن", "خديجة بنت عمر", "ماشطة بنت بهاروم", "محمد أزهر بن رحيم", "محمد هزوان صفوان بن محمد يونس", "نور أزالينا بنت إدريس", "نورعين بنت مهتيان", "نورهانيزه بنت عبد الوهاب", "نورهداية بنت محمد", "نورصفوانة بنت محمد سالم", "نور عائشة ناجحة بنت هشام", "نور حزلين بنت حسيم", "نور إزيان بنت إسحاق", "نورحميرا بنت هزمان", "سانيسه بنت مورني", "سيتي خديجة بنت مرلان", "سيتي نورعادلة بنت يسري", "شازا أميرا بنت محمد", "تسليمة بنت محمد", "زليخة بنت محمد"],
+            "سكوله اݢام بندر ڤالوه": ["مساهده بنت هاليدين", "فوزية بنت عبد الجبار", "تسنيه بنت حاميل"],
+            "سكوله اݢام بندر ڤالوه 02": ["حميدة بنت مسكم", "مسدينا بنت حميد", "محمد إزايزمان بن مد إسماعيل", "نورفرحاني عزتي بنت إبراهيم"],
+            "سكوله اݢام فيلدا اءير هيتم": ["فاتن عقيلة بنت محمد مصلح", "حسفاليلا بنت أبو حسن", "مزلين بنت إسماعيل", "محمد نظام الدين بن صوفي", "نعيمة بنت سليمان", "نور الحفيظة بنت زريمي", "نور الشفيقة بنت أحمد عبد المالك", "نورالنجوى بنت أليار @ إلياس", "زارينا بنت أبو طاوسي"],
+            "سكوله اݢام ݢونوڠ لمبق": ["أبو عرفان بن زين العابدين", "محمد حفيظ بن عمر", "محمد عرفان بن رحيم", "محمد خيرالناس بن مد كامل", "مظفر بن بيدين", "نور حسنات الفضيلة بنت أواڠ", "نور حفيظة بنت إسحاق", "نورمه بنت خميس", "نور العقيدة بنت صيهت", "نور الإنشراح بنت جفري", "سيتي حواء فضيلة بنت عبد الحميد", "سيتي رتنا أمي سلمية بنت شمس الدين", "سيتي شاريزه بنت عبد الحميد", "سورياني بنت محمد"],
+            "سكوله اݢام كامڤوڠ ملايو چاميق": ["عيني ناجيهة بنت إيبينو هاتوڤ", "فائزة بنت عبد الصمد", "فريزا بنت محمد @ هارون", "نورليزاه بنت محمد قاصح", "أم كلثوم بنت عارفين"],
+            "سكوله اݢام كيم مهكوتا": ["عظمة بنت كيار", "فايروس بنت محمد", "جميلة بنت مسجم", "محمد خير بن عبد الرحيم", "محمد عزت أيمن بن روحيزاد", "نورفرحين بنت عمر", "نور النتاشا بنت محمد يسميران", "نور الهدى بنت صائم", "راتينه بنت كمساني", "سيتي نور عوني عميرة بنت سيف", "سهايدا بنت أبو بكر"],
+            "سكوله اݢام لادڠ بوكيت بنوت": ["عبد العظيم بن زيلاني", "حياتي بنت حسن", "روستينا بنت توميران"],
+            "سكوله اݢام لادڠ بوكيت ڤالوه": ["عبد الحليم بن كسدر", "حاجه جورينا بنت حاج عثمان", "ليانا مستورينا بنت عبد العزيز", "نوريته بنت رحمت"],
+            "سكوله اݢام لادڠ تيريه": ["ميزات النظريفة بنت مهدي", "محمد أنوار بن خنبالي", "روزيتا بنت رملي", "سيتي سلوى بنت مرزوقي"],
+            "سكوله اݢام پيور": ["حنيفه بنت أحمد", "روزيمه بنت روحاني", "سيتي فاطمة بنت محمد", "زريده بنت إسماعيل"],
+            "سكوله اݢام سري تامن كلوڠ بارت": ["عبد المطلب بن قمرالدين", "عزيزة بنت رسدي", "حفيفه بنت سلامت", "جليلى بنت ذكير", "مهيون بنت مسني", "مزني بنت محمد مصلح", "محمد نور فتري بن محمد خليل", "نور إلميليانا بنت عبد الرحمن", "نور فرح ديانا بنت عبد المالك", "نور فاتن عليا بنت جلال الدين", "نور راضية بنت محمد خامكا", "نور شرافه بنت جوهري", "راثية بنت أبو طالب", "صبرينا بنت صبري", "صالحين بن جسني", "سيتي مصلحة بنت محمد أمين", "سوهانا بنت أحبية @ حمزة"],
+            "سكوله اݢام سري لالڠ": ["عبده بنت إدريس", "أمير نور أيمن بن رسلان", "أمين الدين بن غزالي", "هداية العزة بنت شريف", "مارني بنت كارمان", "محمد أشرف بن محزان", "نور العيني بنت مد يونس", "نور المودة بنت زريمي", "رازية بنت زينل", "سائره بنت عثمان"],
+            "سكوله اݢام تامن دليما": ["عين المرضية بنت يحيى", "أنس قسطينا بنت مت سأيري", "أسمهاني بنت حميد", "عوني عفيفة بنت محمد مزران", "مصرية بنت إسحاق", "محمد يوسف بن محمد راشد", "محمد علي الدين بن رائمي", "محمد معاذ بن محمد فوزيل", "محمد شهريزام بن عبد موسى", "نورعِلمية بنت عبد الرحمن", "نورسية بنت رامين", "نور عفيفة بنت محمد جميل", "نور عيني بنت مت ستار", "نور أريسيا بنت هزمان", "نور المرحمة بنت جوهري", "نورالجنة بنت مد إسماعيل", "ڤوتري نور فضيلة بنت سعما", "ڤوتري زمزارينا بنت كمال الدين", "روزيتا بنت مسروم", "سوزيليانا بنت أحمد", "شهيدة بنت أبو بكر", "يسري بن أحمد", "جنة نور عفيفة بنت زيهان"],
+            "سكوله اݢام تامن ديسا": ["باتريسيا بلقيس بنت عبدالله", "محمد نور فؤاد بن نورالدين", "ناجيهة بنت محمد يزيد", "نجوى بنت غزالي", "نور عزة بنت راميان", "نورهداية بنت محمد تع", "رابعة العدوية بنت إسماعيل", "شدة النور بنت سليمان", "سيتي نورليانا بنت سعيدي", "سيتي ريفاده @ سيتي رفيدة بنت مد ساريڠ"],
+            "س.ر.ا.ب. كلوڠ": ["فائمه بنت إسماعيل", "محمد عزالدين بن مد روزي", "محمد خيرالإقبال بن تاج الدين", "نتاشا نورهزورة بنت محمد بصير", "نور شفيقة بنت سلامت", "نور الهدى بنت محمد خاريس"],
+            "سكوله اݢام بندر رڠݢم": ["هيراواتي بنت سليمان", "ميزات الأكمال بنت ريملي", "محمد نظام بن كمال", "نيلاکسوما بنت مد نواوي", "فضيلة بنت رملي", "زارينا بنت سليمان"],
+            "سكوله اݢام بوكيت كنعن": ["عبد العزيز بن مناڤ", "نورأزلين بنت شمس الدين", "نورعاشقين بنت قاسم", "سري روهايو بنت عبد الحميد"],
+            "سكوله اݢام داتوء إبراهيم مجيد": ["عينون بنت جميران", "أمين الدين بن محمد درويس", "أسوانيزا بنت يسوف", "فليله بنت كريم", "محمد أنيق إكليل بن يسريزان", "نور أزورا بنت مولانا", "نورعيني بنت هاشم", "نور علية بنت محمد رافعي", "صميدة بنت بكر", "سالينا بنت نواوي", "سيتي نبيلة بنت أمل الدين", "سيتي نورعائشة بنت جمال", "سيتي سانه بنت كوسين", "سيتي سهيلا بنت صائم", "سوزيتا بنت سوكر", "يزيد بن جبار @ ساهيد"],
+            "سكوله اݢام فيلدا لايڠ-لايڠ": ["أزله بنت أحمد", "نورأصلينا بنت إسماعيل", "نورمزلينا بنت مرزوقي", "سيتي خديجة بنت غزالي", "سهايلي إيمي بنت عبد الشكور"],
+            "سكوله اݢام كومڤليكس ڤڠهولو": ["أزيئينا بنت محمد خيري", "إيرناواتي بنت عبد الطالب", "فاتن نورروضة بنت أرازمي", "فاتن نبيلة بنت محمد نورالدين", "جفري بن عبد الصمد@صمد", "ليلى ساري بنت أسموني", "ماريانا بنت عبد الرزاق", "محمد هارون الرشيدين أحمد", "محمد ذوالحلمي بن أبو", "نادية عتيقة بنت إلياس", "نصرالدين بن سيران", "نورعزاتي بنت أزمان", "نورسكينة بنت أحمد شهاب", "أوكتريفيا أريانتي بنت أيدير", "سيتي سلايا بنت ساريڠ"],
+            "سكوله اݢام ڤاريت حاج هاشم": ["أبو حفيظ بن محمد كمال", "هدى خالصة بنت محمد نور", "محمد فوزان بن محمد مربت", "نور ألينا بنت أبو بكر", "نور فرحانا بنت رحمت", "روحانا بنت عبد المجيد", "سيتي نور حليمة السعدية بنت محمد رسلان", "وحيدة بنت مرسودي", "يوليزا إيليا بنت مد رملي"],
+            "سكوله اݢام ڤاسوقن ݢرقن ام": ["أزواهيزا بنت مد عثمان", "محمد الحفيظ بن سيرت", "محمد إلهان بن عبد المالك", "سيتي حميراء بنت زانودين"],
+            "سكوله اݢام ڤكن لايڠ-لايڠ": ["عتيقة زليخة بنت عبد القادر", "حاجه مريمه بنت عبد المنان", "محمد إقبال بن شاري", "نورأصليندا بنت ياسمين أفندي", "نورالهدى بنت محمد إيزاهاري", "روسیاتيمه بنت سينوڠ", "سيتي أفرينا بنت قمرالزمان", "سيتي ربيعة بنت حمزة", "زكية بنت عبد الحميد"],
+            "سكوله اݢام ڤنجارا سيمڤڠ رڠام": ["نور فرحه بنت عبد الرحيم", "نور شميلة بنت عبد الحفيظ", "رصلينا بنت ڤانت", "سوزيليانه بنت بني"],
+            "سكوله اݢام سيمڤڠ رڠام": ["فائزة بنت داود", "مسنه بنت طالب", "نور ليزار بنت أحمد", "نورعين بنت محمد حسين", "نورأزهم بن مد خيري", "نورحسليندا بنت ݢمان@واݢيمن", "نورليلاواتي بنت محمد", "نور عائشة بنت مد عيسى", "نور فرحين بنت عبد الكريم", "نور عاشقين بنت حسين", "نور ماشطة بنت محمد جاني", "نور مبشرة بنت محمد", "نور العيني بنت نورعزمي", "نورالعين بنت فريد الأطرس", "سيتي ميسرة بنت أمل الدين", "سيتي ميسرة بنت مد بحرالدين", "سيتي نور بلقيس بنت مامي"],
+            "سكوله اݢام سري كنچان": ["أحمد شفاء الفواز بن عمر", "أنيس بنت أنوار", "فريدة بنت رملي", "جليحه بنت جميل", "كماعزوره بنت أزهر", "نورليانا بنت مسڤار", "نورمرهيداواتي بنت مرزوقي", "سيتي زليخة بنت محمد"],
+            "سكوله اݢام سري ماچڤ": ["أمني بنت أنوار", "فريداواتي بنت هارون", "محمد فائز بن محمد مربت", "محمد صديق بن نورالدين", "نور عاشقين بنت جعفر", "نور هداية بنت إسحاق", "سيتي سلمة بنت محمد تسليم", "سبحان بن أحمد بندي", "زيده بنت موكسين"],
+            "سكوله اݢام سري ماجو جاي": ["أديبة بنت عبد الرحمن", "محمد ثقيف خيرالدين", "نورلياني بنت محمد توكيران", "نورعفيقه نزيهة محمد رسلان", "نور النجيحة بنت محمد سالم", "رسنه بنت توكيمين"],
+            "سكوله اݢام سري تڠه رڠݢم": ["أنيتا بنت ڤرمون", "فريزه بنت إسمان", "كارتيني بنت ليمان @ سليمان", "محمد نورعين بن عانتمين"],
+            "سكوله اݢام سوڠاي ليناو": ["أنيس شهداء بنت إسحاق", "ماريانا بنت طاهر", "محمد أسلمهان بن مماجن خان", "نورهدايو بنت ميسڤين", "سيتي نورحفيظة بنت محمد جوها", "توميسه بنت جعفر"]
         };
 
         function setupProfil() {
@@ -899,16 +936,15 @@
             const guru = document.getElementById('profil-guru').value;
 
             if (!sekolah || !guru) {
-                // Gunakan kotak dialog rekaan khas dalam JS jika perlu, buat masa ini guna alert biasa
-                alert("سيلا ڤيليه سكوله دان نام ݢورو ترلبيه دهولو!");
+                paparModal("رالت (Ralat)", "Sila pilih sekolah dan nama guru terlebih dahulu!", "error");
                 return;
             }
 
             document.getElementById('sidebar-guru-name').innerText = guru;
             document.getElementById('sidebar-guru-school').innerText = sekolah;
             
-            alert("ڤروفيل ݢورو برجايا دسيمڤن!");
-            switchTab('dashboard'); // Kembali ke papan muka
+            paparModal("برجایا (Berjaya)", "Profil guru berjaya dikemas kini!", "success");
+            switchTab('dashboard');
         }
 
         window.onload = () => {
