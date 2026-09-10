@@ -1,434 +1,490 @@
 <!DOCTYPE html>
-<html lang="ms-Arab" dir="rtl">
+<html lang="ms" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيستم إي-RPT دان إي-RPH سكج</title>
-    
+    <title>Sistem e-RPT SAKJ (Jawi)</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-
+    <!-- Google Fonts: Amiri -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
-        body { 
-            font-family: 'Amiri', serif; 
-            line-height: 1.8;
-            font-size: 1.125rem;
+        :root {
+            --primary: #059669; /* Emerald 600 */
         }
-        .font-sans {
-            font-family: 'Inter', sans-serif;
-        }
-        
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-        .filter-btn { display: block; }
-        .filter-btn .content {
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            border: 1px solid #e2e8f0;
-            background-color: #ffffff;
-            color: #475569;
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-align: center;
-            transition: all 0.2s;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .filter-btn:not(.active):hover .content:not(.opacity-50) {
+        body {
+            font-family: 'Amiri', serif;
             background-color: #f8fafc;
-            border-color: #cbd5e1;
+            color: #0f172a;
         }
-        .filter-btn.active[data-type="tahap"] .content {
-            background-color: #ecfdf5;
-            border-color: #10b981;
-            color: #065f46;
-            box-shadow: 0 0 0 1px #10b981;
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
-        .filter-btn.active[data-type="subjek"] .content {
-            background-color: #f5f3ff;
-            border-color: #8b5cf6;
-            color: #4c1d95;
-            box-shadow: 0 0 0 1px #8b5cf6;
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9; 
         }
-
-        /* Checkbox styling khas untuk aktiviti */
-        .checkbox-label input:checked + div {
-            background-color: #ecfdf5;
-            border-color: #10b981;
-            color: #065f46;
-            font-weight: bold;
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
         }
-        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        /* Hide sidebar and specific buttons during print */
         @media print {
-            aside, header, #print-btn, .print-hidden { display: none !important; }
-            main, #view-erph { overflow: visible !important; height: auto !important; }
-            .bg-slate-50 { background-color: #ffffff !important; }
-            body { padding: 0; margin: 0; }
+            .print-hidden {
+                display: none !important;
+            }
+            .print-full {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+            body {
+                background-color: white !important;
+            }
+            #view-laporan {
+                display: block !important;
+            }
+        }
+        /* Checkbox styling */
+        .checkbox-custom:checked + div {
+            background-color: #ecfdf5;
+            border-color: #10b981;
+            color: #047857;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased flex h-screen overflow-hidden">
+<body class="h-screen flex overflow-hidden selection:bg-emerald-200 selection:text-emerald-900">
 
-    <aside class="w-64 bg-white border-l border-slate-200 flex flex-col h-full shadow-sm z-10 shrink-0 hidden md:flex print-hidden">
-        <div class="p-6 border-b border-slate-100 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-md shrink-0">
-                <i class="ph ph-book-open-text text-xl"></i>
+    <!-- Sidebar -->
+    <aside class="w-72 bg-white border-l border-slate-200 flex flex-col h-full shadow-sm print-hidden z-20">
+        <!-- Logo Area -->
+        <div class="p-6 border-b border-slate-100 flex items-center justify-center gap-4 bg-emerald-50/50">
+            <div class="w-14 h-14 bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-emerald-600/20">
+                <i class="ph-fill ph-book-open-text text-3xl"></i>
             </div>
             <div>
-                <h1 class="font-bold text-2xl leading-tight text-slate-800">إي-RPT سكج</h1>
-                <p class="text-sm text-slate-500 font-medium">سيستم فغوروسن RPT</p>
+                <h1 class="text-2xl font-bold text-slate-800 leading-tight">إي-RPT<br><span class="text-emerald-600 text-lg">SAKJ ٢٠٢٦</span></h1>
             </div>
         </div>
 
-        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-bold transition-colors bg-emerald-50 text-emerald-700">
-                <i class="ph ph-squares-four text-xl"></i>
-                ڤاڤن موک
-            </button>
-            <button onclick="switchTab('rpt')" id="nav-rpt" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                <i class="ph ph-table text-xl"></i>
-                جدوال RPT ٢٠٢٦
-            </button>
-            <button onclick="switchTab('erph')" id="nav-erph" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                <i class="ph ph-file-text text-xl"></i>
-                بورڠ إي-RPH
+        <!-- Navigation Menu -->
+        <nav class="flex-1 overflow-y-auto p-4 space-y-2">
+            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-4 px-4 py-3 rounded-lg text-lg font-bold transition-colors bg-emerald-50 text-emerald-700">
+                <i class="ph ph-squares-four text-2xl"></i> ڤاڤن موک
             </button>
             
-            <div class="pt-6 pb-2">
-                <p class="px-4 text-sm font-bold text-slate-400 mb-2">تتڤن (Tetapan)</p>
-                <button onclick="switchTab('profil')" id="nav-profil" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                    <i class="ph ph-gear text-xl"></i> ڤروفيل ݢورو
-                </button>
+            <div class="pt-4 pb-2">
+                <p class="px-4 text-lg font-bold text-slate-400 mb-2">مودول اوتام</p>
             </div>
+            
+            <button onclick="switchTab('rpt')" id="nav-rpt" class="w-full flex items-center gap-4 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                <i class="ph ph-calendar-check text-2xl"></i> جدوال RPT ٢٠٢٦
+            </button>
+            <button onclick="switchTab('erph')" id="nav-erph" class="w-full flex items-center gap-4 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                <i class="ph ph-file-text text-2xl"></i> بورڠ إي-RPH
+            </button>
+            <button onclick="switchTab('laporan')" id="nav-laporan" class="w-full flex items-center gap-4 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                <i class="ph ph-folder-open text-2xl"></i> لاڤورن إي-RPH
+            </button>
+
+            <div class="pt-4 pb-2">
+                <p class="px-4 text-lg font-bold text-slate-400 mb-2">تتڤن</p>
+            </div>
+            <button onclick="switchTab('profil')" id="nav-profil" class="w-full flex items-center gap-4 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                <i class="ph ph-user-circle text-2xl"></i> ڤروفيل ݢورو
+            </button>
         </nav>
-        
-        <div class="p-4 border-t border-slate-100">
-            <div class="flex items-center gap-3 px-4 py-3 bg-slate-50 rounded-lg border border-slate-200">
-                <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 shrink-0">
-                    <i class="ph ph-user text-sm"></i>
+
+        <!-- User Profile Status -->
+        <div class="p-5 border-t border-slate-100 bg-slate-50">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xl border-2 border-white shadow-sm">
+                    <i class="ph-fill ph-user"></i>
                 </div>
-                <div class="flex-1 min-w-0">
-                    <p id="sidebar-guru-name" class="text-xl font-bold text-slate-800 truncate" dir="rtl">استاذ / استاذة</p>
-                    <p id="sidebar-guru-school" class="text-base text-slate-500 truncate" dir="rtl">سكوله اݢام كلوڠ</p>
+                <div class="flex-1 overflow-hidden">
+                    <p class="text-lg font-bold text-slate-800 truncate" id="sidebar-guru-name">تتڤن ڤروفيل</p>
+                    <p class="text-sm text-slate-500 truncate" id="sidebar-sekolah-name">سيلا لڠکڤکن ڤروفيل</p>
                 </div>
             </div>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
-        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 shrink-0 z-10 print-hidden">
-            <div class="flex items-center gap-3">
-                <button class="md:hidden text-slate-600 text-2xl"><i class="ph ph-list"></i></button>
-                <h2 id="header-title" class="text-2xl font-bold text-slate-800">ڤاڤن موک</h2>
-            </div>
-            <div class="flex items-center gap-4 text-lg text-slate-600 font-bold">
-                <i class="ph ph-calendar-blank text-xl hidden sm:block"></i>
-                <span id="current-date" class="hidden sm:block">سيسي اكاديميك ٢٠٢٦</span>
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full bg-slate-50/50 print-full relative overflow-hidden">
+        
+        <!-- Header -->
+        <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 shadow-sm z-10 print-hidden">
+            <h2 id="header-title" class="text-3xl font-bold text-slate-800">ڤاڤن موک</h2>
+            <div class="flex items-center gap-4 bg-slate-100 px-4 py-2 rounded-full border border-slate-200">
+                <i class="ph ph-calendar-blank text-slate-500 text-xl"></i>
+                <span id="current-date" class="font-medium text-slate-600 text-lg"></span>
             </div>
         </header>
 
-        <div class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50/50">
+        <!-- Content Area -->
+        <div class="flex-1 overflow-y-auto p-8 relative print-full">
             
-            <!-- VIEW: PAPAN MUKA (DASHBOARD) -->
-            <div id="view-dashboard" class="max-w-5xl mx-auto space-y-8 block">
-                <!-- Statistik Papan Muka -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl shrink-0"><i class="ph ph-calendar-check"></i></div>
-                        <div>
-                            <p class="text-lg text-slate-500 mb-1">جومله ميڠݢو</p>
-                            <p class="text-3xl font-bold text-slate-800 font-sans">43</p>
-                        </div>
+            <!-- VIEW: DASHBOARD -->
+            <div id="view-dashboard" class="max-w-6xl mx-auto space-y-6">
+                <!-- Welcome Banner -->
+                <div class="bg-gradient-to-l from-emerald-600 to-teal-800 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
+                    <div class="relative z-10">
+                        <h2 class="text-4xl font-bold mb-2">سلامت داتڠ، <span id="welcome-name">أستاذ/أستاذة</span></h2>
+                        <p class="text-emerald-100 text-xl max-w-2xl">سيستم ڤڠوروسن رانچڠن ڤڠاجرن تاهونن (e-RPT) دان هارين (e-RPH) سکوله اݢام کراجاءن جوهر تاهون ٢٠٢٦.</p>
                     </div>
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-2xl shrink-0"><i class="ph ph-books"></i></div>
-                        <div>
-                            <p class="text-lg text-slate-500 mb-1">سوبجيك اكتيف</p>
-                            <p id="stat-subjek" class="text-2xl font-bold text-slate-800 leading-tight">عملن لازيم دان KIJ</p>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl shrink-0"><i class="ph ph-graduation-cap"></i></div>
-                        <div>
-                            <p class="text-lg text-slate-500 mb-1">تاهڤ / درجه</p>
-                            <p id="stat-tahap" class="text-3xl font-bold text-slate-800 font-sans">6</p>
-                        </div>
-                    </div>
+                    <i class="ph-duotone ph-book-open-text absolute -bottom-10 -left-10 text-9xl text-white/20 transform rotate-12"></i>
                 </div>
 
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                    <div class="p-6 border-b border-slate-100 bg-slate-50/50">
-                        <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                            <i class="ph ph-sliders-horizontal text-emerald-600"></i> تتڤن ڤاڤرن RPT
-                        </h3>
-                    </div>
-                    <div class="p-6 space-y-8">
-                        <div>
-                            <h4 class="text-xl font-bold text-slate-800 mb-4">ڤيليهن تاهڤ (Tahap)</h4>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="filter-tahap">
-                                <label class="filter-btn group" data-type="tahap" data-val="Darjah 4"><div class="content opacity-50 cursor-not-allowed">درجه ٤</div></label>
-                                <label class="filter-btn group" data-type="tahap" data-val="Darjah 5"><div class="content opacity-50 cursor-not-allowed">درجه ٥</div></label>
-                                <label class="filter-btn active cursor-pointer" data-type="tahap" data-val="Darjah 6">
-                                    <input type="radio" name="tahap" class="hidden" checked><div class="content">درجه ٦</div>
-                                </label>
-                                <label class="filter-btn group" data-type="tahap" data-val="Darjah Khas"><div class="content opacity-50 cursor-not-allowed">درجه خاص</div></label>
-                            </div>
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-5 hover:shadow-md transition-shadow">
+                        <div class="w-16 h-16 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                            <i class="ph-fill ph-files text-3xl"></i>
                         </div>
-
                         <div>
-                            <h4 class="text-xl font-bold text-slate-800 mb-4">ڤيليهن سوبجيك (Subjek)</h4>
-                            <div class="grid grid-cols-2 md:grid-cols-5 gap-3" id="filter-subjek">
-                                <label class="filter-btn cursor-pointer" data-type="subjek" data-val="Sirah"><input type="radio" name="subjek" class="hidden"><div class="content">سيره</div></label>
-                                <label class="filter-btn cursor-pointer" data-type="subjek" data-val="Akhlak"><input type="radio" name="subjek" class="hidden"><div class="content">اخلاق</div></label>
-                                <label class="filter-btn cursor-pointer" data-type="subjek" data-val="Bahasa Arab"><input type="radio" name="subjek" class="hidden"><div class="content">بهاس عرب</div></label>
-                                <label class="filter-btn active cursor-pointer" data-type="subjek" data-val="Amalan Lazim & KIJ"><input type="radio" name="subjek" class="hidden" checked><div class="content">عملن لازيم & KIJ</div></label>
-                                <label class="filter-btn cursor-pointer" data-type="subjek" data-val="Tafsir Al-Quran & Hadith"><input type="radio" name="subjek" class="hidden"><div class="content">تفسير & حديث</div></label>
-                                <label class="filter-btn cursor-pointer" data-type="subjek" data-val="Jenayat"><input type="radio" name="subjek" class="hidden"><div class="content">جنايات</div></label>
-                                <label class="filter-btn cursor-pointer" data-type="subjek" data-val="Munakahat"><input type="radio" name="subjek" class="hidden"><div class="content">مناكحات</div></label>
-                                <label class="filter-btn cursor-pointer" data-type="subjek" data-val="Muamalat"><input type="radio" name="subjek" class="hidden"><div class="content">معاملات</div></label>
-                                <label class="filter-btn cursor-pointer" data-type="subjek" data-val="Faraid"><input type="radio" name="subjek" class="hidden"><div class="content">فرائض</div></label>
-                                <label class="filter-btn cursor-pointer" data-type="subjek" data-val="Ibadat"><input type="radio" name="subjek" class="hidden"><div class="content">عبادات</div></label>
-                            </div>
-                        </div>
-                        <div class="pt-4 border-t border-slate-100 flex justify-end">
-                            <button onclick="switchTab('rpt')" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg text-xl font-bold transition-colors shadow-sm flex items-center justify-center gap-2">
-                                بوک جدوال RPT <i class="ph ph-arrow-left font-bold"></i>
-                            </button>
+                            <p class="text-slate-500 text-lg mb-1">RPH دهنتر</p>
+                            <h3 class="text-3xl font-bold text-slate-800">٢٤</h3>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div id="view-erph" class="max-w-4xl mx-auto hidden">
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                    <div class="p-6 border-b border-slate-100 bg-emerald-50/50 flex justify-between items-center print-hidden">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-5 hover:shadow-md transition-shadow">
+                        <div class="w-16 h-16 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                            <i class="ph-fill ph-calendar-star text-3xl"></i>
+                        </div>
                         <div>
-                            <h3 class="text-3xl font-bold text-slate-800">بورڠ إي-RPH</h3>
-                            <p class="text-lg text-slate-500 mt-1">رانچڠن ڤڠاجرن هارين سكج</p>
+                            <p class="text-slate-500 text-lg mb-1">ميڠݢو سماس</p>
+                            <h3 class="text-3xl font-bold text-slate-800">١٢</h3>
                         </div>
-                        <button onclick="window.print()" id="print-btn" class="px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-lg font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-2">
-                            <i class="ph ph-printer text-xl"></i> چيتق / PDF
-                        </button>
                     </div>
-                    
-                    <div class="p-8">
-                        <div class="hidden print:block text-center mb-8">
-                            <h2 class="text-3xl font-bold mb-2">رانچڠن ڤڠاجرن هارين</h2>
-                            <h3 class="text-2xl text-slate-600">سكوله اݢام كراجاءن جوهر</h3>
-                            <hr class="mt-4 border-slate-800 border-2">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-5 hover:shadow-md transition-shadow">
+                        <div class="w-16 h-16 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                            <i class="ph-fill ph-check-circle text-3xl"></i>
                         </div>
-                        
-                        <form class="space-y-6">
-                            <!-- Baris 1: Minggu, Subjek, Kelas -->
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <label class="block font-bold text-slate-700 text-xl">ميڠݢو</label>
-                                    <select id="erph-minggu" onchange="autoFillRPT()" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl font-sans text-right" dir="rtl">
-                                        <option value="">ڤيليه ميڠݢو...</option>
-                                    </select>
-                                </div>
-                                <div class="space-y-2">
-                                    <label class="block font-bold text-slate-700 text-xl">مات ڤلاجرن</label>
-                                    <select id="erph-subjek" onchange="autoFillRPT()" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl">
-                                        <option value="">ڤيليه مات ڤلاجرن...</option>
-                                        <option value="Sirah">سيره</option>
-                                        <option value="Akhlak">اخلاق</option>
-                                        <option value="Bahasa Arab">بهاس عرب</option>
-                                        <option value="Amalan Lazim & KIJ">عملن لازيم دان KIJ</option>
-                                        <option value="Tafsir Al-Quran & Hadith">تفسير القرءان دان حديث</option>
-                                        <option value="Jenayat">جنايات</option>
-                                        <option value="Munakahat">مناكحات</option>
-                                        <option value="Muamalat">معاملات</option>
-                                        <option value="Faraid">فرائض</option>
-                                        <option value="Ibadat">عبادات</option>
-                                    </select>
-                                </div>
-                                <div class="space-y-2">
-                                    <label class="block font-bold text-slate-700 text-xl">كلس</label>
-                                    <input type="text" id="erph-kelas" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl" placeholder="٦ ابن سينا">
-                                </div>
-                            </div>
-                            
-                            <!-- Baris 2: Tarikh, Masa -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="space-y-2">
-                                    <label class="block font-bold text-slate-700 text-xl">تاريخ / هاري</label>
-                                    <input type="text" id="erph-tarikh" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl font-sans text-right" dir="rtl" placeholder="23 Mei 2026 / Isnin">
-                                </div>
-                                <div class="space-y-2">
-                                    <label class="block font-bold text-slate-700 text-xl">ماس</label>
-                                    <input type="text" id="erph-masa" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl" placeholder="٣.٣٠ - ٤.٠٠ ڤتڠ">
-                                </div>
-                            </div>
-                            
-                            <hr class="border-slate-200 my-6">
-
-                            <div class="space-y-6">
-                                <div class="space-y-2">
-                                    <label class="block font-bold text-slate-700 text-xl">تاجوق / بيدڠ</label>
-                                    <input type="text" id="erph-tajuk" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl">
-                                </div>
-                                
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div class="space-y-2">
-                                        <label class="block font-bold text-slate-700 text-xl">ستندرد كاندوڠن</label>
-                                        <textarea id="erph-sk" rows="3" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl resize-none bg-slate-50"></textarea>
-                                    </div>
-                                    <div class="space-y-2">
-                                        <label class="block font-bold text-slate-700 text-xl">ستندرد ڤمبلاجرن</label>
-                                        <textarea id="erph-sp" rows="3" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl resize-none bg-slate-50"></textarea>
-                                    </div>
-                                </div>
-
-                                <div class="space-y-2">
-                                    <label class="block font-bold text-slate-700 text-xl">اوبجيكتيف ڤمبلاجرن</label>
-                                    <p class="text-sm text-slate-500 mb-2 font-sans font-medium" dir="ltr">Di akhir pembelajaran, murid dapat:</p>
-                                    <select id="erph-objektif" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl">
-                                        <option value="">ڤيليه اوبجيكتيف...</option>
-                                    </select>
-                                </div>
-
-                                <div class="space-y-3">
-                                    <label class="block font-bold text-slate-700 text-xl">اكتيۏيتي ڤڠاجرن دان ڤمبلاجرن</label>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="erph-aktiviti-container">
-                                        <label class="checkbox-label cursor-pointer">
-                                            <input type="checkbox" name="aktiviti" value="ݢورو منرڠكن تاجوق" class="hidden">
-                                            <div class="p-3 border border-slate-200 rounded-lg text-lg flex items-center gap-3 transition-colors">
-                                                <div class="w-5 h-5 rounded border border-slate-400 flex items-center justify-center shrink-0 check-icon bg-white"></div>
-                                                <span>ݢورو منرڠكن تاجوق</span>
-                                            </div>
-                                        </label>
-                                        <label class="checkbox-label cursor-pointer">
-                                            <input type="checkbox" name="aktiviti" value="موريد ممبري تومڤوان" class="hidden">
-                                            <div class="p-3 border border-slate-200 rounded-lg text-lg flex items-center gap-3 transition-colors">
-                                                <div class="w-5 h-5 rounded border border-slate-400 flex items-center justify-center shrink-0 check-icon bg-white"></div>
-                                                <span>موريد ممبري تومڤوان</span>
-                                            </div>
-                                        </label>
-                                        <label class="checkbox-label cursor-pointer">
-                                            <input type="checkbox" name="aktiviti" value="سيسي سوءال جواب" class="hidden">
-                                            <div class="p-3 border border-slate-200 rounded-lg text-lg flex items-center gap-3 transition-colors">
-                                                <div class="w-5 h-5 rounded border border-slate-400 flex items-center justify-center shrink-0 check-icon bg-white"></div>
-                                                <span>سيسي سوءال جواب</span>
-                                            </div>
-                                        </label>
-                                        <label class="checkbox-label cursor-pointer">
-                                            <input type="checkbox" name="aktiviti" value="موريد منجواب لمبرن كرجا" class="hidden">
-                                            <div class="p-3 border border-slate-200 rounded-lg text-lg flex items-center gap-3 transition-colors">
-                                                <div class="w-5 h-5 rounded border border-slate-400 flex items-center justify-center shrink-0 check-icon bg-white"></div>
-                                                <span>موريد منجواب لمبرن كرجا</span>
-                                            </div>
-                                        </label>
-                                        <label class="checkbox-label cursor-pointer">
-                                            <input type="checkbox" name="aktiviti" value="ڤربينچڠن دالم كومڤولن" class="hidden">
-                                            <div class="p-3 border border-slate-200 rounded-lg text-lg flex items-center gap-3 transition-colors">
-                                                <div class="w-5 h-5 rounded border border-slate-400 flex items-center justify-center shrink-0 check-icon bg-white"></div>
-                                                <span>ڤربينچڠن دالم كومڤولن</span>
-                                            </div>
-                                        </label>
-                                        <label class="checkbox-label cursor-pointer">
-                                            <input type="checkbox" name="aktiviti" value="تسميع حفظن / باچاءن" class="hidden">
-                                            <div class="p-3 border border-slate-200 rounded-lg text-lg flex items-center gap-3 transition-colors">
-                                                <div class="w-5 h-5 rounded border border-slate-400 flex items-center justify-center shrink-0 check-icon bg-white"></div>
-                                                <span>تسميع حفظن / باچاءن</span>
-                                            </div>
-                                        </label>
-                                        <label class="checkbox-label cursor-pointer sm:col-span-2">
-                                            <input type="checkbox" name="aktiviti" value="تياد اكتيۏيتي (Cuti / Peperiksaan)" class="hidden" id="chk-tiada-aktiviti">
-                                            <div class="p-3 border border-red-200 bg-red-50 text-red-700 rounded-lg text-lg flex items-center gap-3 transition-colors">
-                                                <div class="w-5 h-5 rounded border border-red-400 flex items-center justify-center shrink-0 check-icon bg-white"></div>
-                                                <span>تياد اكتيۏيتي (چوتي / ڤڤريقساءن)</span>
-                                            </div>
-                                        </label>
-                                    </div>
-                                    <style>
-                                        input:checked + div .check-icon { background-color: #10b981; border-color: #10b981; position: relative; }
-                                        input:checked + div .check-icon::after { content: ''; position: absolute; width: 5px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); top: 2px; }
-                                        #chk-tiada-aktiviti:checked + div .check-icon { background-color: #ef4444; border-color: #ef4444; }
-                                    </style>
-                                </div>
-
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-                                    <div class="space-y-2">
-                                        <label class="block font-bold text-slate-700 text-xl">ڤنيلاين / ڤنتسيرن</label>
-                                        <select id="erph-penilaian" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl">
-                                            <option value="">ڤيليه ڤنيلاين...</option>
-                                            <option value="سوءال جواب ليسن دان برتوليس">ليسن دان برتوليس</option>
-                                            <option value="لاتيهن برتوليس / لمبرن كرجا">لاتيهن برتوليس / لمبرن كرجا</option>
-                                            <option value="سوءال جواب ليسن">سوءال جواب ليسن</option>
-                                            <option value="تسميع حفظن / باچاءن">تسميع حفظن / باچاءن</option>
-                                            <option value="ڤمرهاتين دان ڤمبنتڠن">ڤمرهاتين دان ڤمبنتڠن</option>
-                                            <option value="-">تياد ڤنيلاين</option>
-                                        </select>
-                                    </div>
-                                    <div class="space-y-2">
-                                        <label class="block font-bold text-slate-700 text-xl">باهن بنتو مڠاجر (BBM)</label>
-                                        <select id="erph-bbm" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl">
-                                            <option value="">ڤيليه BBM...</option>
-                                            <option value="بوكو تيكس، لمبرن كرجا، ڤاڤن ڤوتيه">بوكو تيكس، لمبرن كرجا، ڤاڤن ڤوتيه</option>
-                                            <option value="بوكو تيكس، كد إمبسن، ڤاڤن ڤوتيه">بوكو تيكس، كد إمبسن</option>
-                                            <option value="سليد ڤمبنتڠن، ۏيديو، بوكو تيكس">سليد ڤمبنتڠن، ۏيديو</option>
-                                            <option value="بوكو تيكس، راديو/اءوديو، لمبرن كرجا">راديو/اءوديو</option>
-                                            <option value="-">تياد BBM</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <label class="block font-bold text-slate-700 text-xl">ريفليکسي</label>
-                                    <select id="erph-refleksi" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl">
-                                        <option value="">ڤيليه ريفليکسي...</option>
-                                        <option value="سبهاݢين بسر موريد برجايا منچاڤي اوبجيكتيف ڤمبلاجرن. موريد يڠ لمه دبري بيمبيڠن.">سبهاݢين بسر موريد برجايا منچاڤي اوبجيكتيف</option>
-                                        <option value="سموا موريد برجايا مڠواساءي اوبجيكتيف ڤمبلاجرن دڠن باءيق.">سموا موريد برجايا مڠواساءي اوبجيكتيف</option>
-                                        <option value="سبهاݢين موريد ممرلوكن بيمبيڠن تمبهن دالم سيسي ڤموليھن.">ممرلوكن بيمبيڠن تمبهن (ڤموليھن)</option>
-                                        <option value="ڤمبلاجرن دتڠݢوهكن كران چوتي عموم / ڤروݢرم سكوله.">ڤمبلاجرن دتڠݢوهكن (چوتي/ڤروݢرم)</option>
-                                        <option value="-">تياد ريفليکسي (Cuti / Peperiksaan)</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="pt-6 border-t border-slate-100 flex justify-start gap-3 print-hidden" dir="ltr">
-                                <button type="reset" class="px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 text-xl font-bold font-sans">Reset</button>
-                                <button type="button" onclick="simpanKeGoogleSheet()" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xl font-bold flex items-center gap-2 font-sans transition-colors">
-                                    <i class="ph ph-google-logo text-2xl"></i> Simpan ke Google Sheet
-                                </button>
-                            </div>
-                        </form>
+                        <div>
+                            <p class="text-slate-500 text-lg mb-1">ستاتوس ڤڠساهن</p>
+                            <h3 class="text-2xl font-bold text-emerald-600">دساهکن</h3>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- VIEW: JADUAL RPT -->
             <div id="view-rpt" class="max-w-6xl mx-auto hidden">
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-full">
-                    <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center print-hidden">
-                        <h3 id="rpt-table-title" class="text-2xl font-bold text-slate-800">RPT Amalan Lazim & KIJ - Darjah 6 (2026)</h3>
-                        <button onclick="window.print()" class="px-4 py-2 bg-white border border-slate-300 rounded-lg text-lg font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-2">
-                            <i class="ph ph-printer text-xl"></i> چيتق / PDF
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[calc(100vh-140px)]">
+                    <div class="p-6 border-b border-slate-200 bg-slate-50 flex flex-wrap gap-4 items-center justify-between">
+                        <div class="flex items-center gap-4 flex-1">
+                            <select id="filter-subjek" class="px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 bg-white text-xl min-w-[200px]">
+                                <option value="">-- ڤيليه مات ڤلاجرن --</option>
+                                <option value="سيرة">سيرة</option>
+                                <option value="توحيد">توحيد</option>
+                                <option value="عبادة">عبادة</option>
+                                <option value="عملن لازيم">عملن لازيم</option>
+                            </select>
+                            <select id="filter-tahap" class="px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 bg-white text-xl min-w-[150px]">
+                                <option value="">-- ڤيليه درجه --</option>
+                                <option value="درجه ١">درجه ١</option>
+                                <option value="درجه ٢">درجه ٢</option>
+                                <option value="درجه ٣">درجه ٣</option>
+                                <option value="درجه ٦">درجه ٦</option>
+                            </select>
+                            <button onclick="cariRPT()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-xl transition-colors shadow-sm">
+                                چاري
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 overflow-auto bg-slate-50 p-6 relative">
+                        <!-- Placeholder Data -->
+                        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden text-center p-12 text-slate-500">
+                            <i class="ph-duotone ph-table text-6xl mb-4 text-slate-300"></i>
+                            <p class="text-xl">سيلا ڤيليه مات ڤلاجرن دان درجه اونتوق ممڤاڤرکن جدوال RPT.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: BORANG e-RPH -->
+            <div id="view-erph" class="max-w-4xl mx-auto hidden pb-20">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 bg-emerald-50/50">
+                        <h3 class="text-3xl font-bold text-slate-800">ڤڠيسين بورڠ إي-RPH</h3>
+                        <p class="text-lg text-slate-500 mt-1">ايسي معلومت ڤڠاجرن دان ڤمبلاجرن (PdP) هارين.</p>
+                    </div>
+                    
+                    <div class="p-8">
+                        <form id="erph-form" class="space-y-8" onsubmit="event.preventDefault();">
+                            
+                            <!-- Maklumat Asas -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-xl border border-slate-100">
+                                <div class="space-y-2">
+                                    <label class="block font-bold text-slate-700 text-xl">مات ڤلاجرن</label>
+                                    <select id="erph-subjek" name="subjek" onchange="autoFillRPT()" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl" required dir="rtl">
+                                        <option value="">-- ڤيليه مات ڤلاجرن --</option>
+                                        <option value="القرءان">القرءان</option>
+                                        <option value="حفظن">حفظن</option>
+                                        <option value="توحيد">توحيد</option>
+                                        <option value="عبادة">عبادة</option>
+                                        <option value="سيرة">سيرة</option>
+                                        <option value="اخلاق">اخلاق</option>
+                                        <option value="عملن لازيم">عملن لازيم</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block font-bold text-slate-700 text-xl">ميڠݢو</label>
+                                    <select id="erph-minggu" name="minggu" onchange="autoFillRPT()" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl" required dir="rtl">
+                                        <option value="">-- ڤيليه ميڠݢو --</option>
+                                        <option value="ميڠݢو ١">ميڠݢو ١</option>
+                                        <option value="ميڠݢو ٢">ميڠݢو ٢</option>
+                                        <option value="ميڠݢو ٣">ميڠݢو ٣</option>
+                                        <option value="ميڠݢو ٤">ميڠݢو ٤</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block font-bold text-slate-700 text-xl">کلس / درجه</label>
+                                    <input type="text" id="erph-kelas" name="kelas" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 text-xl" placeholder="چونتوه: درجه ١ ابو بکر" required dir="rtl">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block font-bold text-slate-700 text-xl">تاريخ</label>
+                                    <input type="date" id="erph-tarikh" name="tarikh" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 text-xl font-sans" required dir="ltr">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block font-bold text-slate-700 text-xl">ماس</label>
+                                    <input type="text" name="masa" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 text-xl" placeholder="چونتوه: ٣:٣٠ - ٤:٠٠ ڤتڠ" required dir="rtl">
+                                </div>
+                            </div>
+
+                            <!-- Kandungan PdP -->
+                            <div class="space-y-6">
+                                <div class="space-y-2">
+                                    <label class="block font-bold text-slate-700 text-xl">تاجوق</label>
+                                    <input type="text" id="erph-tajuk" name="tajuk" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 text-xl" placeholder="تاجوق ڤمبلاجرن..." required dir="rtl">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block font-bold text-slate-700 text-xl">ستندرد کندوڠن</label>
+                                    <textarea id="erph-sk" name="sk" rows="2" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 text-xl" placeholder="ستندرد کندوڠن..." required dir="rtl"></textarea>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block font-bold text-slate-700 text-xl">ستندرد ڤمبلاجرن</label>
+                                    <textarea id="erph-sp" name="sp" rows="2" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 text-xl" placeholder="ستندرد ڤمبلاجرن..." required dir="rtl"></textarea>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block font-bold text-slate-700 text-xl">اوبجيکتيف ڤمبلاجرن</label>
+                                    <textarea id="erph-objektif" name="objektif" rows="3" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 text-xl" placeholder="ڤد اخير ڤمبلاجرن موريد داڤت..." required dir="rtl"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Multi-Select Aktiviti -->
+                            <div class="space-y-4 bg-slate-50 p-6 rounded-xl border border-slate-100">
+                                <label class="block font-bold text-slate-700 text-xl">اکتيۏيتي ڤمبلاجرن</label>
+                                <p class="text-slate-500 text-lg mb-4">بوله ڤيليه لبيه درڤد ساتو.</p>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="aktiviti-container">
+                                    <label class="relative cursor-pointer">
+                                        <input type="checkbox" name="aktiviti_check" value="ڤنراڠن ݢورو" class="peer sr-only checkbox-custom">
+                                        <div class="rounded-lg border border-slate-200 px-4 py-3 hover:bg-slate-100 transition-colors text-xl bg-white" dir="rtl">ڤنراڠن ݢورو</div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="checkbox" name="aktiviti_check" value="سوءال جواب" class="peer sr-only checkbox-custom">
+                                        <div class="rounded-lg border border-slate-200 px-4 py-3 hover:bg-slate-100 transition-colors text-xl bg-white" dir="rtl">سوءال جواب</div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="checkbox" name="aktiviti_check" value="ڤربينچڠن کومڤولن" class="peer sr-only checkbox-custom">
+                                        <div class="rounded-lg border border-slate-200 px-4 py-3 hover:bg-slate-100 transition-colors text-xl bg-white" dir="rtl">ڤربينچڠن کومڤولن</div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="checkbox" name="aktiviti_check" value="لاتيهن برتوليس" class="peer sr-only checkbox-custom">
+                                        <div class="rounded-lg border border-slate-200 px-4 py-3 hover:bg-slate-100 transition-colors text-xl bg-white" dir="rtl">لاتيهن برتوليس</div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="checkbox" name="aktiviti_check" value="ڤمبنتڠن موريد" class="peer sr-only checkbox-custom">
+                                        <div class="rounded-lg border border-slate-200 px-4 py-3 hover:bg-slate-100 transition-colors text-xl bg-white" dir="rtl">ڤمبنتڠن موريد</div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="checkbox" name="aktiviti_check" value="ڤرماءينن / کويز" class="peer sr-only checkbox-custom">
+                                        <div class="rounded-lg border border-slate-200 px-4 py-3 hover:bg-slate-100 transition-colors text-xl bg-white" dir="rtl">ڤرماءينن / کويز</div>
+                                    </label>
+                                </div>
+                                <input type="hidden" name="aktiviti" id="erph-aktiviti-hidden">
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="block font-bold text-slate-700 text-xl">باهن بنتو مڠاجر (BBM)</label>
+                                    <select name="bbm" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 text-xl" dir="rtl">
+                                        <option value="بوکو تيک‌س">بوکو تيک‌س</option>
+                                        <option value="بوکو کرجا">بوکو کرجا</option>
+                                        <option value="کاد ايمبسن">کاد ايمبسن</option>
+                                        <option value="چرتا / ڤيتا ميندا">چرتا / ڤيتا ميندا</option>
+                                        <option value="ڤاڤن ڤوتيه">ڤاڤن ڤوتيه</option>
+                                        <option value="کومڤوتر / LCD">کومڤوتر / LCD</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block font-bold text-slate-700 text-xl">ڤنيلاين</label>
+                                    <select name="penilaian" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 text-xl" dir="rtl">
+                                        <option value="ڤمرهاتين">ڤمرهاتين</option>
+                                        <option value="ليسن">ليسن</option>
+                                        <option value="ڤنوليسن">ڤنوليسن</option>
+                                        <option value="لمبرن کرجا">لمبرن کرجا</option>
+                                        <option value="کويز">کويز</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block font-bold text-slate-700 text-xl">ريفليکسي</label>
+                                <select name="refleksi" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 text-xl" dir="rtl">
+                                    <option value="___ / ___ موريد منچاڤاي اوبجيکتيف.">___ / ___ موريد منچاڤاي اوبجيکتيف.</option>
+                                    <option value="موريد دبري لاتيهن ڤڠاياءن.">موريد دبري لاتيهن ڤڠاياءن.</option>
+                                    <option value="موريد دبري بيمبيڠن خاص (ڤموليهن).">موريد دبري بيمبيڠن خاص (ڤموليهن).</option>
+                                    <option value="ڤدڤ دتڠݢوهکن کران: ">ڤدڤ دتڠݢوهکن کران: </option>
+                                </select>
+                            </div>
+
+                            <div class="pt-6 border-t border-slate-100 flex flex-wrap justify-start gap-4 print-hidden" dir="ltr">
+                                <button type="reset" class="px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 text-xl font-bold">سيمڤن سمولا</button>
+                                <button type="button" onclick="simpanKeGoogleSheet()" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xl font-bold flex items-center gap-2 transition-colors shadow-sm" dir="rtl">
+                                    <i class="ph-bold ph-paper-plane-tilt text-2xl"></i> سيمڤن کأدالم ݢوݢل شيت
+                                </button>
+                                <a href="https://docs.google.com/spreadsheets/d/1Z4xb3VrQd69LiMvvwPbqr9HwoO2b-_0iBAlc9MyU2FI/edit?gid=0#gid=0" target="_blank" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xl font-bold flex items-center gap-2 transition-colors shadow-sm" dir="rtl">
+                                    <i class="ph-bold ph-table text-2xl"></i> ليهت ريکود
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: LAPORAN -->
+            <div id="view-laporan" class="max-w-4xl mx-auto hidden">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 bg-emerald-50/50 flex justify-between items-center print-hidden">
+                        <div>
+                            <h3 class="text-3xl font-bold text-slate-800">لاڤورن إي-RPH</h3>
+                            <p class="text-lg text-slate-500 mt-1">سماقن دان ڤڠساهن رانچڠن ڤڠاجرن هارين</p>
+                        </div>
+                        <button onclick="window.print()" class="px-5 py-2.5 bg-white border border-slate-300 rounded-lg text-lg font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-2">
+                            <i class="ph-bold ph-printer text-xl"></i> چيتق / PDF
                         </button>
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-right" dir="rtl">
-                            <thead>
-                                <tr class="bg-slate-100/80 text-slate-700 border-b border-slate-200">
-                                    <th class="py-4 px-4 text-center font-bold w-20 border-l border-slate-200">ميڠݢو</th>
-                                    <th class="py-4 px-4 text-center font-bold w-32 border-l border-slate-200">تاريخ</th>
-                                    <th class="py-4 px-6 font-bold border-l border-slate-200 w-1/3">ستندرد كاندوڠن</th>
-                                    <th class="py-4 px-6 font-bold border-l border-slate-200 w-1/3">ستندرد ڤمبلاجرن</th>
-                                    <th class="py-4 px-4 text-center font-bold w-32">چاتتن</th>
-                                </tr>
-                            </thead>
-                            <tbody id="rpt-table-body" class="text-lg">
-                                <!-- Data diletakkan di sini oleh JS -->
-                            </tbody>
-                        </table>
+                    
+                    <div class="p-8">
+                        <div class="hidden print:block text-center mb-8">
+                            <h2 class="text-3xl font-bold mb-2">لاڤورن ڤڠهنتارن إي-RPH</h2>
+                            <h3 class="text-2xl text-slate-600">سکوله اݢام کراجاءن جوهر</h3>
+                            <hr class="mt-4 border-slate-800 border-2">
+                        </div>
+
+                        <div class="space-y-6">
+                            <!-- Carian Laporan -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-xl border border-slate-200 print-hidden">
+                                <div class="space-y-2 md:col-span-2">
+                                    <label class="block font-bold text-slate-700 text-xl">نام سکوله</label>
+                                    <select id="laporan-sekolah" onchange="onSekolahLaporanChange()" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 bg-white text-xl" dir="rtl">
+                                        <option value="">-- ڤيليه سکوله --</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block font-bold text-slate-700 text-xl">نام ݢورو</label>
+                                    <select id="laporan-guru" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 bg-white text-xl" disabled dir="rtl">
+                                        <option value="">-- سيلا ڤيليه سکوله دهولو --</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block font-bold text-slate-700 text-xl">ستاتوس هانتر</label>
+                                    <select id="laporan-status" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 bg-white text-xl" dir="rtl">
+                                        <option value="سوده دهنتر">سوده دهنتر</option>
+                                        <option value="بلوم دهنتر">بلوم دهنتر</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Cetakan Maklumat -->
+                            <div class="hidden print:block space-y-4 mb-8 text-right" dir="rtl">
+                                <p class="text-2xl font-bold">نام سکوله: <span id="print-sekolah" class="font-normal border-b border-black">__________________</span></p>
+                                <p class="text-2xl font-bold">نام ݢورو: <span id="print-guru" class="font-normal border-b border-black">__________________</span></p>
+                                <p class="text-2xl font-bold">ستاتوس ڤڠهنتارن: <span id="print-status" class="font-normal border-b border-black">__________________</span></p>
+                            </div>
+
+                            <!-- Ulasan Penyemak -->
+                            <div class="space-y-4 pt-4 border-t border-slate-200 print:border-none print:pt-0">
+                                <div class="print-hidden">
+                                    <label class="block font-bold text-slate-700 text-xl mb-2">ڤيليهن اولسن ڤنتس</label>
+                                    <select id="pilihan-ulasan" onchange="isiUlasanPantas()" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 bg-white text-xl" dir="rtl">
+                                        <option value="">-- ڤيليه اولسن اونتوق دماسوقکن کالم کوتک --</option>
+                                        
+                                        <optgroup label="[ چمرلڠ ]">
+                                            <option value="ڤڠاجرن يڠ ساڠت باءيق دان مناريق.">ڤڠاجرن يڠ ساڠت باءيق دان مناريق.</option>
+                                            <option value="اوبجيکتيف ڤمبلاجرن ترچاڤاي دڠن چمرلڠ.">اوبجيکتيف ڤمبلاجرن ترچاڤاي دڠن چمرلڠ.</option>
+                                            <option value="ڤڠليبَتن موريد ساڠت اکتيف دان مڠݢالقکن.">ڤڠليبَتن موريد ساڠت اکتيف دان مڠݢالقکن.</option>
+                                            <option value="باهن بنتو مڠاجر (BBM) دݢوناکن دڠن برکسن.">باهن بنتو مڠاجر (BBM) دݢوناکن دڠن برکسن.</option>
+                                            <option value="کاوالن کلس ساڠت باءيق دان تراتور.">کاوالن کلس ساڠت باءيق دان تراتور.</option>
+                                            <option value="ݢورو منونجوقکن ڤڠواساﺀن تاجوق يڠ ساڠت باءيق.">ݢورو منونجوقکن ڤڠواساﺀن تاجوق يڠ ساڠت باءيق.</option>
+                                            <option value="عمالن ڤدڤ ابد ک-٢١ دتراڤکن دڠن جايڽ.">عمالن ڤدڤ ابد ک-٢١ دتراڤکن دڠن جايڽ.</option>
+                                            <option value="تاهڤ کفهمن موريد ساڠت ممواسکن.">تاهڤ کفهمن موريد ساڠت ممواسکن.</option>
+                                            <option value="رانچڠن ڤڠاجرن دتوليس دڠن تليتي دان لڠکڤ.">رانچڠن ڤڠاجرن دتوليس دڠن تليتي دان لڠکڤ.</option>
+                                            <option value="ݢورو ممبريکن ڤنݢوهن ڤوسيتيف يڠ ساڠت ممرنساڠکن.">ݢورو ممبريکن ڤنݢوهن ڤوسيتيف يڠ ساڠت ممرنساڠکن.</option>
+                                        </optgroup>
+
+                                        <optgroup label="[ سدرهانا ]">
+                                            <option value="ڤڠاجرن برجلن دڠن لنچر دان باءيق.">ڤڠاجرن برجلن دڠن لنچر دان باءيق.</option>
+                                            <option value="اوبجيکتيف ڤمبلاجرن سبهاݢينڽ ترچاڤاي.">اوبجيکتيف ڤمبلاجرن سبهاݢينڽ ترچاڤاي.</option>
+                                            <option value="ڤڠليبَتن موريد ممواسکن.">ڤڠليبَتن موريد ممواسکن.</option>
+                                            <option value="ݢورو ڤرلو ممڤلباݢايکن باهن بنتو مڠاجر.">ݢورو ڤرلو ممڤلباݢايکن باهن بنتو مڠاجر.</option>
+                                            <option value="کاوالن کلس ممواسکن، بوله دڤرتيڠکتکن لاݢي.">کاوالن کلس ممواسکن، بوله دڤرتيڠکتکن لاݢي.</option>
+                                            <option value="ݢورو ڤرلو ممڤرباڽقکن سيسي سوءال جواب دڠن موريد.">ݢورو ڤرلو ممڤرباڽقکن سيسي سوءال جواب دڠن موريد.</option>
+                                            <option value="کبياساﺀن موريد فاهم، تتاڤي ڤرلو لِتيهن تمبهن.">کبياساﺀن موريد فاهم، تتاڤي ڤرلو لِتيهن تمبهن.</option>
+                                            <option value="سسواي دتمبه باءيق ڤد بهاݢين ڤنوتوڤ ڤدڤ.">سسواي دتمبه باءيق ڤد بهاݢين ڤنوتوڤ ڤدڤ.</option>
+                                            <option value="ماس ڤڠاجرن ڤرلو دوروس دڠن لبيه تڤت.">ماس ڤڠاجرن ڤرلو دوروس دڠن لبيه تڤت.</option>
+                                            <option value="ستندرد ڤمبلاجرن دسامڤايکن دڠن جلس.">ستندرد ڤمبلاجرن دسامڤايکن دڠن جلس.</option>
+                                        </optgroup>
+
+                                        <optgroup label="[ بيمبيڠن / لمه ]">
+                                            <option value="اوبجيکتيف ڤمبلاجرن بلوم سڤنوهڽ ترچاڤاي، ڤرلو بيمبيڠن.">اوبجيکتيف ڤمبلاجرن بلوم سڤنوهڽ ترچاڤاي، ڤرلو بيمبيڠن.</option>
+                                            <option value="کاوالن کلس ڤرلو دڤرباءيقي دڠن سݢرا.">کاوالن کلس ڤرلو دڤرباءيقي دڠن سݢرا.</option>
+                                            <option value="موريد کليهاتن کورڠ فوکوس دان کورڠ اکتيف.">موريد کليهاتن کورڠ فوکوس دان کورڠ اکتيف.</option>
+                                            <option value="ݢورو ڤرلو مڽدياکن باهن بنتو مڠاجر يڠ لبيه مناريق.">ݢورو ڤرلو مڽدياکن باهن بنتو مڠاجر يڠ لبيه مناريق.</option>
+                                            <option value="ڤنراڠن تاجوق اݢق کابور دان ڤرلو لِتيهن تمبهن.">ڤنراڠن تاجوق اݢق کابور دان ڤرلو لِتيهن تمبهن.</option>
+                                            <option value="سيلا ڤستيکن رانچڠن ڤڠاجرن لڠکڤ سبلوم کلس برمولا.">سيلا ڤستيکن رانچڠن ڤڠاجرن لڠکڤ سبلوم کلس برمولا.</option>
+                                            <option value="ڤرلو لبيه باڽق اکتيۏيتي برڤوستکن موريد.">ڤرلو لبيه باڽق اکتيۏيتي برڤوستکن موريد.</option>
+                                            <option value="موريد ممرلوکن ڤموليهن دان ڤراتين يڠ لبيه خوصوص.">موريد ممرلوکن ڤموليهن دان ڤراتين يڠ لبيه خوصوص.</option>
+                                            <option value="ڤڠوروسن ماس ساڠت کورڠ ممواسکن، رانچڠ ڤدڤ دڠن بتول.">ڤڠوروسن ماس ساڠت کورڠ ممواسکن، رانچڠ ڤدڤ دڠن بتول.</option>
+                                            <option value="سيلا روجوع ڤنيليا دان دڤتکن بيمبيڠن ڤدڤ.">سيلا روجوع ڤنيليا دان دڤتکن بيمبيڠن ڤدڤ.</option>
+                                        </optgroup>
+                                    </select>
+                                    <p class="text-sm text-slate-500 mt-2">* کليک ڤد اولسن د اتس اونتوق ماسوقکن کالم کوتک د باوه سچارا اٴوتوماتيک.</p>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="block font-bold text-slate-700 text-xl">اولسن ڤڽيمق</label>
+                                    <textarea id="laporan-ulasan" rows="5" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 text-xl resize-none bg-white leading-loose" placeholder="تايڤ اولسن اتاو چاتتن د سيني..." dir="rtl"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Ruangan Tandatangan -->
+                            <div class="hidden print:grid grid-cols-2 gap-8 mt-16 pt-16 border-t-2 border-slate-800 text-center font-bold text-xl" dir="rtl">
+                                <div>
+                                    <p class="mb-24">تنداتاڠن ݢورو</p>
+                                    <p>...................................................</p>
+                                    <p class="text-slate-500 font-normal mt-1">(نام & چڤ جاوتن)</p>
+                                </div>
+                                <div>
+                                    <p class="mb-24">ڤڠساهن ݢورو بسر / ڤڽيمق</p>
+                                    <p>...................................................</p>
+                                    <p class="text-slate-500 font-normal mt-1">(نام & چڤ جاوتن)</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -436,39 +492,50 @@
             <!-- VIEW: PROFIL GURU -->
             <div id="view-profil" class="max-w-2xl mx-auto hidden">
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                    <div class="p-6 border-b border-slate-100 bg-slate-50/50">
-                        <h3 class="text-2xl font-bold text-slate-800">ڤروفيل ݢورو</h3>
-                        <p class="text-slate-500 mt-1 font-sans">Kemaskini maklumat guru untuk dijana dalam e-RPH.</p>
+                    <div class="p-6 border-b border-slate-100 bg-slate-50 flex items-center gap-4">
+                        <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-3xl">
+                            <i class="ph-fill ph-user-circle"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-3xl font-bold text-slate-800">تتڤن ڤروفيل ݢورو</h3>
+                            <p class="text-lg text-slate-500 mt-1">کمس کيني معلومت ديري اندا.</p>
+                        </div>
                     </div>
+                    
                     <div class="p-8 space-y-6">
                         <div class="space-y-2">
-                            <label class="block font-bold text-slate-700 text-xl">Nama Sekolah</label>
-                            <select id="profil-sekolah" onchange="onSekolahChange()" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl font-sans" dir="rtl">
-                                <option value="">-- ڤيليه سكوله --</option>
+                            <label class="block font-bold text-slate-700 text-xl">نام سکوله</label>
+                            <select id="profil-sekolah" onchange="onSekolahChange()" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 bg-slate-50 text-xl" dir="rtl">
+                                <option value="">-- ڤيليه سکوله --</option>
                             </select>
                         </div>
                         <div class="space-y-2">
-                            <label class="block font-bold text-slate-700 text-xl">Nama Guru</label>
-                            <select id="profil-guru" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl font-sans" disabled dir="rtl">
-                                <option value="">-- سيلا ڤيليه سكوله دهولو --</option>
+                            <label class="block font-bold text-slate-700 text-xl">نام ݢورو</label>
+                            <select id="profil-guru" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 bg-slate-50 text-xl" disabled dir="rtl">
+                                <option value="">-- سيلا ڤيليه سکوله دهولو --</option>
                             </select>
                         </div>
+
                         <div class="pt-6 border-t border-slate-100 flex justify-start" dir="ltr">
-                            <button onclick="simpanProfil()" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xl font-bold flex items-center gap-2 transition-colors font-sans">
-                                <i class="ph ph-check-circle text-2xl"></i> Simpan Profil
+                            <button onclick="simpanProfil()" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xl font-bold flex items-center gap-2 transition-colors shadow-sm" dir="rtl">
+                                <i class="ph-bold ph-check-circle text-2xl"></i> سيمڤن ڤروفيل
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Modal Custom (Menggantikan alert) -->
-            <div id="custom-modal" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center z-50 print-hidden" dir="rtl">
-                <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-xl transform transition-all text-center">
-                    <div id="modal-icon" class="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4"></div>
-                    <h3 id="modal-title" class="text-2xl font-bold text-slate-800 mb-2"></h3>
-                    <p id="modal-message" class="text-lg text-slate-600 mb-6 font-sans"></p>
-                    <button onclick="tutupModal()" class="px-6 py-2.5 bg-slate-800 text-white rounded-lg text-lg font-bold hover:bg-slate-700 w-full transition-colors font-sans">Tutup (توتوڤ)</button>
+            <!-- Modal Custom (Notifikasi) -->
+            <div id="custom-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center z-50 transition-opacity opacity-0">
+                <div class="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl transform transition-all scale-95" id="modal-content">
+                    <div class="text-center">
+                        <div id="modal-icon" class="w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-4">
+                            <!-- Icon injected by JS -->
+                        </div>
+                        <h3 id="modal-title" class="text-2xl font-bold text-slate-800 mb-2"></h3>
+                        <p id="modal-message" class="text-slate-600 mb-6 text-lg"></p>
+                        <button onclick="closeModal()" class="w-full py-3 px-4 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold transition-colors text-lg">توتوڤ</button>
+                    </div>
                 </div>
             </div>
 
@@ -476,405 +543,28 @@
     </main>
 
     <script>
-        function paparModal(tajuk, mesej, jenis) {
-            const modal = document.getElementById('custom-modal');
-            const icon = document.getElementById('modal-icon');
-            document.getElementById('modal-title').innerText = tajuk;
-            document.getElementById('modal-message').innerText = mesej;
-
-            if (jenis === 'success') {
-                icon.className = 'w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 bg-emerald-100 text-emerald-600 text-3xl';
-                icon.innerHTML = '<i class="ph ph-check-circle"></i>';
-            } else if (jenis === 'loading') {
-                icon.className = 'w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 bg-blue-100 text-blue-600 text-3xl animate-spin';
-                icon.innerHTML = '<i class="ph ph-spinner-gap"></i>';
-            } else {
-                icon.className = 'w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 bg-red-100 text-red-600 text-3xl';
-                icon.innerHTML = '<i class="ph ph-warning-circle"></i>';
-            }
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-
-        function tutupModal() {
-            const modal = document.getElementById('custom-modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-
-        async function simpanKeGoogleSheet() {
-            const guru = document.getElementById('sidebar-guru-name').innerText;
-            const sekolah = document.getElementById('sidebar-guru-school').innerText;
-            const minggu = document.getElementById('erph-minggu').options[document.getElementById('erph-minggu').selectedIndex]?.text || '';
-            const subjek = document.getElementById('erph-subjek').options[document.getElementById('erph-subjek').selectedIndex]?.text || '';
-            const kelas = document.getElementById('erph-kelas').value;
-            const tarikh = document.getElementById('erph-tarikh').value;
-            const masa = document.getElementById('erph-masa').value;
-            const tajuk = document.getElementById('erph-tajuk').value;
-            const sk = document.getElementById('erph-sk').value;
-            const sp = document.getElementById('erph-sp').value;
-            const objektif = document.getElementById('erph-objektif').options[document.getElementById('erph-objektif').selectedIndex]?.text || '';
-            
-            const aktivitiElems = document.querySelectorAll('input[name="aktiviti"]:checked');
-            let aktiviti = [];
-            aktivitiElems.forEach(el => aktiviti.push(el.value));
-            const aktivitiStr = aktiviti.join("\n");
-
-            const penilaian = document.getElementById('erph-penilaian').options[document.getElementById('erph-penilaian').selectedIndex]?.text || '';
-            const bbm = document.getElementById('erph-bbm').options[document.getElementById('erph-bbm').selectedIndex]?.text || '';
-            const refleksi = document.getElementById('erph-refleksi').options[document.getElementById('erph-refleksi').selectedIndex]?.text || '';
-
-            if(!tarikh || !kelas) {
-                paparModal("رالت (Ralat)", "Sila lengkapkan maklumat Tarikh dan Kelas terlebih dahulu sebelum menyimpan.", "error");
-                return;
-            }
-
-            paparModal("سدڠ مپيمڤن...", "Data sedang dihantar ke Google Sheets. Sila tunggu sebentar...", "loading");
-
-            // Menggunakan fungsi Form Data untuk mengelakkan halangan CORS
-            const formData = new URLSearchParams();
-            formData.append("guru", guru);
-            formData.append("sekolah", sekolah);
-            formData.append("minggu", minggu);
-            formData.append("subjek", subjek);
-            formData.append("kelas", kelas);
-            formData.append("tarikh", tarikh);
-            formData.append("masa", masa);
-            formData.append("tajuk", tajuk);
-            formData.append("sk", sk);
-            formData.append("sp", sp);
-            formData.append("objektif", objektif);
-            formData.append("aktiviti", aktivitiStr);
-            formData.append("penilaian", penilaian);
-            formData.append("bbm", bbm);
-            formData.append("refleksi", refleksi);
-
-            // TAMPAL URL WEB APP ANDA YANG BAHARU DI SINI:
-            const webAppUrl = "https://script.google.com/macros/s/AKfycbxzY6BfEQE5POlqgaC9FANUOiJHTeGeqmJvDo74r45SLF5dr9FPYJvT3L-ZEtpCVelvUQ/exec"; 
-
-            try {
-                fetch(webAppUrl, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: formData
-                }).then(() => {
-                    paparModal("برجایا (Berjaya)!", "Data e-RPH anda telah berjaya disimpan ke dalam Google Sheets!", "success");
-                    
-                    // Reset borang selepas berjaya simpan
-                    document.querySelector('form').reset();
-                    const objSelect = document.getElementById('erph-objektif');
-                    if(objSelect) objSelect.innerHTML = '<option value="">ڤيليه اوبجيكتيف...</option>';
-                    
-                    setTimeout(() => tutupModal(), 3000);
-                }).catch((error) => {
-                    console.error('Error!', error.message);
-                    paparModal("رالت (Ralat)", "Gagal menyimpan data. Sila pastikan capaian internet anda stabil.", "error");
-                });
-            } catch (error) {
-                console.error('Error!', error.message);
-                paparModal("رالت (Ralat)", "Gagal menyimpan data.", "error");
-            }
-        }
-
-        // Tarikh dan Catatan RPT
-        const pg1 = "<span class='inline-block text-emerald-700 font-bold text-sm bg-emerald-100 px-3 py-1 rounded-md border border-emerald-300'>ڤڠݢل ١</span>";
-        const pg2 = "<span class='inline-block text-emerald-700 font-bold text-sm bg-emerald-100 px-3 py-1 rounded-md border border-emerald-300'>ڤڠݢل ٢</span>";
-        const cPeperiksaan = "<span class='inline-block text-purple-700 font-bold text-sm bg-purple-100 px-3 py-1 rounded-md border border-purple-300'>ڤڤريقساءن</span>";
-        const cAkhir = "<span class='inline-block text-blue-700 font-bold text-sm bg-blue-100 px-3 py-1 rounded-md border border-blue-300'>اخير تاهون</span>";
-
-        const tarikhMinggu = {
-            1: "12.01 - 16.01.2026", 2: "19.01 - 23.01.2026", 3: "26.01 - 30.01.2026", 4: "03.02 - 06.02.2026", 5: "09.02 - 13.02.2026", 6: "16.02 - 20.02.2026", 7: "23.02 - 27.02.2026", 8: "02.03 - 06.03.2026", 9: "09.03 - 13.03.2026", 10: "16.03 - 18.03.2026", 11: "30.03 - 03.04.2026", 12: "06.04 - 10.04.2026", 13: "13.04 - 17.04.2026", 14: "20.04 - 24.04.2026", 15: "27.04 - 30.04.2026", 16: "04.05 - 08.05.2026", 17: "11.05 - 15.05.2026", 18: "18.05 - 22.05.2026", 19: "08.06 - 12.06.2026", 20: "15.06 - 19.06.2026", 21: "22.06 - 26.06.2026", 22: "29.06 - 03.07.2026", 23: "06.07 - 10.07.2026", 24: "13.07 - 17.07.2026", 25: "20.07 - 24.07.2026", 26: "27.07 - 31.07.2026", 27: "03.08 - 07.08.2026", 28: "10.08 - 14.08.2026", 29: "17.08 - 21.08.2026", 30: "24.08 - 28.08.2026", 31: "07.09 - 11.09.2026", 32: "14.09 - 18.09.2026", 33: "21.09 - 25.09.2026", 34: "28.09 - 02.10.2026", 35: "05.10 - 09.10.2026", 36: "12.10 - 16.10.2026", 37: "19.10 - 23.10.2026", 38: "26.10 - 30.10.2026", 39: "02.11 - 06.11.2026", 40: "09.11 - 13.11.2026", 41: "16.11 - 20.11.2026", 42: "23.11 - 27.11.2026", 43: "30.11 - 04.12.2026"
+        // URL Apps Script Anda
+        const webAppUrl = "https://script.google.com/macros/s/AKfycbxzY6BfEQE5POlqgaC9FANUOiJHTeGeqmJvDo74r45SLF5dr9FPYJvT3L-ZEtpCVelvUQ/exec";
+        
+        // Pangkalan Data Sekolah & Guru Kluang dalam Ejaan Jawi
+        const senaraiGuruSekolah = {
+            "سکوله اݢام بوکيت توڠکت": ["حفيظ بن اهبية@همزه", "محمد مهيمن بن حجي هترن", "نورديانا بنت هارون", "نور عزاتي بنت اب غفار", "نور عزة بنت مختار", "سلينا بنت وسل", "سوسي تاتوم بنت محمد رشيد"],
+            "سکوله اݢام داتوء احمد": ["عائشة عزاتي بنت جمال الدين", "عالية سکينة بنت ذوالکفلي", "حزلينا بنت مد قادر", "خيرالنساء بنت طالب", "مسينتن بنت بصير", "مزلان بن محمد نور"],
+            "سکوله اݢام فيلدا کاهڠ بارت": ["محمد فاتح بن قمرين", "نور ليانا بنت محمد طاهر", "نور الإنشراح بنت عبدالغفار", "رسيلة بنت حارث", "سفورا بنت محمود"],
+            "سکوله اݢام کلوواڠ بارت": ["حليزه بنت سريمن", "حسليندا بنت غزالي", "مھانوم بنت محمد اقبال", "مسلا بنت حسن", "محمد انوار بن راوڤ", "محمد نقي الدين بن مھد"],
+            "سکوله اݢام تامن سري لمبق": ["احمد نور فهمي بن مرسيد", "عائشة نبيلة بنت محمد", "امينه بنت اتن حسن", "عفة انشراح بنت بهارالدين", "لقمان الحکيم بن شهوان"],
+            "سکوله اݢام بندر کلوواڠ": ["عفيفة نور سعادة بنت عزمي", "عين الفتحية انشراح بنت يزيد", "اسماء بنت عبدالصمد", "ازهد بن عبدالرزاق", "ديانا بنت عبدالعزيز"],
+            "سکوله اݢام سري کمڤوڠ تڠه ٠١": ["عظيمة بنت محمد عريف", "بهرالدين بن جعفر", "دانيال عقيف بن شمس الزمان", "عزة فرزانا بنت مد نظام"],
+            "سکوله اݢام سلطان سر ابراهيم": ["جواريين بنت جسمان", "نور حبيبة بنت امت مسرا", "نورعيني بنت جلال"],
+            "سکوله رنده اݢام برسڤادو کلوواڠ": ["فائمه بنت اسماعيل", "محمد عزالدين بن مد روزي", "محمد خير الإقبال بن تاج الدين", "ناتاشا نورهزورا بنت محمد بصير"]
         };
 
-        const rawData = {
-            "Sirah": {
-                1: ["١. قيصه ٢٥ اورڠ رسول", "١. منچريتاكن سچارا ريڠكس توجوان الله مڠوتوسكن ٢٥ اورڠ رسول."],
-                2: ["٢. نبي محمد SAW", "١. منرڠكن سسيليه كتورونن نبي محمد SAW."],
-                3: ["٣. ڤريستيوا سبلوم كرسولن", "١. منجلسكن ڤريستيوا ڤمبلهن دادا نبي."],
-                4: ["٤. ڤنريماءن وحيو ڤرتام", "١. منچريتاكن كأداءن نبي سماس منريما وحيو د ݢوا حراء."],
-                19: ["٥. دعوه نبي سچارا رهسيا", "١. منرڠكن چارا نبي بردعوه سچارا رهسيا."],
-                20: ["٦. دعوه نبي سچارا ترڠ-ترڠن", "١. منجلسكن ڤننتڠن كافير قريش ترهادف دعوه نبي."],
-                33: ["٧. هجره كمدينة", "١. منچريتاكن ڤريستيوا هجره نبي كمدينة."]
-            },
-            "Akhlak": {
-                1: ["١. علمو اخلاق", "١. مڽاتاكن ڤڠرتين علمو اخلاق منوروت بهاس دان ايستيله."],
-                2: ["٢. ادب ترهادف عالم سكيتر", "١. مڽاتاكن مقصود عالم سكيتر دان دليلوڽ."],
-                3: ["٣. ڤونچا كروسقن عالم", "١. ممباچ دليل القرءان تنتڠ ڤونچا كروسقن عالم."],
-                4: ["٤. كچينتاءن كڤد نݢارا", "١. منجلسكن ديفينيسي منچينتاءي نݢارا سچارا ريڠكس."],
-                8: ["٤. احسان", "١. منجلسكن كڤنتيڠن احسان دالم ديري."],
-                11: ["٥. رضا", "١. مڽبوت ڤڠنلن رضا سچارا ريڠكس."],
-                19: ["٦. تواضع", "١. ممباچ ڤڠنلن تواضع دڠن ريڠكس."],
-                22: ["٧. تفكر", "١. منجلسكن كڤنتيڠن عقل دالم إسلام."],
-                25: ["٨. عجب", "١. مڽاتاكن كسن صيفت عجب سچارا ريڠكس."],
-                29: ["٩. سڠک بوروق", "١. ممباچ ڤڠنلن سڠک بوروق دڠن جلس."],
-                35: ["١٠. بخيل", "١. ممباچ ڤڠنلن صيفت بخيل دغن جلس."]
-            },
-            "Bahasa Arab": {
-                1: ["الدرس الأول: المرفوعات من الأسماء (الفاعل)", "١. ممباچ آيات دڠن سبوتن يڠ جلس."],
-                4: ["نائب الفاعل", "١. مڽبوت سبب دبواڠ فاعل دڠن باءيق."],
-                7: ["المبتدأ والخبر", "١. مڽاتاكن مقصود المبتدأ والخبر."],
-                9: ["الدرس الثاني: المنصوبات من الأسماء (المفعول به)", "١. منوليس چونتوه آيات ريڠكس."],
-                11: ["المفعول المطلق", "١. ممباچ آيات دان ممهمي معنان."],
-                13: ["التمييز", "١. مڽاتاكن معنا التمييز دڠن باءيق."],
-                20: ["المنادى", "١. مڽبوت معنا المنادى دڠن باءيق."],
-                22: ["الدرس الثالث: المجرورات من الأسماء", "١. مغلواركن حروف الجر ڤد ڤتيقن."],
-                24: ["الإضافة", "١. ممباچ ايسي ڤلاجرن دڠن سبوتن يڠ جلس."],
-                28: ["الدرس الرابع: كتابة الإنشاء", "١. مڽبوت اساس ڤركاتاءن برسرتا معنان."]
-            },
-            "Amalan Lazim & KIJ": {
-                1: ["١. صلاة تسبيح", "١. مڽاتاكن ڤڠرتين دان دليل صلاة تسبيح."],
-                2: ["٢. كسلطانن إسلام جوهر (داتوء جعفر)", "١. منرڠكن روايت هيدوف دان جاس بلياو."],
-                5: ["٣. صلاة وتر", "١. مڽاتاكن ڤڠرتين، دليل دان حكوم صلاة وتر."],
-                6: ["٤. كسلطانن إسلام جوهر (داتوء بنتارا لوار)", "١. مشهورايكن روايت هيدوف دان كرجاي."],
-                11: ["٥. صلاة ݢرهان", "١. مڽاتاكن ڤڠرتين، دليل، حكوم دان كلبيهن."],
-                13: ["٦. كسلطانن إسلام جوهر (حبيب سيد علوي)", "١. منچريتاكن روايت هيدوف بلياو."],
-                21: ["٧. صلاة الإستسقاء", "١. مڽاتاكن ڤڠرتين، دليل، حكوم دان تمڤت."],
-                25: ["٨. موافقة جوهر", "١. مشهورايكن كونسيف بڠسا جوهر."],
-                26: ["٩. ترحيم صبح", "١. مڽاتاكن ڤڠرتين دان حكوم ترحيم صبح."],
-                30: ["١٠. برزنجي (راوي ١)", "١. مڽاتاكن ڤڠرتين، حكوم دان ممباچ راوي ١."],
-                33: ["١١. ڤرسورتن جوهر (كوريندم ١٢)", "١. منرڠكن كاندوڠن كوريندم ١٢ دان تاج السلاطين."],
-                38: ["١٢. سمبليهن", "١. منجلسكن ڤڠرتين، دليل، حكوم دان شرط."]
-            },
-            "Tafsir Al-Quran & Hadith": {
-                1: ["١. كلوارݢ سكينة (سورة الروم)", "١. ممباچ آيات دان مقصود دڠن بتول."],
-                4: ["٢. لارڠن ڤرتاپاءن يڠ ملمڤاو", "١. ممباچ حديث دان مقصود دڠن بتول."],
-                8: ["٣. نصيحت لقمان الحكيم", "١. ممباچ آيات دان مقصود دڠن بتول."],
-                11: ["٤. چيري٢ دعاء يڠ دمقبولكن", "١. ممباچ حديث دان مقصود دڠن بتول."],
-                19: ["٥. سقسي دهاري اخيرة (سورة يس)", "١. ممباچ آيات دان مقصود دڠن بتول."],
-                22: ["٦. تيڠݢلكن ڤركارا يڠ مراݢوكن", "١. ممباچ حديث دان مقصود دڠن بتول."],
-                25: ["٧. كواجيبن برمشوارت (سورة الشورى)", "١. ممباچ آيات دان مقصود دڠن بتول."],
-                28: ["٨. منيڠݢلكن ڤركارا يڠ تيدق ڤرلو", "١. ممباچ حديث دان مقصود دڠن بتول."],
-                33: ["٩. ادب منريما دان مڽيباركن بريتا", "١. ممباچ حديث دان مقصود دڠن بتول."],
-                35: ["١٠. كسمڤورناءن ايمان", "١. ممباچ حديث دان مقصود دڠن بتول."]
-            },
-            "Jenayat": {
-                1: ["١. منچروبوه (الصيال)", "١. مڽاتاكن ارتي منچروبوه ڤد بهاس دان ايستيله."],
-                7: ["٢. مرتد (الردة)", "١. مڽاتاكن ارتي مرتد ڤد بهاس دان ايستيله."],
-                19: ["٣. ڤمبرونتق (البغاة)", "١. مڽاتاكن ارتي ڤمبرونتق ڤد بهاس دان ايستيله."],
-                25: ["٤. برلومبا دان ممانه", "١. مڽاتاكن ارتي المسابقة دان المناضلة."],
-                33: ["٥. الجهاد", "١. مڽاتاكن ارتي الجهاد ڤد بهاس دان ايستيله."]
-            },
-            "Munakahat": {
-                1: ["١. ڤڠنلن رجوع", "١. مڽبوت ڤڠنلن رجوع دان شرط-شرطڽ."],
-                3: ["٢. حكوم رجوع", "١. منرڠكن حكوم رجوع دالم إسلام."],
-                5: ["٣. إدة", "١. منجلسكن مقصود إدة دان جنيس-جنيسڽ."],
-                19: ["٤. ظهار", "١. مڽاتاكن ڤڠنلن ظهار دان حكومڽ."],
-                25: ["٥. لعان", "١. منرڠكن مقصود لعان دان شرط-شرطڽ."],
-                33: ["٦. حضانة", "١. منجلسكن مقصود حضانة دان حق penjagaan anak."]
-            },
-            "Muamalat": {
-                1: ["١. المخابرة دان المزارعة", "١. منجلسكن ڤڠرتين المخابرة دان المزارعة."],
-                5: ["٢. المضاربة", "١. مڽاتاكن ڤڠرتين المضاربة دان ركونڽ."],
-                11: ["٣. المساقاة", "١. منرڠكن ڤڠرتين المساقاة دان شرطڽ."],
-                19: ["٤. اللقطة (بارڠ جومڤاءن)", "١. منرڠكن ڤڠرتين اللقطة دان حكومڽ."],
-                25: ["٥. الوديعة", "١. منجلسكن ڤڠرتين الوديعة دان جنيسڽ."],
-                33: ["٦. العارية (ڤينجمن)", "١. مڽاتاكن ڤڠرتين العارية دان ركونڽ."]
-            },
-            "Faraid": {
-                1: ["١. ڤڠنلن وصيت", "١. منرڠكن ڤڠرتين وصيت دان ركونڽ."],
-                5: ["٢. شرط وصيت", "١. منجلسكن شرط-شرط وصيت يڠ صح."],
-                11: ["٣. ڤوساك اصحاب الفروض", "١. منرڠكن ݢولوڠن يڠ برحق منريما ڤوساك."],
-                19: ["٤. ڤوساك حواشي", "١. منتعريفكن مقصود حواشي دالم ڤوساك."],
-                25: ["٥. حجوب", "١. منجلسكن مقصود حجوب دان جنيسڽ."],
-                33: ["٦. ڤڠيراءن ڤوساك", "١. منونجوقكن چارا اسس ڤڠيراءن ڤوساك."]
-            },
-            "Ibadat": {
-                1: ["١. حكوم برڤاكاين", "١. مڽبوت حكوم دان كأداءن يڠ دحرامكن مڠݢوناكن سوترا."],
-                2: ["٢. زكاة", "١. منتعريفكن ڤڠرتين زكاة ڤد بهاس دان ايستيله."],
-                6: ["٣. زكاة فطرة", "١. مينارايكن شرط-شرط واجب زكاة فطرة."],
-                9: ["٤. اصناف زكاة", "١. ممبينچڠكن هوراين لاڤن اصناف يڠ برحق منريما زكاة."],
-                10: ["٥. ڤواسا", "١. مڽبوت ڤڠرتين ڤواسا ڤد بهاس دان ايستيله شرع."],
-                19: ["٦. اعتكاف", "١. منتعريفكن كلمة اعتكاف ڤد بهاس دان ايستيله شرع."],
-                21: ["٧. حج دان عمرة", "١. منتعريفكن حج دان عمرة دري سݢي بهاس دان ايستيله."],
-                33: ["٨. بهاݢين حج دان دم", "١. منجلسكن چارا ملاكوكن حج دان عمرة."]
-            }
-        };
-
-        const rptDatabase = { "Darjah 6": {} };
-        Object.keys(rawData).forEach(subj => {
-            rptDatabase["Darjah 6"][subj] = [];
-            let lastData = ["اولڠ كاجي دان ڤڠوكوهن", "١. لاتيه توبي دان اولڠ كاجي برفوكوس."];
-            
-            for(let i=1; i<=43; i++) {
-                let sk = "اولڠ كاجي دان ڤڠوكوهن";
-                let sp = "١. لاتيه توبي دان اولڠ كاجي برفوكوس.";
-                let cat = (i <= 18) ? pg1 : pg2;
-                
-                if (i>=14 && i<=18) { sk = "ڤڤريقساءن ستڠه تاهون"; sp = "Ujian Lisan / Bertulis"; cat = cPeperiksaan; }
-                else if (i===27) { sk = "ڤڤريقساءن ڤرچوباءن SDEA"; sp = "Ujian Percubaan"; cat = cPeperiksaan; }
-                else if (i===31 || i===32) { sk = "ڤڤريقساءن ليسن SDEA"; sp = "Ujian Lisan SDEA"; cat = cPeperiksaan; }
-                else if (i===42) { sk = "ڤڤريقساءن برتوليس SDEA"; sp = "Ujian Bertulis SDEA"; cat = cPeperiksaan; }
-                else if (i>=38 && i<=43 && i!==42) { sk = "اولڠ كاجي ڤڤريقساءن"; sp = "Minggu Ulang Kaji"; cat = cAkhir; }
-                else {
-                    if(rawData[subj][i]) {
-                        lastData = rawData[subj][i];
-                    }
-                    sk = lastData[0];
-                    sp = lastData[1];
-                }
-                
-                rptDatabase["Darjah 6"][subj].push({
-                    minggu: i.toString(),
-                    tarikh: tarikhMinggu[i] ? tarikhMinggu[i].replace(" - ", "<br>hingga<br>") : "",
-                    stdKandungan: sk,
-                    stdPembelajaran: sp,
-                    catatan: cat
-                });
-            }
-        });
-
-        let currentTahap = "Darjah 6";
-        let currentSubjek = "Amalan Lazim & KIJ";
-
-        function setupFilters() {
-            const bindClick = (buttons, type) => {
-                buttons.forEach(label => {
-                    label.addEventListener('click', () => {
-                        if (label.querySelector('.opacity-50')) return;
-                        buttons.forEach(l => l.classList.remove('active'));
-                        label.classList.add('active');
-                        label.querySelector('input').checked = true;
-                        
-                        if (type === 'tahap') currentTahap = label.getAttribute('data-val');
-                        if (type === 'subjek') currentSubjek = label.getAttribute('data-val');
-                        updateUI();
-                        
-                        // Kemas kini e-RPH juga jika sedang buka
-                        if(!document.getElementById('view-erph').classList.contains('hidden')) {
-                            document.getElementById('erph-subjek').value = currentSubjek;
-                            autoFillRPT();
-                        }
-                    });
-                });
-            };
-
-            bindClick(document.querySelectorAll('#filter-tahap .filter-btn'), 'tahap');
-            bindClick(document.querySelectorAll('#filter-subjek .filter-btn'), 'subjek');
-        }
-
-        const JawiSubjekMap = {
-            "Sirah": "سيره", "Akhlak": "اخلاق", "Bahasa Arab": "بهاس عرب",
-            "Amalan Lazim & KIJ": "عملن لازيم & KIJ", "Tafsir Al-Quran & Hadith": "تفسير & حديث",
-            "Jenayat": "جنايات", "Munakahat": "مناكحات", "Muamalat": "معاملات",
-            "Faraid": "فرائض", "Ibadat": "عبادات"
-        };
-
-        function updateUI() {
-            document.getElementById('stat-subjek').innerText = JawiSubjekMap[currentSubjek] || currentSubjek;
-            document.getElementById('stat-tahap').innerText = currentTahap.replace('Darjah ', '');
-            document.getElementById('rpt-table-title').innerText = `RPT ${currentSubjek} - ${currentTahap} (2026)`;
-            renderTable();
-        }
-
-        function renderTable() {
-            const tbody = document.getElementById('rpt-table-body');
-            const data = (rptDatabase[currentTahap] && rptDatabase[currentTahap][currentSubjek]) ? rptDatabase[currentTahap][currentSubjek] : null;
-
-            if (!data || data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-12 text-center text-slate-500"><i class="ph ph-warning-circle text-4xl mb-2"></i><br>Sistem sedang dikemas kini.</td></tr>`;
-                return;
-            }
-
-            let html = '';
-            data.forEach((row) => {
-                const bgClass = (parseInt(row.minggu) % 2 === 0) ? 'bg-white' : 'bg-slate-50/30';
-                html += `
-                    <tr class="${bgClass} hover:bg-emerald-50/60 transition-colors group border-b border-slate-100 last:border-b-0">
-                        <td class="py-4 px-4 text-center border-l border-slate-100 align-top font-bold text-slate-600 font-sans">${row.minggu}</td>
-                        <td class="py-4 px-4 text-sm text-slate-600 border-l border-slate-100 align-top text-center leading-relaxed pt-5 font-sans">${row.tarikh}</td>
-                        <td class="py-4 px-6 text-slate-800 border-l border-slate-100 align-top text-right">${row.stdKandungan}</td>
-                        <td class="py-4 px-6 text-slate-800 border-l border-slate-100 align-top text-right">${row.stdPembelajaran}</td>
-                        <td class="py-4 px-4 text-sm text-slate-600 align-top pt-5 text-center font-sans">${row.catatan}</td>
-                    </tr>
-                `;
-            });
-            tbody.innerHTML = html;
-        }
-
-        function setupERPH() {
-            const mingguSelect = document.getElementById('erph-minggu');
-            if(mingguSelect) {
-                for(let i=1; i<=43; i++) {
-                    let opt = document.createElement('option');
-                    opt.value = i.toString();
-                    opt.innerText = "ميڠݢو " + i + " (Minggu " + i + ")";
-                    mingguSelect.appendChild(opt);
-                }
-            }
-            
-            // Checkbox logic for "Tiada Aktiviti"
-            const tiadaAktiviti = document.getElementById('chk-tiada-aktiviti');
-            const allAktiviti = document.querySelectorAll('input[name="aktiviti"]:not(#chk-tiada-aktiviti)');
-            
-            if(tiadaAktiviti) {
-                tiadaAktiviti.addEventListener('change', (e) => {
-                    if(e.target.checked) {
-                        allAktiviti.forEach(cb => cb.checked = false);
-                    }
-                });
-            }
-            
-            allAktiviti.forEach(cb => {
-                cb.addEventListener('change', (e) => {
-                    if(e.target.checked && tiadaAktiviti) tiadaAktiviti.checked = false;
-                });
-            });
-        }
-
-        function stripHTML(html) {
-            let tmp = document.createElement("DIV");
-            let cleanHtml = html.replace(/<br\s*[\/]?>/gi, " - ");
-            tmp.innerHTML = cleanHtml;
-            return tmp.textContent || tmp.innerText || "";
-        }
-
-        function autoFillRPT() {
-            const minggu = document.getElementById('erph-minggu').value;
-            const subjek = document.getElementById('erph-subjek').value;
-            const tahap = currentTahap;
-
-            if (!minggu || !subjek) return;
-
-            // Pastikan data wujud
-            if (rptDatabase[tahap] && rptDatabase[tahap][subjek]) {
-                const dataMinggu = rptDatabase[tahap][subjek].find(item => item.minggu == minggu);
-
-                if (dataMinggu) {
-                    // Buang tag HTML untuk input tarikh
-                    let tarikhBersih = stripHTML(dataMinggu.tarikh);
-                    document.getElementById('erph-tarikh').value = tarikhBersih;
-                    
-                    // Bersihkan tajuk dari nombor depan (contoh "١. ")
-                    let tajukBersih = dataMinggu.stdKandungan.replace(/^[٠-٩0-9]+[\.\-\)\s]+/, '').trim();
-                    document.getElementById('erph-tajuk').value = tajukBersih;
-                    
-                    document.getElementById('erph-sk').value = dataMinggu.stdKandungan;
-                    document.getElementById('erph-sp').value = dataMinggu.stdPembelajaran;
-
-                    // Jana pilihan objektif secara automatik berdasarkan Standard Pembelajaran
-                    const objSelect = document.getElementById('erph-objektif');
-                    objSelect.innerHTML = '<option value="">ڤيليه اوبجيكتيف...</option>';
-                    let spBersih = dataMinggu.stdPembelajaran.replace(/^[٠-٩0-9]+[\.\-\)\s]+/, '').trim();
-                    let opt = document.createElement('option');
-                    opt.value = spBersih;
-                    opt.innerText = spBersih;
-                    objSelect.appendChild(opt);
-                    objSelect.selectedIndex = 1; // Auto pilih objektif tersebut
-
-                    // Papar Notifikasi Berjaya
-                    paparModal("برجایا (Berjaya)", `Maklumat RPT Minggu ${minggu} berjaya dimuat turun ke dalam borang.`, "success");
-                    
-                    // Tutup modal secara automatik selepas 2 saat
-                    setTimeout(() => {
-                        tutupModal();
-                    }, 2000);
-                }
-            }
-        }
+        // Update current date
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('ms-MY', options);
 
         function switchTab(tabId) {
-            ['dashboard', 'rpt', 'erph', 'profil'].forEach(id => {
+            ['dashboard', 'rpt', 'erph', 'profil', 'laporan'].forEach(id => {
                 document.getElementById(`view-${id}`).classList.add('hidden');
                 document.getElementById(`nav-${id}`).className = "w-full flex items-center gap-4 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900";
             });
@@ -887,67 +577,30 @@
             if (tabId === 'rpt') title = 'جدوال RPT ٢٠٢٦';
             if (tabId === 'erph') {
                 title = 'بورڠ إي-RPH';
-                document.getElementById('erph-subjek').value = currentSubjek;
-                
-                let darjahNum = currentTahap.replace('Darjah ', '');
-                let kelasInput = document.getElementById('erph-kelas');
-                if(!kelasInput.value) kelasInput.value = "درجه " + darjahNum + " ";
-                
-                autoFillRPT();
+                const savedProfil = JSON.parse(localStorage.getItem('erpt_profil'));
+                if(savedProfil) {
+                    if(!document.getElementById('erph-guru')) {
+                        const hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.id = 'erph-guru';
+                        hiddenInput.name = 'guru';
+                        document.getElementById('erph-form').appendChild(hiddenInput);
+                    }
+                    if(!document.getElementById('erph-sekolah-hidden')) {
+                        const hiddenSek = document.createElement('input');
+                        hiddenSek.type = 'hidden';
+                        hiddenSek.id = 'erph-sekolah-hidden';
+                        hiddenSek.name = 'sekolah';
+                        document.getElementById('erph-form').appendChild(hiddenSek);
+                    }
+                    document.getElementById('erph-guru').value = savedProfil.guru;
+                    document.getElementById('erph-sekolah-hidden').value = savedProfil.sekolah;
+                }
             }
             if (tabId === 'profil') title = 'ڤروفيل ݢورو';
+            if (tabId === 'laporan') title = 'لاڤورن إي-RPH';
             document.getElementById('header-title').innerText = title;
         }
-
-        const senaraiGuruSekolah = {
-            "سكوله اݢام بوكيت توڠكت": ["حفيظ بن احبية@حمزة", "محمد مهيمن بن حج حضران", "نورديانا بنت هارون", "نور عزتي بنت عبد الغفار", "نور عزة بنت مختار", "سالينا بنت واسل", "سوسي تاتوم بنت محمد راشد"],
-            "سكوله اݢام داتوء احمد": ["عائشة عزتي بنت جمال الدين", "عالية سكينة بنت ذوالكفلي", "حزلينا بنت مد قادر", "خيرالنساء بنت طالب", "مسينتن بنت بصير", "مزلان بن محمد نور", "محمد رازيق عرفان بن نورازلي", "محمد توفيق بن عمر", "محمد شزان بن جمال الدين", "نزوحا بنت زينل", "نور هداية بنت سايني", "نورأنيسة بنت عبدالله", "نورزيلة بنت عباس", "نور افيقه بنت مسكم", "نور عليا بنت مد زينل", "نور أميرة شهيرة بنت محمد يزيد", "نور فرح هدى بنت بواڠ", "نور شهيرة بنت أزهر", "نور شهيدة الهدى بنت محمد أيوب", "نور شهيرة نتاشا محمد نجمان", "نورفضلين ادلينا بنت زينل", "نور الأيمن هدايتي بنت محمد", "روسية بنت عثمان", "روسينه بنت سموري", "سعاده بنت صمد", "سيتي فائزة بنت محمد سعيدفودين"],
-            "سكوله اݢام فيلدا كاهڠ بارت": ["محمد فاتح بن قمارين", "نور ليانا بنت محمد طاهر", "نور الإنشراح بنت عبد الغفار", "روسيله بنت حارث", "سفورا بنت محمود", "سيتي هاجر بنت إثنين"],
-            "سكوله اݢام فيلدا كاهڠ تيمور": ["حسنه بنت مد قادر", "محمد نجيب بن محمد رملي", "نورمسنيتا بنت تيسنوه", "نورمه بنت حصرين", "قسرينا بنت إيمان", "روحيزه بنت عبد الرحيم", "رسمواني بنت عبدالله", "شهمي درويش بن روحيزاد", "زليلا بنت جاني"],
-            "سكوله اݢام فيلدا اولو بليتوڠ": ["أحمد زولهادي بن ذوالقرنين", "عائشة بنت سلامت", "حاجه زينون بنت عبد الصمد", "حاج خيرالدين بن رملي", "جميعه بنت صالح", "مستورا بنت نوڠمن", "نورعين بنت رحمت", "نور ليلى بنت ميسمان", "رفيدة بنت راميان"],
-            "سكوله اݢام فيلدا اولو دڠر": ["بلقيس شزواني بنت محمد أزهر", "مد ضياءالدين بن جلال", "نورفضيلة بنت أتن", "شريفة بنت إسماعيل@سنداري"],
-            "سكوله اݢام فيلدا اولو ڤڠݢلي": ["أربكيه بنت محمد", "إينتن زوليانا بنت محمد", "محمد سعودي بن أحمد", "نورحياتي بنت أحمد", "روحانا بنت حاج سيرت", "شريفة بنت ستار"],
-            "سكوله اݢام كاهڠ باتو 28": ["أزلينا بنت بصري", "ناطره بنت حسن", "نورميدة بنت محمد حليل", "رعيمة بنت مد زم"],
-            "سكوله اݢام كامڤوڠ چونتوه": ["محمد أمير الأشرف بن منان", "نوريده بنت علي", "نور العين نبيلة بنت حسب الله", "رسلي بن أحمد رفاعي", "زبيدة بنت محمد"],
-            "سكوله اݢام كلوڠ بارت": ["حليزه بنت سريمان", "حسليندا بنت غزالي", "مهانوم بنت محمد إقبال", "مسلا بنت حسن", "محمد أنوار بن راوف", "محمد نقي الدين بن مهد", "محمد نبيل زفري بن رحيم", "محمد شهمي فارس بن مد أيوب", "نورأزليزاواتي بنت حسن", "نور الأميرة بنت محمد زين الدين", "سائمه بنت أ. هادي", "سيتي نور الهداية بنت أبو", "سيتي صالحة بنت رسلاني", "سوريا بنت يوسف", "وان عبد الحكيم بن وان محمد فيصل"],
-            "سكوله اݢام لادڠ موتيارا": ["خيرالعارفين بن سجود", "محمد أسمادي بن سحر", "زيلاواتي بنت شمس الدين", "ذوالأكمال بن خميس"],
-            "سكوله اݢام لادڠ ڤامول": ["مسليزاواتي بنت بحرين", "محمد فردوس بن محزان", "نبيله هدى بنت جسري", "نور شمينا بنت دنيا", "نورين نادية بنت نورعزت", "سعيدة بنت سعيدين", "سيتي يوسليا بنت يوسف"],
-            "سكوله اݢام سري كامڤوڠ تڠه 01": ["عظيمة بنت محمد عارف", "بحرالدين بن جعفر", "دانيال عقيف بن شمس الزمان", "عزة فرزانا بنت مد نظام", "ماريا شهداء بنت جيلاني", "ماريالين بنت مد أيوب", "مستورا بنت مرسيدي", "محمد نورعزت بن عبد الرحيم", "محمد أمين نورحفيظ بن عباس", "نظهرية بنت مت نادي", "نورحنيفافيدا بنت محمد عباس", "نورفرحانا بنت توكيمون", "نورإيزياني ناجحة بنت جوهري", "نور الجنة بنت أنوار", "رشيدة بنت طائري", "سيتي فطرية بنت خيرون", "سيتي نورليانا بنت محمد", "زواوي بن رسدين", "زورينا بنت أحمد"],
-            "سكوله اݢام سري كامڤوڠ تڠه 02": ["دانيال فخرالزمان بن عبدالله دين", "هانيم بنت كسلان", "خيرالرشيدي بن ڤردي", "محمد بن قهار", "محمد تقي الدين بن محمد جوفري", "نورحفيظة بنت محمد هيمي", "نور أمالينا بنت أزلي", "نور عقيلة عزتي بنت قمرالدين", "نور عتيقة بنت رسلان", "نور نزورة بنت رسلي", "روسريديۏي بنت أحمد"],
-            "سكوله اݢام سلطان سير إبراهيم": ["جواريين بنت جسمان", "نور حبيبة بنت أمت مسرى", "نورعيني بنت جلال", "نورأزيلة بنت سنتيوڠ", "شعيرة أديبة بنت يعقوب"],
-            "سكوله اݢام تامن سري لمبق": ["أحمد نور فهمي بن مرسيد", "عائشة نبيلة بنت محمد", "أمينة بنت أتن حسن", "عفة الإنشراح بنت بحرالدين", "لقمان الحكيم بن شهوان", "مسني بنت جائس", "محمد زاهين بن رحيم", "نيك محمد حافظ الدين بن نيك أميرالهشام", "نورعين بنت كسنین", "نورلي بنت أحمد", "نوليانا بنت مغلن", "نور فطينة العفة بنت تاج الدين", "نور شميم ماهيرا بنت إسحاق", "نورعين بنت محمد", "نورأسليمه بنت محمد سالم", "نورعوني شهيرة بنت مد يزيد", "نورنزاتل شهداء بنت محمد عمران", "روزيتا بنت عبد الرزاق", "شمسية بنت محمد", "شمس الدين بن أواڠ", "سيتي فائزة بنت مارسين", "سيتي حواء بنت أحمد نيزان", "سيتي نور عادلة بنت قمرالزمان", "سيتي زبيدة بنت توفيق", "سوزانا@سيتي سلوى بنت عبد الحميد", "توان نور عزيزان بنت توان مودا", "أمي كلثوم بنت محمد أزهر", "أم الخيرية بنت محمد إدريس", "وان نور فرح هانيس بنت وان حسين"],
-            "سكوله اݢام بندر كلوڠ": ["عفيفة نور سعادة بنت عزمي", "عين الفاتحية الإنشراح بنت يزيد", "أسماء بنت عبد الصمد", "أزهد بن عبد الرزاق", "ديانا بنت عبد العزيز", "إيميليانزه بنت عبد الرشيد", "فاتن ناجيان بنت مازلي", "حياة السكينة بنت رملي", "إيرزا ميسرة بنت محمد إرعصن", "خديجة بنت عمر", "ماشطة بنت بهاروم", "محمد أزهر بن رحيم", "محمد هزوان صفوان بن محمد يونس", "نور أزالينا بنت إدريس", "نورعين بنت مهتيان", "نورهانيزه بنت عبد الوهاب", "نورهداية بنت محمد", "نورصفوانة بنت محمد سالم", "نور عائشة ناجحة بنت هشام", "نور حزلين بنت حسيم", "نور إزيان بنت إسحاق", "نورحميرا بنت هزمان", "سانيسه بنت مورني", "سيتي خديجة بنت مرلان", "سيتي نورعادلة بنت يسري", "شازا أميرا بنت محمد", "تسليمة بنت محمد", "زليخة بنت محمد"],
-            "سكوله اݢام بندر ڤالوه": ["مساهده بنت هاليدين", "فوزية بنت عبد الجبار", "تسنيه بنت حاميل"],
-            "سكوله اݢام بندر ڤالوه 02": ["حميدة بنت مسكم", "مسدينا بنت حميد", "محمد إزايزمان بن مد إسماعيل", "نورفرحاني عزتي بنت إبراهيم"],
-            "سكوله اݢام فيلدا اءير هيتم": ["فاتن عقيلة بنت محمد مصلح", "حسفاليلا بنت أبو حسن", "مزلين بنت إسماعيل", "محمد نظام الدين بن صوفي", "نعيمة بنت سليمان", "نور الحفيظة بنت زريمي", "نور الشفيقة بنت أحمد عبد المالك", "نورالنجوى بنت أليار @ إلياس", "زارينا بنت أبو طاوسي"],
-            "سكوله اݢام ݢونوڠ لمبق": ["أبو عرفان بن زين العابدين", "محمد حفيظ بن عمر", "محمد عرفان بن رحيم", "محمد خيرالناس بن مد كامل", "مظفر بن بيدين", "نور حسنات الفضيلة بنت أواڠ", "نور حفيظة بنت إسحاق", "نورمه بنت خميس", "نور العقيدة بنت صيهت", "نور الإنشراح بنت جفري", "سيتي حواء فضيلة بنت عبد الحميد", "سيتي رتنا أمي سلمية بنت شمس الدين", "سيتي شاريزه بنت عبد الحميد", "سورياني بنت محمد"],
-            "سكوله اݢام كامڤوڠ ملايو چاميق": ["عيني ناجيهة بنت إيبينو هاتوڤ", "فائزة بنت عبد الصمد", "فريزا بنت محمد @ هارون", "نورليزاه بنت محمد قاصح", "أم كلثوم بنت عارفين"],
-            "سكوله اݢام كيم مهكوتا": ["عظمة بنت كيار", "فايروس بنت محمد", "جميلة بنت مسجم", "محمد خير بن عبد الرحيم", "محمد عزت أيمن بن روحيزاد", "نورفرحين بنت عمر", "نور النتاشا بنت محمد يسميران", "نور الهدى بنت صائم", "راتينه بنت كمساني", "سيتي نور عوني عميرة بنت سيف", "سهايدا بنت أبو بكر"],
-            "سكوله اݢام لادڠ بوكيت بنوت": ["عبد العظيم بن زيلاني", "حياتي بنت حسن", "روستينا بنت توميران"],
-            "سكوله اݢام لادڠ بوكيت ڤالوه": ["عبد الحليم بن كسدر", "حاجه جورينا بنت حاج عثمان", "ليانا مستورينا بنت عبد العزيز", "نوريته بنت رحمت"],
-            "سكوله اݢام لادڠ تيريه": ["ميزات النظريفة بنت مهدي", "محمد أنوار بن خنبالي", "روزيتا بنت رملي", "سيتي سلوى بنت مرزوقي"],
-            "سكوله اݢام پيور": ["حنيفه بنت أحمد", "روزيمه بنت روحاني", "سيتي فاطمة بنت محمد", "زريده بنت إسماعيل"],
-            "سكوله اݢام سري تامن كلوڠ بارت": ["عبد المطلب بن قمرالدين", "عزيزة بنت رسدي", "حفيفه بنت سلامت", "جليلى بنت ذكير", "مهيون بنت مسني", "مزني بنت محمد مصلح", "محمد نور فتري بن محمد خليل", "نور إلميليانا بنت عبد الرحمن", "نور فرح ديانا بنت عبد المالك", "نور فاتن عليا بنت جلال الدين", "نور راضية بنت محمد خامكا", "نور شرافه بنت جوهري", "راثية بنت أبو طالب", "صبرينا بنت صبري", "صالحين بن جسني", "سيتي مصلحة بنت محمد أمين", "سوهانا بنت أحبية @ حمزة"],
-            "سكوله اݢام سري لالڠ": ["عبده بنت إدريس", "أمير نور أيمن بن رسلان", "أمين الدين بن غزالي", "هداية العزة بنت شريف", "مارني بنت كارمان", "محمد أشرف بن محزان", "نور العيني بنت مد يونس", "نور المودة بنت زريمي", "رازية بنت زينل", "سائره بنت عثمان"],
-            "سكوله اݢام تامن دليما": ["عين المرضية بنت يحيى", "أنس قسطينا بنت مت سأيري", "أسمهاني بنت حميد", "عوني عفيفة بنت محمد مزران", "مصرية بنت إسحاق", "محمد يوسف بن محمد راشد", "محمد علي الدين بن رائمي", "محمد معاذ بن محمد فوزيل", "محمد شهريزام بن عبد موسى", "نورعِلمية بنت عبد الرحمن", "نورسية بنت رامين", "نور عفيفة بنت محمد جميل", "نور عيني بنت مت ستار", "نور أريسيا بنت هزمان", "نور المرحمة بنت جوهري", "نورالجنة بنت مد إسماعيل", "ڤوتري نور فضيلة بنت سعما", "ڤوتري زمزارينا بنت كمال الدين", "روزيتا بنت مسروم", "سوزيليانا بنت أحمد", "شهيدة بنت أبو بكر", "يسري بن أحمد", "جنة نور عفيفة بنت زيهان"],
-            "سكوله اݢام تامن ديسا": ["باتريسيا بلقيس بنت عبدالله", "محمد نور فؤاد بن نورالدين", "ناجيهة بنت محمد يزيد", "نجوى بنت غزالي", "نور عزة بنت راميان", "نورهداية بنت محمد تع", "رابعة العدوية بنت إسماعيل", "شدة النور بنت سليمان", "سيتي نورليانا بنت سعيدي", "سيتي ريفاده @ سيتي رفيدة بنت مد ساريڠ"],
-            "س.ر.ا.ب. كلوڠ": ["فائمه بنت إسماعيل", "محمد عزالدين بن مد روزي", "محمد خيرالإقبال بن تاج الدين", "نتاشا نورهزورة بنت محمد بصير", "نور شفيقة بنت سلامت", "نور الهدى بنت محمد خاريس"],
-            "سكوله اݢام بندر رڠݢم": ["هيراواتي بنت سليمان", "ميزات الأكمال بنت ريملي", "محمد نظام بن كمال", "نيلاکسوما بنت مد نواوي", "فضيلة بنت رملي", "زارينا بنت سليمان"],
-            "سكوله اݢام بوكيت كنعن": ["عبد العزيز بن مناڤ", "نورأزلين بنت شمس الدين", "نورعاشقين بنت قاسم", "سري روهايو بنت عبد الحميد"],
-            "سكوله اݢام داتوء إبراهيم مجيد": ["عينون بنت جميران", "أمين الدين بن محمد درويس", "أسوانيزا بنت يسوف", "فليله بنت كريم", "محمد أنيق إكليل بن يسريزان", "نور أزورا بنت مولانا", "نورعيني بنت هاشم", "نور علية بنت محمد رافعي", "صميدة بنت بكر", "سالينا بنت نواوي", "سيتي نبيلة بنت أمل الدين", "سيتي نورعائشة بنت جمال", "سيتي سانه بنت كوسين", "سيتي سهيلا بنت صائم", "سوزيتا بنت سوكر", "يزيد بن جبار @ ساهيد"],
-            "سكوله اݢام فيلدا لايڠ-لايڠ": ["أزله بنت أحمد", "نورأصلينا بنت إسماعيل", "نورمزلينا بنت مرزوقي", "سيتي خديجة بنت غزالي", "سهايلي إيمي بنت عبد الشكور"],
-            "سكوله اݢام كومڤليكس ڤڠهولو": ["أزيئينا بنت محمد خيري", "إيرناواتي بنت عبد الطالب", "فاتن نورروضة بنت أرازمي", "فاتن نبيلة بنت محمد نورالدين", "جفري بن عبد الصمد@صمد", "ليلى ساري بنت أسموني", "ماريانا بنت عبد الرزاق", "محمد هارون الرشيدين أحمد", "محمد ذوالحلمي بن أبو", "نادية عتيقة بنت إلياس", "نصرالدين بن سيران", "نورعزاتي بنت أزمان", "نورسكينة بنت أحمد شهاب", "أوكتريفيا أريانتي بنت أيدير", "سيتي سلايا بنت ساريڠ"],
-            "سكوله اݢام ڤاريت حاج هاشم": ["أبو حفيظ بن محمد كمال", "هدى خالصة بنت محمد نور", "محمد فوزان بن محمد مربت", "نور ألينا بنت أبو بكر", "نور فرحانا بنت رحمت", "روحانا بنت عبد المجيد", "سيتي نور حليمة السعدية بنت محمد رسلان", "وحيدة بنت مرسودي", "يوليزا إيليا بنت مد رملي"],
-            "سكوله اݢام ڤاسوقن ݢرقن ام": ["أزواهيزا بنت مد عثمان", "محمد الحفيظ بن سيرت", "محمد إلهان بن عبد المالك", "سيتي حميراء بنت زانودين"],
-            "سكوله اݢام ڤكن لايڠ-لايڠ": ["عتيقة زليخة بنت عبد القادر", "حاجه مريمه بنت عبد المنان", "محمد إقبال بن شاري", "نورأصليندا بنت ياسمين أفندي", "نورالهدى بنت محمد إيزاهاري", "روسیاتيمه بنت سينوڠ", "سيتي أفرينا بنت قمرالزمان", "سيتي ربيعة بنت حمزة", "زكية بنت عبد الحميد"],
-            "سكوله اݢام ڤنجارا سيمڤڠ رڠام": ["نور فرحه بنت عبد الرحيم", "نور شميلة بنت عبد الحفيظ", "رصلينا بنت ڤانت", "سوزيليانه بنت بني"],
-            "سكوله اݢام سيمڤڠ رڠام": ["فائزة بنت داود", "مسنه بنت طالب", "نور ليزار بنت أحمد", "نورعين بنت محمد حسين", "نورأزهم بن مد خيري", "نورحسليندا بنت ݢمان@واݢيمن", "نورليلاواتي بنت محمد", "نور عائشة بنت مد عيسى", "نور فرحين بنت عبد الكريم", "نور عاشقين بنت حسين", "نور ماشطة بنت محمد جاني", "نور مبشرة بنت محمد", "نور العيني بنت نورعزمي", "نورالعين بنت فريد الأطرس", "سيتي ميسرة بنت أمل الدين", "سيتي ميسرة بنت مد بحرالدين", "سيتي نور بلقيس بنت مامي"],
-            "سكوله اݢام سري كنچان": ["أحمد شفاء الفواز بن عمر", "أنيس بنت أنوار", "فريدة بنت رملي", "جليحه بنت جميل", "كماعزوره بنت أزهر", "نورليانا بنت مسڤار", "نورمرهيداواتي بنت مرزوقي", "سيتي زليخة بنت محمد"],
-            "سكوله اݢام سري ماچڤ": ["أمني بنت أنوار", "فريداواتي بنت هارون", "محمد فائز بن محمد مربت", "محمد صديق بن نورالدين", "نور عاشقين بنت جعفر", "نور هداية بنت إسحاق", "سيتي سلمة بنت محمد تسليم", "سبحان بن أحمد بندي", "زيده بنت موكسين"],
-            "سكوله اݢام سري ماجو جاي": ["أديبة بنت عبد الرحمن", "محمد ثقيف خيرالدين", "نورلياني بنت محمد توكيران", "نورعفيقه نزيهة محمد رسلان", "نور النجيحة بنت محمد سالم", "رسنه بنت توكيمين"],
-            "سكوله اݢام سري تڠه رڠݢم": ["أنيتا بنت ڤرمون", "فريزه بنت إسمان", "كارتيني بنت ليمان @ سليمان", "محمد نورعين بن عانتمين"],
-            "سكوله اݢام سوڠاي ليناو": ["أنيس شهداء بنت إسحاق", "ماريانا بنت طاهر", "محمد أسلمهان بن مماجن خان", "نورهدايو بنت ميسڤين", "سيتي نورحفيظة بنت محمد جوها", "توميسه بنت جعفر"]
-        };
 
         function setupProfil() {
             const selectSekolah = document.getElementById('profil-sekolah');
@@ -957,11 +610,78 @@
                 opt.innerText = sekolah;
                 selectSekolah.appendChild(opt);
             });
+
+            const saved = JSON.parse(localStorage.getItem('erpt_profil'));
+            if (saved) {
+                selectSekolah.value = saved.sekolah;
+                onSekolahChange();
+                document.getElementById('profil-guru').value = saved.guru;
+                updateSidebarProfil();
+            }
         }
 
         function onSekolahChange() {
             const sekolah = document.getElementById('profil-sekolah').value;
             const selectGuru = document.getElementById('profil-guru');
+            selectGuru.innerHTML = '<option value="">-- ڤيليه نام ݢورو --</option>';
+            if (sekolah && senaraiGuruSekolah[sekolah]) {
+                selectGuru.disabled = false;
+                senaraiGuruSekolah[sekolah].sort().forEach(guru => {
+                    let opt = document.createElement('option');
+                    opt.value = guru;
+                    opt.innerText = guru;
+                    selectGuru.appendChild(opt);
+                });
+            } else {
+                selectGuru.innerHTML = '<option value="">-- سيلا ڤيليه سکوله دهولو --</option>';
+                selectGuru.disabled = true;
+            }
+        }
+
+        function simpanProfil() {
+            const sekolah = document.getElementById('profil-sekolah').value;
+            const guru = document.getElementById('profil-guru').value;
+            if (!sekolah || !guru) {
+                showModal('رلت', 'سيلا لڠکڤکن ڤيليهن سکوله دان ݢورو.', 'error');
+                return;
+            }
+            localStorage.setItem('erpt_profil', JSON.stringify({ sekolah, guru }));
+            updateSidebarProfil();
+            showModal('برجاي', 'ڤروفيل برجاي دسيمڤن!', 'success');
+        }
+
+        function updateSidebarProfil() {
+            const saved = JSON.parse(localStorage.getItem('erpt_profil'));
+            if (saved) {
+                document.getElementById('sidebar-guru-name').innerText = saved.guru;
+                document.getElementById('sidebar-sekolah-name').innerText = saved.sekolah;
+                document.getElementById('welcome-name').innerText = saved.guru.split(' ')[0]; 
+            }
+        }
+
+        function setupLaporan() {
+            const selectSekolah = document.getElementById('laporan-sekolah');
+            Object.keys(senaraiGuruSekolah).sort().forEach(sekolah => {
+                let opt = document.createElement('option');
+                opt.value = sekolah;
+                opt.innerText = sekolah;
+                selectSekolah.appendChild(opt);
+            });
+            
+            document.getElementById('laporan-sekolah').addEventListener('change', (e) => {
+                document.getElementById('print-sekolah').innerText = e.target.value || "";
+            });
+            document.getElementById('laporan-guru').addEventListener('change', (e) => {
+                document.getElementById('print-guru').innerText = e.target.value || "";
+            });
+            document.getElementById('laporan-status').addEventListener('change', (e) => {
+                document.getElementById('print-status').innerText = e.target.value || "";
+            });
+        }
+
+        function onSekolahLaporanChange() {
+            const sekolah = document.getElementById('laporan-sekolah').value;
+            const selectGuru = document.getElementById('laporan-guru');
             
             selectGuru.innerHTML = '<option value="">-- ڤيليه نام ݢورو --</option>';
             
@@ -974,32 +694,156 @@
                     selectGuru.appendChild(opt);
                 });
             } else {
-                selectGuru.innerHTML = '<option value="">-- سيلا ڤيليه سكوله دهولو --</option>';
+                selectGuru.innerHTML = '<option value="">-- سيلا ڤيليه سکوله دهولو --</option>';
                 selectGuru.disabled = true;
+            }
+            document.getElementById('print-sekolah').innerText = sekolah || "";
+        }
+
+        function isiUlasanPantas() {
+            const dropdown = document.getElementById('pilihan-ulasan');
+            const textarea = document.getElementById('laporan-ulasan');
+            
+            if (dropdown.value) {
+                if (textarea.value.trim() === '') {
+                    textarea.value = dropdown.value;
+                } else {
+                    textarea.value += '\n' + dropdown.value;
+                }
+                dropdown.value = '';
             }
         }
 
-        function simpanProfil() {
-            const sekolah = document.getElementById('profil-sekolah').value;
-            const guru = document.getElementById('profil-guru').value;
+        function autoFillRPT() {
+            const subjek = document.getElementById('erph-subjek').value;
+            const minggu = document.getElementById('erph-minggu').value;
 
-            if (!sekolah || !guru) {
-                paparModal("رالت (Ralat)", "Sila pilih sekolah dan nama guru terlebih dahulu!", "error");
+            if (subjek && minggu) {
+                let sk = ""; let sp = ""; let tajuk = "";
+                
+                if (subjek === 'عملن لازيم') {
+                    sk = "١.١ ممباچ دان مڠهافل سورة الفاتحة دڠن بتول.";
+                    sp = "١.١.١ ممباچ سورة الفاتحة دڠن مخرج يڠ بتول.";
+                    tajuk = "سورة الفاتحة";
+                } else if (subjek === 'توحيد') {
+                    sk = "٢.١ ممهمي دان مياقيني روکون ايمان.";
+                    sp = "٢.١.١ مڽاتاکن ڤڠرتين روکون ايمان.";
+                    tajuk = "روکون ايمان";
+                } else {
+                    sk = "ستندرد کندوڠن مڠيکوت DSKP.";
+                    sp = "ستندرد ڤمبلاجرن مڠيکوت DSKP.";
+                    tajuk = "تاجوق ڤدڤ (" + subjek + ")";
+                }
+
+                document.getElementById('erph-sk').value = sk;
+                document.getElementById('erph-sp').value = sp;
+                document.getElementById('erph-tajuk').value = tajuk;
+                
+                if(!document.getElementById('erph-tarikh').value) {
+                    const today = new Date();
+                    document.getElementById('erph-tarikh').value = today.toISOString().split('T')[0];
+                }
+
+                const toast = document.createElement('div');
+                toast.className = "fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-emerald-600 text-white px-6 py-3 rounded-full shadow-lg text-lg font-bold z-50 transition-opacity duration-300";
+                toast.innerHTML = "<i class='ph ph-check-circle'></i> معلومت برجاي دسدوت!";
+                document.body.appendChild(toast);
+                setTimeout(() => {
+                    toast.style.opacity = "0";
+                    setTimeout(() => toast.remove(), 300);
+                }, 2000);
+            }
+        }
+
+        function simpanKeGoogleSheet() {
+            const form = document.getElementById('erph-form');
+            if(!form.checkValidity()) {
+                form.reportValidity();
                 return;
             }
 
-            document.getElementById('sidebar-guru-name').innerText = guru;
-            document.getElementById('sidebar-guru-school').innerText = sekolah;
+            if (!localStorage.getItem('erpt_profil')) {
+                showModal('ڤروفيل تياد', 'سيلا تتڤکن ڤروفيل ݢورو دان سکوله دهولو.', 'error');
+                switchTab('profil');
+                return;
+            }
+
+            const checkboxes = document.querySelectorAll('input[name="aktiviti_check"]:checked');
+            let aktivitiValues = [];
+            checkboxes.forEach((cb) => {
+                aktivitiValues.push(cb.value);
+            });
+            if(aktivitiValues.length === 0) {
+                showModal('رلت', 'سيلا ڤيليه سکورڠ-کورڠڽ ساتو اکتيۏيتي ڤدڤ.', 'error');
+                return;
+            }
+            document.getElementById('erph-aktiviti-hidden').value = aktivitiValues.join(", ");
+
+            showModal('مڽيمڤن...', 'سيلا توڠݢو سبنتر، داتا سدڠ دهنتر کأدالم ݢوݢل شيت.', 'loading');
             
-            paparModal("برجایا (Berjaya)", "Profil guru berjaya dikemas kini!", "success");
-            switchTab('dashboard');
+            const formData = new FormData(form);
+            
+            fetch(webAppUrl, {
+                method: "POST",
+                mode: "no-cors",
+                body: new URLSearchParams(formData)
+            }).then(() => {
+                showModal('برجاي!', 'معلومت إي-RPH تله برجاي دهنتر کأدالم ݢوݢل شيت.', 'success');
+                form.reset();
+            }).catch(error => {
+                showModal('رلت', 'ݢاݢل مڠهنتر داتا. سيلا سمق سامبوڠن اينترنيت اتاو URL سکريڤ.', 'error');
+                console.error(error);
+            });
+        }
+
+        function showModal(title, message, type) {
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('modal-content');
+            const iconContainer = document.getElementById('modal-icon');
+            
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-message').innerText = message;
+            
+            iconContainer.className = "w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-4";
+            
+            if (type === 'success') {
+                iconContainer.classList.add('bg-emerald-100', 'text-emerald-600');
+                iconContainer.innerHTML = '<i class="ph-fill ph-check-circle text-5xl"></i>';
+            } else if (type === 'error') {
+                iconContainer.classList.add('bg-red-100', 'text-red-600');
+                iconContainer.innerHTML = '<i class="ph-fill ph-warning-circle text-5xl"></i>';
+            } else if (type === 'loading') {
+                iconContainer.classList.add('bg-blue-100', 'text-blue-600');
+                iconContainer.innerHTML = '<i class="ph ph-spinner-gap text-5xl animate-spin"></i>';
+            }
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('modal-content');
+            
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 300);
         }
 
         window.onload = () => {
-            setupFilters();
-            setupERPH();
             setupProfil();
-            updateUI();
+            setupLaporan();
+            updateSidebarProfil();
         };
     </script>
 </body>
