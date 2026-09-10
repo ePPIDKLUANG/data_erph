@@ -542,7 +542,7 @@
     <script>
         // MASUKKAN URL WEB APP ANDA DI SINI
         // Gantikan teks "SILA_TAMPAL_URL_WEB_APP_DI_SINI" dengan pautan yang disalin dari Google Apps Script
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwYGWZM3C7-o7KCEqBIO8nHbNYwOHamQAjxfj4L8CoqtP3DJ41O84Ddyg7Xpkg3jU4G0Q/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxU-RoTeur50KYMGRiEkR1ac6zdiMgE23VxaNuwFwOjzOP894usZFSFtovA2B0fWo8BlA/exec";
 
         function paparModal(tajuk, mesej, jenis) {
             const modal = document.getElementById('custom-modal');
@@ -689,7 +689,68 @@
         function lihatERPH(mingguNum) {
             switchTab('erph');
             document.getElementById('erph-minggu').value = mingguNum.toString();
-            autoFillRPT();
+            
+            const sekolah = document.getElementById('laporan-sekolah').value;
+            const guru = document.getElementById('laporan-guru').value;
+            
+            // Cari data tepat dari rekod yang telah ditarik
+            const rphData = window.fetchedLaporanData.find(row => 
+                row.sekolah.trim().toLowerCase() === sekolah.trim().toLowerCase() && 
+                row.guru.trim().toLowerCase() === guru.trim().toLowerCase() && 
+                row.minggu.match(/\d+/) && row.minggu.match(/\d+/)[0] == mingguNum
+            );
+
+            if (rphData) {
+                // Isi Maklumat Asas
+                document.getElementById('erph-subjek').value = rphData.subjek;
+                document.getElementById('erph-kelas').value = rphData.kelas;
+                document.getElementById('erph-tarikh').value = rphData.tarikh;
+                document.getElementById('erph-masa').value = rphData.masa;
+                document.getElementById('erph-tajuk').value = rphData.tajuk;
+                document.getElementById('erph-sk').value = rphData.sk;
+                document.getElementById('erph-sp').value = rphData.sp;
+
+                // Masukkan Objektif (kerana pilihan drop-down objektif selalunya dinamik)
+                const objSelect = document.getElementById('erph-objektif');
+                objSelect.innerHTML = '<option value="">ڤيليه اوبجيكتيف...</option>';
+                if (rphData.objektif) {
+                    let opt = document.createElement('option');
+                    opt.value = rphData.objektif;
+                    opt.innerText = rphData.objektif;
+                    objSelect.appendChild(opt);
+                    objSelect.selectedIndex = 1;
+                }
+
+                // Tetapkan Select Option (Penilaian, BBM, Refleksi)
+                const setSelect = (id, textValue) => {
+                    const el = document.getElementById(id);
+                    if(!el || !textValue) return;
+                    for(let i=0; i<el.options.length; i++) {
+                        if(el.options[i].text.includes(textValue) || el.options[i].value.includes(textValue)) {
+                            el.selectedIndex = i;
+                            break;
+                        }
+                    }
+                };
+                setSelect('erph-penilaian', rphData.penilaian);
+                setSelect('erph-bbm', rphData.bbm);
+                setSelect('erph-refleksi', rphData.refleksi);
+
+                // Tandakan Kotak Semak Aktiviti
+                document.querySelectorAll('input[name="aktiviti"]').forEach(cb => cb.checked = false);
+                if (rphData.aktiviti) {
+                    const aktivitiList = rphData.aktiviti.split('\n');
+                    document.querySelectorAll('input[name="aktiviti"]').forEach(cb => {
+                        if(aktivitiList.includes(cb.value)) cb.checked = true;
+                    });
+                }
+                
+                paparModal("Paparan e-RPH", `Rekod RPH Minggu ${mingguNum} berjaya dibuka dari pangkalan data!`, "success");
+                setTimeout(() => tutupModal(), 1500);
+            } else {
+                // Jika tiada dalam rekod (contohnya belum hantar), gunakan autofill automatik RPT
+                autoFillRPT();
+            }
         }
 
         /* -------------------------------------------------------------------------- */
