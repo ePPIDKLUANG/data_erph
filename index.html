@@ -16,12 +16,9 @@
             font-family: 'Amiri', serif; 
             line-height: 1.8;
             font-size: 1.125rem;
-            /* Memastikan ligatures (cantuman) tulisan Jawi berfungsi dengan baik */
             font-feature-settings: "liga" 1, "rlig" 1;
         }
-        .font-sans {
-            font-family: 'Inter', sans-serif;
-        }
+        .font-sans { font-family: 'Inter', sans-serif; }
         
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
@@ -61,7 +58,6 @@
             box-shadow: 0 0 0 1px #8b5cf6;
         }
 
-        /* Checkbox styling khas untuk aktiviti */
         .checkbox-label input:checked + div {
             background-color: #ecfdf5;
             border-color: #10b981;
@@ -71,7 +67,7 @@
         
         @media print {
             aside, header, #print-btn, .print-hidden { display: none !important; }
-            main, #view-erph, #view-laporan { overflow: visible !important; height: auto !important; }
+            main, #view-erph, #view-laporan, #view-rpt { overflow: visible !important; height: auto !important; }
             .bg-slate-50 { background-color: #ffffff !important; }
             body { padding: 0; margin: 0; }
         }
@@ -86,30 +82,26 @@
             </div>
             <div>
                 <h1 class="font-bold text-2xl leading-tight text-slate-800">إي-RPT سكج</h1>
-                <p class="text-sm text-slate-500 font-medium font-sans">Sistem Pengurusan RPT</p>
+                <p class="text-sm text-slate-500 font-medium font-sans">Sistem Pengurusan</p>
             </div>
         </div>
 
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
             <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-bold transition-colors bg-emerald-50 text-emerald-700">
-                <i class="ph ph-squares-four text-xl"></i>
-                ڤاڤن موك (Dashboard)
+                <i class="ph ph-squares-four text-xl"></i> ڤاڤن موک
             </button>
             <button onclick="switchTab('rpt')" id="nav-rpt" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                <i class="ph ph-table text-xl"></i>
-                جدول RPT ٢٠٢٦
+                <i class="ph ph-table text-xl"></i> جدوال RPT ٢٠٢٦
             </button>
             <button onclick="switchTab('erph')" id="nav-erph" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                <i class="ph ph-file-text text-xl"></i>
-                بورڠ إي-RPH
+                <i class="ph ph-file-text text-xl"></i> بورڠ إي-RPH
             </button>
             <button onclick="switchTab('laporan')" id="nav-laporan" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900">
-                <i class="ph ph-chart-bar text-xl"></i>
-                لاڤورن (Laporan)
+                <i class="ph ph-chart-bar text-xl"></i> لاڤورن
             </button>
             
             <div class="pt-6 pb-2">
-                <p class="px-4 text-sm font-bold text-slate-400 mb-2 font-sans">TETAPAN</p>
+                <p class="px-4 text-sm font-bold text-slate-400 mb-2 font-sans uppercase">Tetapan</p>
                 <button onclick="switchTab('profil')" id="nav-profil" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900">
                     <i class="ph ph-gear text-xl"></i> ڤروفيل ݢورو
                 </button>
@@ -122,8 +114,8 @@
                     <i class="ph ph-user text-sm"></i>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <p id="sidebar-guru-name" class="text-xl font-bold text-slate-800 truncate" dir="rtl">استاذ / استاذة</p>
-                    <p id="sidebar-guru-school" class="text-sm font-sans text-slate-500 truncate" dir="ltr">Sekolah Agama Kluang</p>
+                    <p id="sidebar-guru-name" class="text-lg font-bold text-slate-800 truncate" dir="rtl">استاذ / استاذة</p>
+                    <p id="sidebar-guru-school" class="text-sm text-slate-500 truncate" dir="rtl">سكوله اݢام كلوڠ</p>
                 </div>
             </div>
         </div>
@@ -133,16 +125,17 @@
         <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 shrink-0 z-10 print-hidden">
             <div class="flex items-center gap-3">
                 <button class="md:hidden text-slate-600 text-2xl"><i class="ph ph-list"></i></button>
-                <h2 id="header-title" class="text-2xl font-bold text-slate-800">ڤاڤن موك</h2>
+                <h2 id="header-title" class="text-2xl font-bold text-slate-800">ڤاڤن موک (Dashboard)</h2>
             </div>
-            <div class="flex items-center gap-4 text-lg text-slate-600 font-bold">
+            <div class="flex items-center gap-4 text-lg text-slate-600 font-bold font-sans">
                 <i class="ph ph-calendar-blank text-xl hidden sm:block"></i>
-                <span id="current-date" class="hidden sm:block font-sans">Sesi Akademik 2026</span>
+                <span id="current-date" class="hidden sm:block">Sesi Akademik 2026</span>
             </div>
         </header>
 
-        <div class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50/50">
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50/50 relative">
             
+            <!-- VIEW: DASHBOARD -->
             <div id="view-dashboard" class="max-w-5xl mx-auto space-y-8 block">
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-4">
@@ -156,7 +149,7 @@
                         <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-2xl shrink-0"><i class="ph ph-books"></i></div>
                         <div>
                             <p class="text-lg text-slate-500 mb-1">سوبجيك اكتيف</p>
-                            <p id="stat-subjek" class="text-2xl font-bold text-slate-800 leading-tight">عملن لازيم دان KIJ</p>
+                            <p id="stat-subjek" class="text-2xl font-bold text-slate-800 leading-tight">عملن لازيم & KIJ</p>
                         </div>
                     </div>
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-4">
@@ -176,7 +169,7 @@
                     </div>
                     <div class="p-6 space-y-8">
                         <div>
-                            <h4 class="text-xl font-bold text-slate-800 mb-4 font-sans">Pilihan Tahap (Darjah)</h4>
+                            <h4 class="text-xl font-bold text-slate-800 mb-4">ڤيليهن تاهڤ (Tahap)</h4>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="filter-tahap">
                                 <label class="filter-btn group" data-type="tahap" data-val="Darjah 4"><div class="content opacity-50 cursor-not-allowed">درجه ٤</div></label>
                                 <label class="filter-btn group" data-type="tahap" data-val="Darjah 5"><div class="content opacity-50 cursor-not-allowed">درجه ٥</div></label>
@@ -186,9 +179,8 @@
                                 <label class="filter-btn group" data-type="tahap" data-val="Darjah Khas"><div class="content opacity-50 cursor-not-allowed">درجه خاص</div></label>
                             </div>
                         </div>
-
                         <div>
-                            <h4 class="text-xl font-bold text-slate-800 mb-4 font-sans">Pilihan Subjek</h4>
+                            <h4 class="text-xl font-bold text-slate-800 mb-4">ڤيليهن سوبجيك (Subjek)</h4>
                             <div class="grid grid-cols-2 md:grid-cols-5 gap-3" id="filter-subjek">
                                 <label class="filter-btn cursor-pointer" data-type="subjek" data-val="Sirah"><input type="radio" name="subjek" class="hidden"><div class="content">سيره</div></label>
                                 <label class="filter-btn cursor-pointer" data-type="subjek" data-val="Akhlak"><input type="radio" name="subjek" class="hidden"><div class="content">اخلاق</div></label>
@@ -204,7 +196,7 @@
                         </div>
                         <div class="pt-4 border-t border-slate-100 flex justify-end">
                             <button onclick="switchTab('rpt')" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg text-xl font-bold transition-colors shadow-sm flex items-center justify-center gap-2">
-                                بوك جدول RPT <i class="ph ph-arrow-left font-bold"></i>
+                                بوک جدوال RPT <i class="ph ph-arrow-left font-bold"></i>
                             </button>
                         </div>
                     </div>
@@ -224,18 +216,13 @@
                     </div>
                     
                     <div class="p-8">
-                        <div class="hidden print:block text-center mb-8">
-                            <h2 class="text-3xl font-bold mb-2">رانچڠن ڤڠاجرن هارين</h2>
-                            <h3 class="text-2xl text-slate-600 mb-6">سكوله اݢام كراجاءن جوهر</h3>
-                            
-                            <div class="flex justify-between items-end text-xl font-bold border-b-2 border-slate-800 pb-2 text-slate-800" dir="rtl">
+                        <div class="hidden print:block text-center mb-8 border-b-2 border-slate-800 pb-4">
+                            <h2 class="text-3xl font-bold mb-2">بورڠ إي-RPH</h2>
+                            <h3 class="text-xl text-slate-600 mb-4">رانچڠن ڤڠاجرن هارين سكج</h3>
+                            <div class="flex justify-between items-end text-lg font-bold text-slate-800">
                                 <div class="text-right">
-                                    <span class="text-slate-500 font-sans text-sm block font-normal">Nama Guru</span>
-                                    <span id="cetak-guru-name">استاذ / استاذة</span>
-                                </div>
-                                <div class="text-left" dir="ltr">
-                                    <span class="text-slate-500 font-sans text-sm block font-normal text-right">Sekolah</span>
-                                    <span id="cetak-guru-school" class="font-sans">Sekolah Agama Kluang</span>
+                                    <p id="cetak-guru-name">Nama Guru</p>
+                                    <p id="cetak-guru-school" class="text-slate-500 text-base">Nama Sekolah</p>
                                 </div>
                             </div>
                         </div>
@@ -255,8 +242,8 @@
                                         <option value="Sirah">سيره</option>
                                         <option value="Akhlak">اخلاق</option>
                                         <option value="Bahasa Arab">بهاس عرب</option>
-                                        <option value="Amalan Lazim & KIJ">عملن لازيم دان KIJ</option>
-                                        <option value="Tafsir Al-Quran & Hadith">تفسير القرءان دان حديث</option>
+                                        <option value="Amalan Lazim & KIJ">عملن لازيم & KIJ</option>
+                                        <option value="Tafsir Al-Quran & Hadith">تفسير & حديث</option>
                                         <option value="Jenayat">جنايات</option>
                                         <option value="Munakahat">مناكحات</option>
                                         <option value="Muamalat">معاملات</option>
@@ -388,27 +375,27 @@
                                             <option value="بوكو تيكس، لمبرن كرجا، ڤاڤن ڤوتيه">بوكو تيكس، لمبرن كرجا، ڤاڤن ڤوتيه</option>
                                             <option value="بوكو تيكس، كد ايمبسن، ڤاڤن ڤوتيه">بوكو تيكس، كد ايمبسن</option>
                                             <option value="سلاءيد ڤمبنتڠن، ۏيديو، بوكو تيكس">سلاءيد ڤمبنتڠن، ۏيديو</option>
-                                            <option value="بوكو تيكس، راديو / اءوديو، لمبرن كرجا">راديو / اءوديو</option>
+                                            <option value="بوكو تيكس، راديو/اءوديو، لمبرن كرجا">راديو/اءوديو</option>
                                             <option value="-">تياد BBM</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="block font-bold text-slate-700 text-xl">ريفليكسي</label>
+                                    <label class="block font-bold text-slate-700 text-xl">ريفليکسي</label>
                                     <select id="erph-refleksi" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl">
-                                        <option value="">ڤيليه ريفليكسي...</option>
-                                        <option value="سبهاݢين بسر موريد برجاي منچاڤاي اوبجيكتيف ڤمبلاجرن. موريد يڠ لمه دبري بيمبيڠن.">سبهاݢين بسر موريد برجاي منچاڤاي اوبجيكتيف</option>
-                                        <option value="سموا موريد برجاي مڠواساءي اوبجيكتيف ڤمبلاجرن دڠن باءيق.">سموا موريد برجاي مڠواساءي اوبجيكتيف</option>
+                                        <option value="">ڤيليه ريفليکسي...</option>
+                                        <option value="سبهاݢين بسر موريد برجايا منچاڤاي اوبجيكتيف ڤمبلاجرن. موريد يڠ لمه دبري بيمبيڠن.">سبهاݢين بسر موريد برجايا منچاڤاي اوبجيكتيف</option>
+                                        <option value="سموا موريد برجايا مڠواساءي اوبجيكتيف ڤمبلاجرن دڠن باءيق.">سموا موريد برجايا مڠواساءي اوبجيكتيف</option>
                                         <option value="سبهاݢين موريد ممرلوكن بيمبيڠن تمبهن دالم سيسي ڤموليهن.">ممرلوكن بيمبيڠن تمبهن (ڤموليهن)</option>
                                         <option value="ڤمبلاجرن دتڠݢوهكن كران چوتي عموم / ڤروݢرم سكوله.">ڤمبلاجرن دتڠݢوهكن (چوتي/ڤروݢرم)</option>
-                                        <option value="-">تياد ريفليكسي (Cuti / Peperiksaan)</option>
+                                        <option value="-">تياد ريفليکسي (Cuti / Peperiksaan)</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="pt-6 border-t border-slate-100 flex justify-start gap-3 print-hidden" dir="ltr">
                                 <button type="reset" class="px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 text-xl font-bold font-sans">Reset</button>
-                                <button type="button" onclick="simpanKeGoogleSheet()" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xl font-bold flex items-center gap-2 font-sans transition-colors shadow-sm">
+                                <button type="button" onclick="simpanKeGoogleSheet()" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xl font-bold flex items-center gap-2 font-sans transition-colors">
                                     <i class="ph ph-paper-plane-tilt text-2xl"></i> Hantar
                                 </button>
                             </div>
@@ -420,8 +407,8 @@
             <div id="view-rpt" class="max-w-6xl mx-auto hidden">
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-full">
                     <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center print-hidden">
-                        <h3 id="rpt-table-title" class="text-2xl font-bold text-slate-800 font-sans">RPT Amalan Lazim & KIJ - Darjah 6 (2026)</h3>
-                        <button onclick="window.print()" class="px-4 py-2 bg-white border border-slate-300 rounded-lg text-lg font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-2 font-sans">
+                        <h3 id="rpt-table-title" class="text-2xl font-bold text-slate-800 font-sans">Jadual RPT</h3>
+                        <button onclick="window.print()" class="px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-lg font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-2 font-sans">
                             <i class="ph ph-printer text-xl"></i> Cetak / PDF
                         </button>
                     </div>
@@ -436,52 +423,48 @@
                                     <th class="py-4 px-4 text-center font-bold w-32">چاتتن</th>
                                 </tr>
                             </thead>
-                            <tbody id="rpt-table-body" class="text-lg">
-                                <!-- Data diletakkan di sini oleh JS -->
-                            </tbody>
+                            <tbody id="rpt-table-body" class="text-lg"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <div id="view-laporan" class="max-w-6xl mx-auto hidden">
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-full">
-                    <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center print-hidden">
-                        <h3 class="text-2xl font-bold text-slate-800">لاڤورن ڤڠهنترن (Laporan Penghantaran)</h3>
-                        <div class="flex gap-2">
-                            <button onclick="window.print()" class="px-4 py-2 bg-white border border-slate-300 rounded-lg text-lg font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-2 font-sans">
-                                <i class="ph ph-printer text-xl"></i> Cetak / PDF
-                            </button>
-                        </div>
+            <div id="view-laporan" class="max-w-5xl mx-auto hidden">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 bg-slate-50/50 text-center">
+                        <h3 class="text-3xl font-bold text-slate-800">لاڤورن ڤڠهنترن (Laporan Penghantaran)</h3>
+                        <p class="text-slate-500 mt-2 font-sans">Semak status penghantaran e-RPH guru.</p>
                     </div>
                     
-                    <div class="p-6 border-b border-slate-100 bg-white grid grid-cols-1 md:grid-cols-4 gap-4 items-end print-hidden">
-                        <div class="space-y-2">
-                            <label class="block font-bold text-slate-700 text-sm font-sans">Nama Sekolah</label>
-                            <select id="laporan-sekolah" onchange="onLaporanSekolahChange()" class="w-full rounded-lg border border-slate-300 px-3 py-2.5 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-sans" dir="rtl">
-                                <option value="">-- ڤيليه سكوله --</option>
-                            </select>
+                    <div class="p-6 bg-white border-b border-slate-100 print-hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div class="space-y-1">
+                                <label class="block font-bold text-slate-700 text-sm font-sans">Nama Sekolah</label>
+                                <select id="laporan-sekolah" onchange="onLaporanSekolahChange()" class="w-full rounded-lg border border-slate-300 px-4 py-2.5 focus:border-emerald-500 text-lg font-sans" dir="rtl">
+                                    <option value="">-- ڤيليه سكوله --</option>
+                                </select>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block font-bold text-slate-700 text-sm font-sans">Nama Guru</label>
+                                <select id="laporan-guru" class="w-full rounded-lg border border-slate-300 px-4 py-2.5 focus:border-emerald-500 text-lg font-sans" disabled dir="rtl">
+                                    <option value="">-- ڤيليه ݢورو --</option>
+                                </select>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block font-bold text-slate-700 text-sm font-sans">Status</label>
+                                <select id="laporan-status" class="w-full rounded-lg border border-slate-300 px-4 py-2.5 focus:border-emerald-500 text-lg font-sans">
+                                    <option value="Semua">Semua (Keseluruhan)</option>
+                                    <option value="Telah Dihantar">Telah Dihantar (Selesai)</option>
+                                    <option value="Belum Dihantar">Belum Dihantar</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="space-y-2">
-                            <label class="block font-bold text-slate-700 text-sm font-sans">Nama Guru</label>
-                            <select id="laporan-guru" class="w-full rounded-lg border border-slate-300 px-3 py-2.5 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-sans" disabled dir="rtl">
-                                <option value="">-- سيلا ڤيليه سكوله دهولو --</option>
-                            </select>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block font-bold text-slate-700 text-sm font-sans">Status</label>
-                            <select id="laporan-status" class="w-full rounded-lg border border-slate-300 px-3 py-2.5 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-sans">
-                                <option value="Semua">Semua Status</option>
-                                <option value="Telah Dihantar">Telah Dihantar</option>
-                                <option value="Belum Dihantar">Belum Dihantar</option>
-                            </select>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="tarikDataGSheet()" class="w-full px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold flex items-center justify-center gap-2 transition-colors font-sans shadow-sm">
-                                <i class="ph ph-cloud-arrow-down text-xl"></i> Tarik Data
+                        <div class="flex gap-3 font-sans" dir="ltr">
+                            <button onclick="janaLaporan()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-lg font-bold flex items-center gap-2 transition-colors">
+                                <i class="ph ph-magnifying-glass"></i> Semak
                             </button>
-                            <button onclick="janaLaporan()" class="w-full px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold flex items-center justify-center gap-2 transition-colors font-sans shadow-sm">
-                                <i class="ph ph-magnifying-glass text-xl"></i> Semak
+                            <button onclick="tarikDataGSheet()" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-lg font-bold flex items-center gap-2 transition-colors">
+                                <i class="ph ph-cloud-arrow-down"></i> Tarik Data
                             </button>
                         </div>
                     </div>
@@ -489,20 +472,19 @@
                     <div class="overflow-x-auto">
                         <table class="w-full text-right" dir="rtl">
                             <thead>
-                                <tr class="bg-slate-100/80 text-slate-700 border-b border-slate-200">
-                                    <th class="py-4 px-4 text-center font-bold w-16 border-l border-slate-200 font-sans">Bil</th>
-                                    <th class="py-4 px-4 text-center font-bold w-32 border-l border-slate-200">ميڠݢو</th>
-                                    <th class="py-4 px-4 text-center font-bold border-l border-slate-200">تاريخ هنتر</th>
-                                    <th class="py-4 px-4 text-center font-bold w-40 border-l border-slate-200">ستاتوس</th>
-                                    <th class="py-4 px-4 text-center font-bold w-32 font-sans">Tindakan</th>
+                                <tr class="bg-slate-100/80 text-slate-700 border-b border-slate-200 font-sans text-sm uppercase tracking-wider">
+                                    <th class="py-3 px-4 text-center font-bold border-l border-slate-200">Bil</th>
+                                    <th class="py-3 px-4 text-center font-bold border-l border-slate-200">ميڠݢو</th>
+                                    <th class="py-3 px-4 text-center font-bold border-l border-slate-200">Tarikh Hantar</th>
+                                    <th class="py-3 px-4 text-center font-bold border-l border-slate-200">Status</th>
+                                    <th class="py-3 px-4 text-center font-bold">Tindakan</th>
                                 </tr>
                             </thead>
                             <tbody id="laporan-table-body" class="text-lg">
                                 <tr>
-                                    <td colspan="5" class="py-12 text-center text-slate-500 font-sans bg-slate-50/50">
-                                        <i class="ph ph-info text-4xl text-slate-300 mb-2"></i><br>
-                                        Klik <strong>Tarik Data</strong> terlebih dahulu untuk mendapatkan rekod terkini.<br>
-                                        Kemudian pilih tetapan dan klik butang <strong>Semak</strong>.
+                                    <td colspan="5" class="py-12 text-center text-slate-500 font-sans">
+                                        Klik <b>Tarik Data</b> terlebih dahulu untuk mendapatkan rekod terkini.<br>
+                                        Kemudian pilih tetapan dan klik butang <b>Semak</b>.
                                     </td>
                                 </tr>
                             </tbody>
@@ -515,7 +497,7 @@
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-slate-100 bg-slate-50/50">
                         <h3 class="text-2xl font-bold text-slate-800">ڤروفيل ݢورو</h3>
-                        <p class="text-slate-500 mt-1 font-sans">Kemaskini maklumat guru untuk dijana dalam e-RPH dan Laporan.</p>
+                        <p class="text-slate-500 mt-1 font-sans">Kemaskini maklumat guru untuk dijana dalam e-RPH.</p>
                     </div>
                     <div class="p-8 space-y-6">
                         <div class="space-y-2">
@@ -531,7 +513,7 @@
                             </select>
                         </div>
                         <div class="pt-6 border-t border-slate-100 flex justify-start" dir="ltr">
-                            <button onclick="simpanProfil()" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xl font-bold flex items-center gap-2 transition-colors font-sans shadow-sm">
+                            <button onclick="simpanProfil()" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xl font-bold flex items-center gap-2 transition-colors font-sans">
                                 <i class="ph ph-check-circle text-2xl"></i> Simpan Profil
                             </button>
                         </div>
@@ -542,8 +524,8 @@
             <div id="custom-modal" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center z-50 print-hidden" dir="rtl">
                 <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-xl transform transition-all text-center">
                     <div id="modal-icon" class="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4"></div>
-                    <h3 id="modal-title" class="text-2xl font-bold text-slate-800 mb-2 font-sans"></h3>
-                    <p id="modal-message" class="text-lg text-slate-600 mb-6 font-sans"></p>
+                    <h3 id="modal-title" class="text-2xl font-bold text-slate-800 mb-2"></h3>
+                    <p id="modal-message" class="text-lg text-slate-600 mb-6 font-sans whitespace-pre-line"></p>
                     <button onclick="tutupModal()" class="px-6 py-2.5 bg-slate-800 text-white rounded-lg text-lg font-bold hover:bg-slate-700 w-full transition-colors font-sans">Tutup (توتوڤ)</button>
                 </div>
             </div>
@@ -552,7 +534,8 @@
     </main>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxU-RoTeur50KYMGRiEkR1ac6zdiMgE23VxaNuwFwOjzOP894usZFSFtovA2B0fWo8BlA/exec";
+        // GANTIKAN PAUTAN INI DENGAN URL WEB APP 'NEW DEPLOYMENT' YANG BAHARU
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzdPmi7PU4lhxQL8w-myw8IVO19sISHOGHpvNq3qE2Kfk6VGrVYAOPR46c0w4ZjRAEJuA/exec";
 
         function paparModal(tajuk, mesej, jenis) {
             const modal = document.getElementById('custom-modal');
@@ -582,7 +565,7 @@
         }
 
         /* -------------------------------------------------------------------------- */
-        /* SISTEM TARIK DATA GOOGLE SHEET (JSONP) & LAPORAN                          */
+        /* SISTEM TARIK DATA (JSONP) & LAPORAN                                        */
         /* -------------------------------------------------------------------------- */
         window.fetchedLaporanData = null;
 
@@ -590,18 +573,22 @@
             paparModal("Sila Tunggu...", "Sedang menarik rekod dari Google Sheet...", "loading");
             
             if (WEB_APP_URL === "SILA_TAMPAL_URL_WEB_APP_DI_SINI") {
-                 paparModal("Maklumat", "Sila masukkan URL Web App Google Apps Script ke dalam pembolehubah 'WEB_APP_URL' dalam kod sistem terlebih dahulu.", "error");
+                 paparModal("Maklumat", "Sila masukkan URL Web App Google Apps Script ke dalam pembolehubah 'WEB_APP_URL'.", "error");
                  return;
             }
 
-            const scriptUrl = WEB_APP_URL + "?callback=kalkulatorDataJSONP";
-            
+            // Tambah cache-buster ('t') untuk memaksa browser menarik data terbaharu
+            const scriptUrl = WEB_APP_URL + "?callback=kalkulatorDataJSONP&t=" + new Date().getTime();
             const script = document.createElement('script');
             script.src = scriptUrl;
             
             script.onerror = function() {
                 tutupModal();
-                paparModal("Ralat Rangkaian", "Gagal menghubungi pelayan. Pastikan Web App anda disetkan kepada 'Anyone' (Sesiapa sahaja).", "error");
+                paparModal(
+                    "Ralat Akses Sekatan Google", 
+                    "Sistem dihalang daripada membaca data.\n\nIni berlaku kerana Google Apps Script anda belum ditetapkan kepada 'Anyone'. Sila buat 'New Deployment' dan setkan 'Who has access' kepada 'Anyone'.", 
+                    "error"
+                );
             };
             
             document.body.appendChild(script);
@@ -614,7 +601,7 @@
                 if (window.fetchedLaporanData.length === 0) {
                      paparModal("Berjaya", "Capaian berjaya, tetapi tiada rekod dijumpai dalam sistem.", "success");
                 } else {
-                     paparModal("Berjaya", `Data berjaya ditarik! Sejumlah ${window.fetchedLaporanData.length} rekod telah dimuat turun.`, "success");
+                     paparModal("Berjaya", `Data berjaya ditarik! Sejumlah ${window.fetchedLaporanData.length} rekod sedia disemak.`, "success");
                      
                      setTimeout(() => {
                          tutupModal();
@@ -697,7 +684,7 @@
         }
 
         /* -------------------------------------------------------------------------- */
-        /* SISTEM MENGISI RPH AUTO (Autofill dari Sheet vs Autofill dari RPT)         */
+        /* SISTEM MENGISI RPH AUTO (Lihat dari laporan & Autofill dari RPT)           */
         /* -------------------------------------------------------------------------- */
         function lihatERPH(mingguNum) {
             switchTab('erph');
@@ -714,13 +701,13 @@
                 );
 
                 if (rphData) {
-                    document.getElementById('erph-subjek').value = rphData.subjek;
-                    document.getElementById('erph-kelas').value = rphData.kelas;
-                    document.getElementById('erph-tarikh').value = rphData.tarikh;
-                    document.getElementById('erph-masa').value = rphData.masa;
-                    document.getElementById('erph-tajuk').value = rphData.tajuk;
-                    document.getElementById('erph-sk').value = rphData.sk;
-                    document.getElementById('erph-sp').value = rphData.sp;
+                    document.getElementById('erph-subjek').value = rphData.subjek || '';
+                    document.getElementById('erph-kelas').value = rphData.kelas || '';
+                    document.getElementById('erph-tarikh').value = rphData.tarikh || '';
+                    document.getElementById('erph-masa').value = rphData.masa || '';
+                    document.getElementById('erph-tajuk').value = rphData.tajuk || '';
+                    document.getElementById('erph-sk').value = rphData.sk || '';
+                    document.getElementById('erph-sp').value = rphData.sp || '';
 
                     const objSelect = document.getElementById('erph-objektif');
                     objSelect.innerHTML = '<option value="">ڤيليه اوبجيكتيف...</option>';
@@ -762,9 +749,6 @@
             autoFillRPT();
         }
 
-        /* -------------------------------------------------------------------------- */
-        /* PANGKALAN DATA (DATABASE) RPT & GURU YANG TELAH DIBETULKAN EJAAN JAWI DBP  */
-        /* -------------------------------------------------------------------------- */
         const pg1 = "<span class='inline-block text-emerald-700 font-bold text-sm bg-emerald-100 px-3 py-1 rounded-md border border-emerald-300'>ڤڠݢل ١</span>";
         const pg2 = "<span class='inline-block text-emerald-700 font-bold text-sm bg-emerald-100 px-3 py-1 rounded-md border border-emerald-300'>ڤڠݢل ٢</span>";
         const cPeperiksaan = "<span class='inline-block text-purple-700 font-bold text-sm bg-purple-100 px-3 py-1 rounded-md border border-purple-300'>ڤڤريقساءن</span>";
@@ -871,9 +855,6 @@
             }
         }
 
-        /* -------------------------------------------------------------------------- */
-        /* UI LOGIC (TABS, FILTERS, AUTOFILL)                                         */
-        /* -------------------------------------------------------------------------- */
         let currentTahap = "Darjah 6";
         let currentSubjek = "Amalan Lazim & KIJ";
 
@@ -1014,23 +995,29 @@
                 if(nav) nav.className = "w-full flex items-center gap-4 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900";
             });
 
-            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+            const viewTarget = document.getElementById(`view-${tabId}`);
+            if(viewTarget) viewTarget.classList.remove('hidden');
+            
             const activeNav = document.getElementById(`nav-${tabId}`);
             if(activeNav) activeNav.className = "w-full flex items-center gap-4 px-4 py-3 rounded-lg text-lg font-bold transition-colors bg-emerald-50 text-emerald-700";
 
-            let title = 'ڤاڤن موك';
+            let title = 'ڤاڤن موك (Dashboard)';
             if (tabId === 'rpt') title = 'جدول RPT ٢٠٢٦';
             if (tabId === 'laporan') title = 'لاڤورن ڤڠهنترن';
             if (tabId === 'erph') {
                 title = 'بورڠ إي-RPH';
-                document.getElementById('erph-subjek').value = currentSubjek;
+                const elSubjek = document.getElementById('erph-subjek');
+                if(elSubjek) elSubjek.value = currentSubjek;
+                
                 let darjahNum = currentTahap.replace('Darjah ', '');
                 let kelasInput = document.getElementById('erph-kelas');
-                if(!kelasInput.value) kelasInput.value = "درجه " + darjahNum + " ";
+                if(kelasInput && !kelasInput.value) kelasInput.value = "درجه " + darjahNum + " ";
                 autoFillRPT();
             }
             if (tabId === 'profil') title = 'ڤروفيل ݢورو';
-            document.getElementById('header-title').innerText = title;
+            
+            const headerTitle = document.getElementById('header-title');
+            if(headerTitle) headerTitle.innerText = title;
         }
 
         const senaraiGuruSekolah = {
@@ -1088,10 +1075,12 @@
             const selectLaporanSekolah = document.getElementById('laporan-sekolah');
             
             Object.keys(senaraiGuruSekolah).sort().forEach(sekolah => {
-                let opt1 = document.createElement('option');
-                opt1.value = sekolah;
-                opt1.innerText = sekolah;
-                selectSekolah.appendChild(opt1);
+                if(selectSekolah) {
+                    let opt1 = document.createElement('option');
+                    opt1.value = sekolah;
+                    opt1.innerText = sekolah;
+                    selectSekolah.appendChild(opt1);
+                }
                 
                 if (selectLaporanSekolah) {
                     let opt2 = document.createElement('option');
@@ -1105,6 +1094,8 @@
         function onSekolahChange() {
             const sekolah = document.getElementById('profil-sekolah').value;
             const selectGuru = document.getElementById('profil-guru');
+            
+            if(!selectGuru) return;
             selectGuru.innerHTML = '<option value="">-- ڤيليه نام ݢورو --</option>';
             if (sekolah && senaraiGuruSekolah[sekolah]) {
                 selectGuru.disabled = false;
@@ -1123,6 +1114,8 @@
         function onLaporanSekolahChange() {
             const sekolah = document.getElementById('laporan-sekolah').value;
             const selectGuru = document.getElementById('laporan-guru');
+            
+            if(!selectGuru) return;
             selectGuru.innerHTML = '<option value="">-- ڤيليه نام ݢورو --</option>';
             if (sekolah && senaraiGuruSekolah[sekolah]) {
                 selectGuru.disabled = false;
