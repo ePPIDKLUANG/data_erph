@@ -16,6 +16,8 @@
             font-family: 'Amiri', serif; 
             line-height: 1.8;
             font-size: 1.125rem;
+            /* Memastikan ligatures (cantuman) tulisan Jawi berfungsi dengan baik */
+            font-feature-settings: "liga" 1, "rlig" 1;
         }
         .font-sans {
             font-family: 'Inter', sans-serif;
@@ -91,11 +93,11 @@
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
             <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-bold transition-colors bg-emerald-50 text-emerald-700">
                 <i class="ph ph-squares-four text-xl"></i>
-                ڤاڤن موک (Dashboard)
+                ڤاڤن موك (Dashboard)
             </button>
             <button onclick="switchTab('rpt')" id="nav-rpt" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900">
                 <i class="ph ph-table text-xl"></i>
-                جدوال RPT ٢٠٢٦
+                جدول RPT ٢٠٢٦
             </button>
             <button onclick="switchTab('erph')" id="nav-erph" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-bold transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900">
                 <i class="ph ph-file-text text-xl"></i>
@@ -131,7 +133,7 @@
         <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 shrink-0 z-10 print-hidden">
             <div class="flex items-center gap-3">
                 <button class="md:hidden text-slate-600 text-2xl"><i class="ph ph-list"></i></button>
-                <h2 id="header-title" class="text-2xl font-bold text-slate-800">ڤاڤن موک</h2>
+                <h2 id="header-title" class="text-2xl font-bold text-slate-800">ڤاڤن موك</h2>
             </div>
             <div class="flex items-center gap-4 text-lg text-slate-600 font-bold">
                 <i class="ph ph-calendar-blank text-xl hidden sm:block"></i>
@@ -202,7 +204,7 @@
                         </div>
                         <div class="pt-4 border-t border-slate-100 flex justify-end">
                             <button onclick="switchTab('rpt')" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg text-xl font-bold transition-colors shadow-sm flex items-center justify-center gap-2">
-                                بوک جدوال RPT <i class="ph ph-arrow-left font-bold"></i>
+                                بوك جدول RPT <i class="ph ph-arrow-left font-bold"></i>
                             </button>
                         </div>
                     </div>
@@ -224,8 +226,18 @@
                     <div class="p-8">
                         <div class="hidden print:block text-center mb-8">
                             <h2 class="text-3xl font-bold mb-2">رانچڠن ڤڠاجرن هارين</h2>
-                            <h3 class="text-2xl text-slate-600">سكوله اݢام كراجاءن جوهر</h3>
-                            <hr class="mt-4 border-slate-800 border-2">
+                            <h3 class="text-2xl text-slate-600 mb-6">سكوله اݢام كراجاءن جوهر</h3>
+                            
+                            <div class="flex justify-between items-end text-xl font-bold border-b-2 border-slate-800 pb-2 text-slate-800" dir="rtl">
+                                <div class="text-right">
+                                    <span class="text-slate-500 font-sans text-sm block font-normal">Nama Guru</span>
+                                    <span id="cetak-guru-name">استاذ / استاذة</span>
+                                </div>
+                                <div class="text-left" dir="ltr">
+                                    <span class="text-slate-500 font-sans text-sm block font-normal text-right">Sekolah</span>
+                                    <span id="cetak-guru-school" class="font-sans">Sekolah Agama Kluang</span>
+                                </div>
+                            </div>
                         </div>
                         
                         <form class="space-y-6">
@@ -358,7 +370,7 @@
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                                     <div class="space-y-2">
-                                        <label class="block font-bold text-slate-700 text-xl">ڤنيلاين / ڤنتسيرن</label>
+                                        <label class="block font-bold text-slate-700 text-xl">ڤنيلاين / ڤنتكسيرن</label>
                                         <select id="erph-penilaian" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl">
                                             <option value="">ڤيليه ڤنيلاين...</option>
                                             <option value="سوءال جواب ليسن دان برتوليس">ليسن دان برتوليس</option>
@@ -374,22 +386,22 @@
                                         <select id="erph-bbm" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl">
                                             <option value="">ڤيليه BBM...</option>
                                             <option value="بوكو تيكس، لمبرن كرجا، ڤاڤن ڤوتيه">بوكو تيكس، لمبرن كرجا، ڤاڤن ڤوتيه</option>
-                                            <option value="بوكو تيكس، كد إمبسن، ڤاڤن ڤوتيه">بوكو تيكس، كد إمبسن</option>
-                                            <option value="سليد ڤمبنتڠن، ۏيديو، بوكو تيكس">سليد ڤمبنتڠن، ۏيديو</option>
-                                            <option value="بوكو تيكس، راديو/اءوديو، لمبرن كرجا">راديو/اءوديو</option>
+                                            <option value="بوكو تيكس، كد ايمبسن، ڤاڤن ڤوتيه">بوكو تيكس، كد ايمبسن</option>
+                                            <option value="سلاءيد ڤمبنتڠن، ۏيديو، بوكو تيكس">سلاءيد ڤمبنتڠن، ۏيديو</option>
+                                            <option value="بوكو تيكس، راديو / اءوديو، لمبرن كرجا">راديو / اءوديو</option>
                                             <option value="-">تياد BBM</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="block font-bold text-slate-700 text-xl">ريفليکسي</label>
+                                    <label class="block font-bold text-slate-700 text-xl">ريفليكسي</label>
                                     <select id="erph-refleksi" class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-xl">
-                                        <option value="">ڤيليه ريفليکسي...</option>
-                                        <option value="سبهاݢين بسر موريد برجايا منچاڤي اوبجيكتيف ڤمبلاجرن. موريد يڠ لمه دبري بيمبيڠن.">سبهاݢين بسر موريد برجايا منچاڤي اوبجيكتيف</option>
-                                        <option value="سموا موريد برجايا مڠواساءي اوبجيكتيف ڤمبلاجرن دڠن باءيق.">سموا موريد برجايا مڠواساءي اوبجيكتيف</option>
-                                        <option value="سبهاݢين موريد ممرلوكن بيمبيڠن تمبهن دالم سيسي ڤموليھن.">ممرلوكن بيمبيڠن تمبهن (ڤموليھن)</option>
+                                        <option value="">ڤيليه ريفليكسي...</option>
+                                        <option value="سبهاݢين بسر موريد برجاي منچاڤاي اوبجيكتيف ڤمبلاجرن. موريد يڠ لمه دبري بيمبيڠن.">سبهاݢين بسر موريد برجاي منچاڤاي اوبجيكتيف</option>
+                                        <option value="سموا موريد برجاي مڠواساءي اوبجيكتيف ڤمبلاجرن دڠن باءيق.">سموا موريد برجاي مڠواساءي اوبجيكتيف</option>
+                                        <option value="سبهاݢين موريد ممرلوكن بيمبيڠن تمبهن دالم سيسي ڤموليهن.">ممرلوكن بيمبيڠن تمبهن (ڤموليهن)</option>
                                         <option value="ڤمبلاجرن دتڠݢوهكن كران چوتي عموم / ڤروݢرم سكوله.">ڤمبلاجرن دتڠݢوهكن (چوتي/ڤروݢرم)</option>
-                                        <option value="-">تياد ريفليکسي (Cuti / Peperiksaan)</option>
+                                        <option value="-">تياد ريفليكسي (Cuti / Peperiksaan)</option>
                                     </select>
                                 </div>
                             </div>
@@ -480,7 +492,7 @@
                                 <tr class="bg-slate-100/80 text-slate-700 border-b border-slate-200">
                                     <th class="py-4 px-4 text-center font-bold w-16 border-l border-slate-200 font-sans">Bil</th>
                                     <th class="py-4 px-4 text-center font-bold w-32 border-l border-slate-200">ميڠݢو</th>
-                                    <th class="py-4 px-4 text-center font-bold border-l border-slate-200">تاريخ هانتر</th>
+                                    <th class="py-4 px-4 text-center font-bold border-l border-slate-200">تاريخ هنتر</th>
                                     <th class="py-4 px-4 text-center font-bold w-40 border-l border-slate-200">ستاتوس</th>
                                     <th class="py-4 px-4 text-center font-bold w-32 font-sans">Tindakan</th>
                                 </tr>
@@ -540,8 +552,6 @@
     </main>
 
     <script>
-        // MASUKKAN URL WEB APP ANDA DI SINI
-        // Gantikan teks "SILA_TAMPAL_URL_WEB_APP_DI_SINI" dengan pautan yang disalin dari Google Apps Script
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxU-RoTeur50KYMGRiEkR1ac6zdiMgE23VxaNuwFwOjzOP894usZFSFtovA2B0fWo8BlA/exec";
 
         function paparModal(tajuk, mesej, jenis) {
@@ -576,41 +586,46 @@
         /* -------------------------------------------------------------------------- */
         window.fetchedLaporanData = null;
 
-        async function tarikDataGSheet() {
-            paparModal("Sila Tunggu...", "Sedang menarik rekod penghantaran dari sistem...", "loading");
+        function tarikDataGSheet() {
+            paparModal("Sila Tunggu...", "Sedang menarik rekod dari Google Sheet...", "loading");
             
             if (WEB_APP_URL === "SILA_TAMPAL_URL_WEB_APP_DI_SINI") {
                  paparModal("Maklumat", "Sila masukkan URL Web App Google Apps Script ke dalam pembolehubah 'WEB_APP_URL' dalam kod sistem terlebih dahulu.", "error");
                  return;
             }
 
-            try {
-                // Menggunakan fetch biasa (GET) ke Web App Apps Script
-                const response = await fetch(WEB_APP_URL);
-                const result = await response.json();
+            const scriptUrl = WEB_APP_URL + "?callback=kalkulatorDataJSONP";
+            
+            const script = document.createElement('script');
+            script.src = scriptUrl;
+            
+            script.onerror = function() {
+                tutupModal();
+                paparModal("Ralat Rangkaian", "Gagal menghubungi pelayan. Pastikan Web App anda disetkan kepada 'Anyone' (Sesiapa sahaja).", "error");
+            };
+            
+            document.body.appendChild(script);
+        }
 
-                if (result.status === 'success') {
-                    window.fetchedLaporanData = result.data;
-                    
-                    if(window.fetchedLaporanData.length === 0) {
-                         paparModal("Berjaya", "Capaian berjaya, tetapi tiada rekod dijumpai.", "success");
-                    } else {
-                         paparModal("Berjaya", `Data berjaya ditarik! Sejumlah ${window.fetchedLaporanData.length} rekod dijumpai.`, "success");
-                         
-                         // Auto-generate laporan jika nama sekolah sudah dipilih
-                         setTimeout(() => {
-                             tutupModal();
-                             if(document.getElementById('laporan-sekolah').value) {
-                                 janaLaporan();
-                             }
-                         }, 1500);
-                    }
+        function kalkulatorDataJSONP(response) {
+            if (response && response.status === 'success') {
+                window.fetchedLaporanData = response.data;
+                
+                if (window.fetchedLaporanData.length === 0) {
+                     paparModal("Berjaya", "Capaian berjaya, tetapi tiada rekod dijumpai dalam sistem.", "success");
                 } else {
-                    throw new Error(result.message);
+                     paparModal("Berjaya", `Data berjaya ditarik! Sejumlah ${window.fetchedLaporanData.length} rekod telah dimuat turun.`, "success");
+                     
+                     setTimeout(() => {
+                         tutupModal();
+                         if(document.getElementById('laporan-sekolah').value) {
+                             janaLaporan();
+                         }
+                     }, 1500);
                 }
-            } catch (error) {
-                console.error("Ralat Tarik Data:", error);
-                paparModal("Ralat Akses", "Gagal menghubungi pelayan. Pastikan pautan Web App sah dan capaian internet stabil.", "error");
+            } else {
+                tutupModal();
+                paparModal("Ralat Pelayan", "Pelayan berjaya disambung tetapi data tidak tepat atau Google Sheet bermasalah.", "error");
             }
         }
 
@@ -630,13 +645,11 @@
                 return;
             }
 
-            // Senarai minggu yang telah dihantar oleh guru yang dipilih
             const mingguDihantar = [];
             window.fetchedLaporanData.forEach(row => {
                 if (row.sekolah.trim().toLowerCase() === sekolahPilihan.trim().toLowerCase() && 
                     row.guru.trim().toLowerCase() === guruPilihan.trim().toLowerCase()) {
                     
-                    // Cari nombor minggu dalam teks
                     const mingguMatch = row.minggu.match(/\d+/);
                     if (mingguMatch) {
                         mingguDihantar.push({
@@ -650,7 +663,6 @@
             let html = '';
             let bil = 1;
 
-            // Membina jadual untuk kesemua 43 Minggu
             for (let i = 1; i <= 43; i++) {
                 const hantarData = mingguDihantar.find(m => m.num === i);
                 const isHantar = !!hantarData;
@@ -658,12 +670,10 @@
                 const tarikhStr = isHantar ? hantarData.tarikh : "-";
                 const statusStyle = isHantar ? "bg-emerald-100 text-emerald-700 border-emerald-300" : "bg-red-100 text-red-700 border-red-300";
                 
-                // Butang untuk lihat RPH jika telah dihantar
                 const actionBtn = isHantar ? 
                     `<button onclick="lihatERPH(${i})" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-colors mx-auto w-24">Lihat <i class="ph ph-arrow-right"></i></button>` : 
                     `-`;
 
-                // Tapis berdasarkan dropdown "Status"
                 if (statusPilihan === "Semua" || statusPilihan === statusText) {
                     html += `
                         <tr class="bg-white hover:bg-slate-50 transition-colors border-b border-slate-100">
@@ -686,6 +696,9 @@
             tbody.innerHTML = html;
         }
 
+        /* -------------------------------------------------------------------------- */
+        /* SISTEM MENGISI RPH AUTO (Autofill dari Sheet vs Autofill dari RPT)         */
+        /* -------------------------------------------------------------------------- */
         function lihatERPH(mingguNum) {
             switchTab('erph');
             document.getElementById('erph-minggu').value = mingguNum.toString();
@@ -693,68 +706,120 @@
             const sekolah = document.getElementById('laporan-sekolah').value;
             const guru = document.getElementById('laporan-guru').value;
             
-            // Cari data tepat dari rekod yang telah ditarik
-            const rphData = window.fetchedLaporanData.find(row => 
-                row.sekolah.trim().toLowerCase() === sekolah.trim().toLowerCase() && 
-                row.guru.trim().toLowerCase() === guru.trim().toLowerCase() && 
-                row.minggu.match(/\d+/) && row.minggu.match(/\d+/)[0] == mingguNum
-            );
+            if (window.fetchedLaporanData) {
+                const rphData = window.fetchedLaporanData.find(row => 
+                    row.sekolah.trim().toLowerCase() === sekolah.trim().toLowerCase() && 
+                    row.guru.trim().toLowerCase() === guru.trim().toLowerCase() && 
+                    row.minggu.match(/\d+/) && row.minggu.match(/\d+/)[0] == mingguNum
+                );
 
-            if (rphData) {
-                // Isi Maklumat Asas
-                document.getElementById('erph-subjek').value = rphData.subjek;
-                document.getElementById('erph-kelas').value = rphData.kelas;
-                document.getElementById('erph-tarikh').value = rphData.tarikh;
-                document.getElementById('erph-masa').value = rphData.masa;
-                document.getElementById('erph-tajuk').value = rphData.tajuk;
-                document.getElementById('erph-sk').value = rphData.sk;
-                document.getElementById('erph-sp').value = rphData.sp;
+                if (rphData) {
+                    document.getElementById('erph-subjek').value = rphData.subjek;
+                    document.getElementById('erph-kelas').value = rphData.kelas;
+                    document.getElementById('erph-tarikh').value = rphData.tarikh;
+                    document.getElementById('erph-masa').value = rphData.masa;
+                    document.getElementById('erph-tajuk').value = rphData.tajuk;
+                    document.getElementById('erph-sk').value = rphData.sk;
+                    document.getElementById('erph-sp').value = rphData.sp;
 
-                // Masukkan Objektif (kerana pilihan drop-down objektif selalunya dinamik)
-                const objSelect = document.getElementById('erph-objektif');
-                objSelect.innerHTML = '<option value="">ڤيليه اوبجيكتيف...</option>';
-                if (rphData.objektif) {
-                    let opt = document.createElement('option');
-                    opt.value = rphData.objektif;
-                    opt.innerText = rphData.objektif;
-                    objSelect.appendChild(opt);
-                    objSelect.selectedIndex = 1;
-                }
-
-                // Tetapkan Select Option (Penilaian, BBM, Refleksi)
-                const setSelect = (id, textValue) => {
-                    const el = document.getElementById(id);
-                    if(!el || !textValue) return;
-                    for(let i=0; i<el.options.length; i++) {
-                        if(el.options[i].text.includes(textValue) || el.options[i].value.includes(textValue)) {
-                            el.selectedIndex = i;
-                            break;
-                        }
+                    const objSelect = document.getElementById('erph-objektif');
+                    objSelect.innerHTML = '<option value="">ڤيليه اوبجيكتيف...</option>';
+                    if (rphData.objektif) {
+                        let opt = document.createElement('option');
+                        opt.value = rphData.objektif;
+                        opt.innerText = rphData.objektif;
+                        objSelect.appendChild(opt);
+                        objSelect.selectedIndex = 1;
                     }
-                };
-                setSelect('erph-penilaian', rphData.penilaian);
-                setSelect('erph-bbm', rphData.bbm);
-                setSelect('erph-refleksi', rphData.refleksi);
 
-                // Tandakan Kotak Semak Aktiviti
-                document.querySelectorAll('input[name="aktiviti"]').forEach(cb => cb.checked = false);
-                if (rphData.aktiviti) {
-                    const aktivitiList = rphData.aktiviti.split('\n');
-                    document.querySelectorAll('input[name="aktiviti"]').forEach(cb => {
-                        if(aktivitiList.includes(cb.value)) cb.checked = true;
-                    });
+                    const setSelect = (id, textValue) => {
+                        const el = document.getElementById(id);
+                        if(!el || !textValue) return;
+                        for(let i=0; i<el.options.length; i++) {
+                            if(el.options[i].text.includes(textValue) || el.options[i].value.includes(textValue)) {
+                                el.selectedIndex = i;
+                                break;
+                            }
+                        }
+                    };
+                    setSelect('erph-penilaian', rphData.penilaian);
+                    setSelect('erph-bbm', rphData.bbm);
+                    setSelect('erph-refleksi', rphData.refleksi);
+
+                    document.querySelectorAll('input[name="aktiviti"]').forEach(cb => cb.checked = false);
+                    if (rphData.aktiviti) {
+                        const aktivitiList = rphData.aktiviti.split('\n').map(a => a.trim());
+                        document.querySelectorAll('input[name="aktiviti"]').forEach(cb => {
+                            if(aktivitiList.includes(cb.value.trim())) cb.checked = true;
+                        });
+                    }
+                    
+                    paparModal("Paparan e-RPH", `Rekod RPH Minggu ${mingguNum} berjaya dibuka dari pangkalan data!`, "success");
+                    setTimeout(() => tutupModal(), 1500);
+                    return;
                 }
-                
-                paparModal("Paparan e-RPH", `Rekod RPH Minggu ${mingguNum} berjaya dibuka dari pangkalan data!`, "success");
-                setTimeout(() => tutupModal(), 1500);
-            } else {
-                // Jika tiada dalam rekod (contohnya belum hantar), gunakan autofill automatik RPT
-                autoFillRPT();
             }
+            autoFillRPT();
         }
 
         /* -------------------------------------------------------------------------- */
-        /* SISTEM PENGHANTARAN KE GOOGLE SHEET (WEB APP)                             */
+        /* PANGKALAN DATA (DATABASE) RPT & GURU YANG TELAH DIBETULKAN EJAAN JAWI DBP  */
+        /* -------------------------------------------------------------------------- */
+        const pg1 = "<span class='inline-block text-emerald-700 font-bold text-sm bg-emerald-100 px-3 py-1 rounded-md border border-emerald-300'>ڤڠݢل ١</span>";
+        const pg2 = "<span class='inline-block text-emerald-700 font-bold text-sm bg-emerald-100 px-3 py-1 rounded-md border border-emerald-300'>ڤڠݢل ٢</span>";
+        const cPeperiksaan = "<span class='inline-block text-purple-700 font-bold text-sm bg-purple-100 px-3 py-1 rounded-md border border-purple-300'>ڤڤريقساءن</span>";
+        const cAkhir = "<span class='inline-block text-blue-700 font-bold text-sm bg-blue-100 px-3 py-1 rounded-md border border-blue-300'>اخير تاهون</span>";
+
+        const tarikhMinggu = {
+            1: "12.01 - 16.01.2026", 2: "19.01 - 23.01.2026", 3: "26.01 - 30.01.2026", 4: "03.02 - 06.02.2026", 5: "09.02 - 13.02.2026", 6: "16.02 - 20.02.2026", 7: "23.02 - 27.02.2026", 8: "02.03 - 06.03.2026", 9: "09.03 - 13.03.2026", 10: "16.03 - 18.03.2026", 11: "30.03 - 03.04.2026", 12: "06.04 - 10.04.2026", 13: "13.04 - 17.04.2026", 14: "20.04 - 24.04.2026", 15: "27.04 - 30.04.2026", 16: "04.05 - 08.05.2026", 17: "11.05 - 15.05.2026", 18: "18.05 - 22.05.2026", 19: "08.06 - 12.06.2026", 20: "15.06 - 19.06.2026", 21: "22.06 - 26.06.2026", 22: "29.06 - 03.07.2026", 23: "06.07 - 10.07.2026", 24: "13.07 - 17.07.2026", 25: "20.07 - 24.07.2026", 26: "27.07 - 31.07.2026", 27: "03.08 - 07.08.2026", 28: "10.08 - 14.08.2026", 29: "17.08 - 21.08.2026", 30: "24.08 - 28.08.2026", 31: "07.09 - 11.09.2026", 32: "14.09 - 18.09.2026", 33: "21.09 - 25.09.2026", 34: "28.09 - 02.10.2026", 35: "05.10 - 09.10.2026", 36: "12.10 - 16.10.2026", 37: "19.10 - 23.10.2026", 38: "26.10 - 30.10.2026", 39: "02.11 - 06.11.2026", 40: "09.11 - 13.11.2026", 41: "16.11 - 20.11.2026", 42: "23.11 - 27.11.2026", 43: "30.11 - 04.12.2026"
+        };
+
+        const rawData = {
+            "Sirah": { 1: ["١. قيصه ٢٥ اورڠ رسول", "١. منچريتاكن سچارا ريڠكس توجوان الله مڠوتوسكن ٢٥ اورڠ رسول."], 2: ["٢. نبي محمد SAW", "١. منرڠكن سلسيله كتورونن نبي محمد SAW."], 3: ["٣. ڤريستيوا سبلوم كرسولن", "١. منجلسكن ڤريستيوا ڤمبلهن دادا نبي."], 4: ["٤. ڤنريماءن وحيو ڤرتام", "١. منچريتاكن كأداءن نبي سماس منريما وحيو د ݢوا حراء."], 19: ["٥. دعوه نبي سچارا رهسيا", "١. منرڠكن چارا نبي بردعوه سچارا رهسيا."], 20: ["٦. دعوه نبي سچارا ترڠ-ترڠن", "١. منجلسكن ڤننتڠن كافير قريش ترهادف دعوه نبي."], 33: ["٧. هجره كمدينة", "١. منچريتاكن ڤريستيوا هجره نبي كمدينة."] },
+            "Akhlak": { 1: ["١. علمو اخلاق", "١. مڽاتاكن ڤڠرتين علمو اخلاق منوروت بهاس دان ايستيله."], 2: ["٢. ادب ترهادف عالم سكيتر", "١. مڽاتاكن مقصود عالم سكيتر دان دليلڽ."], 3: ["٣. ڤونچا كروسقن عالم", "١. ممباچ دليل القرءان تنتڠ ڤونچا كروسقن عالم."], 4: ["٤. كچينتاءن كڤد نݢارا", "١. منجلسكن ديفينيسي منچينتاءي نݢارا سچارا ريڠكس."], 8: ["٤. احسان", "١. منجلسكن كڤنتيڠن احسان دالم ديري."], 11: ["٥. رضا", "١. مڽبوت ڤڠنلن رضا سچارا ريڠكس."], 19: ["٦. تواضع", "١. ممباچ ڤڠنلن تواضع دڠن ريڠكس."], 22: ["٧. تفكر", "١. منجلسكن كڤنتيڠن عقل دالم إسلام."], 25: ["٨. عجب", "١. مڽاتاكن كسن صيفت عجب سچارا ريڠكس."], 29: ["٩. سڠك بوروق", "١. ممباچ ڤڠنلن سڠك بوروق دڠن جلس."], 35: ["١٠. بخيل", "١. ممباچ ڤڠنلن صيفت بخيل دڠن جلس."] },
+            "Bahasa Arab": { 1: ["الدرس الأول: المرفوعات من الأسماء (الفاعل)", "١. ممباچ آيات دڠن سبوتن يڠ جلس."], 4: ["نائب الفاعل", "١. مڽبوت سبب دبواڠ فاعل دڠن باءيق."], 7: ["المبتدأ والخبر", "١. مڽاتاكن مقصود المبتدأ والخبر."], 9: ["الدرس الثاني: المنصوبات من الأسماء (المفعول به)", "١. منوليس چونتوه آيات ريڠكس."], 11: ["المفعول المطلق", "١. ممباچ آيات دان ممهمي معناڽ."], 13: ["التمييز", "١. مڽاتاكن معنا التمييز دڠن باءيق."], 20: ["المنادى", "١. مڽبوت معنا المنادى دڠن باءيق."], 22: ["الدرس الثالث: المجرورات من الأسماء", "١. مڠلواركن حروف الجر ڤد ڤتيقن."], 24: ["الإضافة", "١. ممباچ ايسي ڤلاجرن دڠن سبوتن يڠ جلس."], 28: ["الدرس الرابع: كتابة الإنشاء", "١. مڽبوت اساس ڤركاتاءن برسرتا معناڽ."] },
+            "Amalan Lazim & KIJ": { 1: ["١. صلاة تسبيح", "١. مڽاتاكن ڤڠرتين دان دليل صلاة تسبيح."], 2: ["٢. كسلطانن إسلام جوهر (داتوء جعفر)", "١. منرڠكن روايت هيدوف دان جاس بلياو."], 5: ["٣. صلاة وتر", "١. مڽاتاكن ڤڠرتين، دليل دان حكوم صلاة وتر."], 6: ["٤. كسلطانن إسلام جوهر (داتوء بنتارا لوار)", "١. مڠهورايكن روايت هيدوف دان كرجاي."], 11: ["٥. صلاة ݢرهان", "١. مڽاتاكن ڤڠرتين، دليل، حكوم دان كلبيهن."], 13: ["٦. كسلطانن إسلام جوهر (حبيب سيد علوي)", "١. منچريتاكن روايت هيدوف بلياو."], 21: ["٧. صلاة الإستسقاء", "١. مڽاتاكن ڤڠرتين، دليل، حكوم دان تمڤت."], 25: ["٨. موافقة جوهر", "١. مڠهورايكن كونسيف بڠسا جوهر."], 26: ["٩. ترحيم صبح", "١. مڽاتاكن ڤڠرتين دان حكوم ترحيم صبح."], 30: ["١٠. برزنجي (راوي ١)", "١. مڽاتاكن ڤڠرتين، حكوم دان ممباچ راوي ١."], 33: ["١1. ڤرسورتن جوهر (كوريندم ١٢)", "١. منرڠكن كاندوڠن كوريندم ١٢ دان تاج السلاطين."], 38: ["١٢. سمبليهن", "١. منجلسكن ڤڠرتين، دليل، حكوم دان شرط."] },
+            "Tafsir Al-Quran & Hadith": { 1: ["١. كلوارݢ سكينة (سورة الروم)", "١. ممباچ آيات دان مقصود دڠن بتول."], 4: ["٢. لارڠن ڤرتاپاءن يڠ ملمڤاو", "١. ممباچ حديث دان مقصود دڠن بتول."], 8: ["٣. نصيحت لقمان الحكيم", "١. ممباچ آيات دان مقصود دڠن بتول."], 11: ["٤. چيري-چيري دعاء يڠ دمقبولكن", "١. ممباچ حديث دان مقصود دڠن بتول."], 19: ["٥. سقسي دهاري اخيرة (سورة يس)", "١. ممباچ آيات دان مقصود دڠن بتول."], 22: ["٦. تيڠݢلكن ڤركارا يڠ مراݢوكن", "١. ممباچ حديث دان مقصود دڠن بتول."], 25: ["٧. كواجيبن برمشوارت (سورة الشورى)", "١. ممباچ آيات دان مقصود دڠن بتول."], 28: ["٨. منيڠݢلكن ڤركارا يڠ تيدق ڤرلو", "١. ممباچ حديث دان مقصود دڠن بتول."], 33: ["٩. ادب منريما دان مڽيباركن بريتا", "١. ممباچ حديث دان مقصود دڠن بتول."], 35: ["١٠. كسمڤورناءن ايمان", "١. ممباچ حديث دان مقصود دڠن بتول."] },
+            "Jenayat": { 1: ["١. منچروبوه (الصيال)", "١. مڽاتاكن ارتي منچروبوه ڤد بهاس دان ايستيله."], 7: ["٢. مرتد (الردة)", "١. مڽاتاكن ارتي مرتد ڤد بهاس دان ايستيله."], 19: ["٣. ڤمبرونتق (البغاة)", "١. مڽاتاكن ارتي ڤمبرونتق ڤد بهاس دان ايستيله."], 25: ["٤. برلومبا دان ممانه", "١. مڽاتاكن ارتي المسابقة دان المناضلة."], 33: ["٥. الجهاد", "١. مڽاتاكن ارتي الجهاد ڤد بهاس دان ايستيله."] },
+            "Munakahat": { 1: ["١. ڤڠنلن رجوع", "١. مڽبوت ڤڠنلن رجوع دان شرط-شرطڽ."], 3: ["٢. حكوم رجوع", "١. منرڠكن حكوم رجوع دالم إسلام."], 5: ["٣. عدة", "١. منجلسكن مقصود عدة دان جنيس-جنيسڽ."], 19: ["٤. ظهار", "١. مڽاتاكن ڤڠنلن ظهار دان حكومڽ."], 25: ["٥. لعان", "١. منرڠكن مقصود لعان دان شرط-شرطڽ."], 33: ["٦. حضانة", "١. منجلسكن مقصود حضانة دان حق penjagaan anak."] },
+            "Muamalat": { 1: ["١. المخابرة دان المزارعة", "١. منجلسكن ڤڠرتين المخابرة دان المزارعة."], 5: ["٢. المضاربة", "١. مڽاتاكن ڤڠرتين المضاربة دان ركونڽ."], 11: ["٣. المساقاة", "١. منرڠكن ڤڠرتين المساقاة دان شرطڽ."], 19: ["٤. اللقطة (بارڠ جومڤاءن)", "١. منرڠكن ڤڠرتين اللقطة دان حكومڽ."], 25: ["٥. الوديعة", "١. منجلسكن ڤڠرتين الوديعة دان جنيسڽ."], 33: ["٦. العارية (ڤينجمن)", "١. مڽاتاكن ڤڠرتين العارية دان ركونڽ."] },
+            "Faraid": { 1: ["١. ڤڠنلن وصيت", "١. منرڠكن ڤڠرتين وصيت دان ركونڽ."], 5: ["٢. شرط وصيت", "١. منجلسكن شرط-شرط وصيت يڠ صح."], 11: ["٣. ڤوساك اصحاب الفروض", "١. منرڠكن ݢولوڠن يڠ برحق منريما ڤوساك."], 19: ["٤. ڤوساك حواشي", "١. منتعريفكن مقصود حواشي دالم ڤوساك."], 25: ["٥. حجوب", "١. منجلسكن مقصود حجوب دان جنيسڽ."], 33: ["٦. ڤڠيراءن ڤوساك", "١. منونجوقكن چارا اسس ڤڠيراءن ڤوساك."] },
+            "Ibadat": { 1: ["١. حكوم برڤاكاين", "١. مڽبوت حكوم دان كأداءن يڠ دحرامكن مڠݢوناكن سوترا."], 2: ["٢. زكاة", "١. منتعريفكن ڤڠرتين زكاة ڤد بهاس دان ايستيله."], 6: ["٣. زكاة فطرة", "١. مڽنارايكن شرط-شرط واجب زكاة فطرة."], 9: ["٤. اصناف زكاة", "١. ممبينچڠكن هوراين لاڤن اصناف يڠ برحق منريما زكاة."], 10: ["٥. ڤواسا", "١. مڽبوت ڤڠرتين ڤواسا ڤد بهاس دان ايستيله شرع."], 19: ["٦. اعتكاف", "١. منتعريفكن كلمة اعتكاف ڤد بهاس دان ايستيله شرع."], 21: ["٧. حج دان عمرة", "١. منتعريفكن حج دان عمرة دري سݢي بهاس دان ايستيله."], 33: ["٨. بهاݢين حج دان دم", "١. منجلسكن چارا ملاكوكن حج دان عمرة."] }
+        };
+
+        const rptDatabase = { "Darjah 6": {} };
+        Object.keys(rawData).forEach(subj => {
+            rptDatabase["Darjah 6"][subj] = [];
+            let lastData = ["اولڠ كاجي دان ڤڠوكوهن", "١. لاتيه توبي دان اولڠ كاجي برفوكوس."];
+            
+            for(let i=1; i<=43; i++) {
+                let sk = "اولڠ كاجي دان ڤڠوكوهن";
+                let sp = "١. لاتيه توبي دان اولڠ كاجي برفوكوس.";
+                let cat = (i <= 18) ? pg1 : pg2;
+                
+                if (i>=14 && i<=18) { sk = "ڤڤريقساءن ڤرتڠهن تاهون"; sp = "Ujian Lisan / Bertulis"; cat = cPeperiksaan; }
+                else if (i===27) { sk = "ڤڤريقساءن ڤرچوباءن SDEA"; sp = "Ujian Percubaan"; cat = cPeperiksaan; }
+                else if (i===31 || i===32) { sk = "ڤڤريقساءن ليسن SDEA"; sp = "Ujian Lisan SDEA"; cat = cPeperiksaan; }
+                else if (i===42) { sk = "ڤڤريقساءن برتوليس SDEA"; sp = "Ujian Bertulis SDEA"; cat = cPeperiksaan; }
+                else if (i>=38 && i<=43 && i!==42) { sk = "اولڠ كاجي ڤڤريقساءن"; sp = "Minggu Ulang Kaji"; cat = cAkhir; }
+                else {
+                    if(rawData[subj][i]) { lastData = rawData[subj][i]; }
+                    sk = lastData[0];
+                    sp = lastData[1];
+                }
+                
+                rptDatabase["Darjah 6"][subj].push({
+                    minggu: i.toString(),
+                    tarikh: tarikhMinggu[i] ? tarikhMinggu[i].replace(" - ", "<br>hingga<br>") : "",
+                    stdKandungan: sk,
+                    stdPembelajaran: sp,
+                    catatan: cat
+                });
+            }
+        });
+
+        /* -------------------------------------------------------------------------- */
+        /* SISTEM PENGHANTARAN DATA (SIMPAN KE SHEET)                                */
         /* -------------------------------------------------------------------------- */
         async function simpanKeGoogleSheet() {
             const guru = document.getElementById('sidebar-guru-name').innerText;
@@ -783,7 +848,7 @@
                 return;
             }
 
-            paparModal("سدڠ مپيمڤن...", "Data sedang dihantar ke Google Sheets. Sila tunggu sebentar...", "loading");
+            paparModal("سدڠ مڽيمڤن...", "Data sedang dihantar ke Google Sheets. Sila tunggu sebentar...", "loading");
 
             const data = {
                 guru: guru, sekolah: sekolah, minggu: minggu, subjek: subjek, kelas: kelas, tarikh: tarikh,
@@ -792,12 +857,6 @@
             };
 
             try {
-                if (WEB_APP_URL === "SILA_TAMPAL_URL_WEB_APP_DI_SINI") {
-                     paparModal("Maklumat", "Sila masukkan URL Web App Google Apps Script ke dalam pembolehubah 'WEB_APP_URL' dalam kod sistem terlebih dahulu.", "error");
-                     return;
-                }
-
-                // POST data ke Web App Apps Script
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
                     mode: 'no-cors', 
@@ -805,68 +864,12 @@
                     body: JSON.stringify(data)
                 });
                 
-                paparModal("برجایا (Berjaya)!", "Data e-RPH anda telah berjaya dihantar ke dalam Google Sheets!", "success");
+                paparModal("برجاي (Berjaya)!", "Data e-RPH anda telah berjaya dihantar ke dalam Google Sheets!", "success");
             } catch (error) {
                 console.error('Error!', error.message);
                 paparModal("رالت (Ralat)", "Gagal menghantar data. Sila pastikan capaian internet anda stabil.", "error");
             }
         }
-
-        /* -------------------------------------------------------------------------- */
-        /* PANGKALAN DATA (DATABASE) RPT & GURU                                       */
-        /* -------------------------------------------------------------------------- */
-        const pg1 = "<span class='inline-block text-emerald-700 font-bold text-sm bg-emerald-100 px-3 py-1 rounded-md border border-emerald-300'>ڤڠݢل ١</span>";
-        const pg2 = "<span class='inline-block text-emerald-700 font-bold text-sm bg-emerald-100 px-3 py-1 rounded-md border border-emerald-300'>ڤڠݢل ٢</span>";
-        const cPeperiksaan = "<span class='inline-block text-purple-700 font-bold text-sm bg-purple-100 px-3 py-1 rounded-md border border-purple-300'>ڤڤريقساءن</span>";
-        const cAkhir = "<span class='inline-block text-blue-700 font-bold text-sm bg-blue-100 px-3 py-1 rounded-md border border-blue-300'>اخير تاهون</span>";
-
-        const tarikhMinggu = {
-            1: "12.01 - 16.01.2026", 2: "19.01 - 23.01.2026", 3: "26.01 - 30.01.2026", 4: "03.02 - 06.02.2026", 5: "09.02 - 13.02.2026", 6: "16.02 - 20.02.2026", 7: "23.02 - 27.02.2026", 8: "02.03 - 06.03.2026", 9: "09.03 - 13.03.2026", 10: "16.03 - 18.03.2026", 11: "30.03 - 03.04.2026", 12: "06.04 - 10.04.2026", 13: "13.04 - 17.04.2026", 14: "20.04 - 24.04.2026", 15: "27.04 - 30.04.2026", 16: "04.05 - 08.05.2026", 17: "11.05 - 15.05.2026", 18: "18.05 - 22.05.2026", 19: "08.06 - 12.06.2026", 20: "15.06 - 19.06.2026", 21: "22.06 - 26.06.2026", 22: "29.06 - 03.07.2026", 23: "06.07 - 10.07.2026", 24: "13.07 - 17.07.2026", 25: "20.07 - 24.07.2026", 26: "27.07 - 31.07.2026", 27: "03.08 - 07.08.2026", 28: "10.08 - 14.08.2026", 29: "17.08 - 21.08.2026", 30: "24.08 - 28.08.2026", 31: "07.09 - 11.09.2026", 32: "14.09 - 18.09.2026", 33: "21.09 - 25.09.2026", 34: "28.09 - 02.10.2026", 35: "05.10 - 09.10.2026", 36: "12.10 - 16.10.2026", 37: "19.10 - 23.10.2026", 38: "26.10 - 30.10.2026", 39: "02.11 - 06.11.2026", 40: "09.11 - 13.11.2026", 41: "16.11 - 20.11.2026", 42: "23.11 - 27.11.2026", 43: "30.11 - 04.12.2026"
-        };
-
-        const rawData = {
-            "Sirah": { 1: ["١. قيصه ٢٥ اورڠ رسول", "١. منچريتاكن سچارا ريڠكس توجوان الله مڠوتوسكن ٢٥ اورڠ رسول."], 2: ["٢. نبي محمد SAW", "١. منرڠكن سسيليه كتورونن نبي محمد SAW."], 3: ["٣. ڤريستيوا سبلوم كرسولن", "١. منجلسكن ڤريستيوا ڤمبلهن دادا نبي."], 4: ["٤. ڤنريماءن وحيو ڤرتام", "١. منچريتاكن كأداءن نبي سماس منريما وحيو د ݢوا حراء."], 19: ["٥. دعوه نبي سچارا رهسيا", "١. منرڠكن چارا نبي بردعوه سچارا رهسيا."], 20: ["٦. دعوه نبي سچارا ترڠ-ترڠن", "١. منجلسكن ڤننتڠن كافير قريش ترهادف دعوه نبي."], 33: ["٧. هجره كمدينة", "١. منچريتاكن ڤريستيوا هجره نبي كمدينة."] },
-            "Akhlak": { 1: ["١. علمو اخلاق", "١. مڽاتاكن ڤڠرتين علمو اخلاق منوروت بهاس دان ايستيله."], 2: ["٢. ادب ترهادف عالم سكيتر", "١. مڽاتاكن مقصود عالم سكيتر دان دليلوڽ."], 3: ["٣. ڤونچا كروسقن عالم", "١. ممباچ دليل القرءان تنتڠ ڤونچا كروسقن عالم."], 4: ["٤. كچينتاءن كڤد نݢارا", "١. منجلسكن ديفينيسي منچينتاءي نݢارا سچارا ريڠكس."], 8: ["٤. احسان", "١. منجلسكن كڤنتيڠن احسان دالم ديري."], 11: ["٥. رضا", "١. مڽبوت ڤڠنلن رضا سچارا ريڠكس."], 19: ["٦. تواضع", "١. ممباچ ڤڠنلن تواضع دڠن ريڠكس."], 22: ["٧. تفكر", "١. منجلسكن كڤنتيڠن عقل دالم إسلام."], 25: ["٨. عجب", "١. مڽاتاكن كسن صيفت عجب سچارا ريڠكس."], 29: ["٩. سڠک بوروق", "١. ممباچ ڤڠنلن سڠک بوروق دڠن جلس."], 35: ["١٠. بخيل", "١. ممباچ ڤڠنلن صيفت بخيل دغن جلس."] },
-            "Bahasa Arab": { 1: ["الدرس الأول: المرفوعات من الأسماء (الفاعل)", "١. ممباچ آيات دڠن سبوتن يڠ جلس."], 4: ["نائب الفاعل", "١. مڽبوت سبب دبواڠ فاعل دڠن باءيق."], 7: ["المبتدأ والخبر", "١. مڽاتاكن مقصود المبتدأ والخبر."], 9: ["الدرس الثاني: المنصوبات من الأسماء (المفعول به)", "١. منوليس چونتوه آيات ريڠكس."], 11: ["المفعول المطلق", "١. ممباچ آيات دان ممهمي معنان."], 13: ["التمييز", "١. مڽاتاكن معنا التمييز دڠن باءيق."], 20: ["المنادى", "١. مڽبوت معنا المنادى دڠن باءيق."], 22: ["الدرس الثالث: المجرورات من الأسماء", "١. مغلواركن حروف الجر ڤد ڤتيقن."], 24: ["الإضافة", "١. ممباچ ايسي ڤلاجرن دڠن سبوتن يڠ جلس."], 28: ["الدرس الرابع: كتابة الإنشاء", "١. مڽبوت اساس ڤركاتاءن برسرتا معنان."] },
-            "Amalan Lazim & KIJ": { 1: ["١. صلاة تسبيح", "١. مڽاتاكن ڤڠرتين دان دليل صلاة تسبيح."], 2: ["٢. كسلطانن إسلام جوهر (داتوء جعفر)", "١. منرڠكن روايت هيدوف دان جاس بلياو."], 5: ["٣. صلاة وتر", "١. مڽاتاكن ڤڠرتين، دليل دان حكوم صلاة وتر."], 6: ["٤. كسلطانن إسلام جوهر (داتوء بنتارا لوار)", "١. مشهورايكن روايت هيدوف دان كرجاي."], 11: ["٥. صلاة ݢرهان", "١. مڽاتاكن ڤڠرتين، دليل، حكوم دان كلبيهن."], 13: ["٦. كسلطانن إسلام جوهر (حبيب سيد علوي)", "١. منچريتاكن روايت هيدوف بلياو."], 21: ["٧. صلاة الإستسقاء", "١. مڽاتاكن ڤڠرتين، دليل، حكوم دان تمڤت."], 25: ["٨. موافقة جوهر", "١. مشهورايكن كونسيف بڠسا جوهر."], 26: ["٩. ترحيم صبح", "١. مڽاتاكن ڤڠرتين دان حكوم ترحيم صبح."], 30: ["١٠. برزنجي (راوي ١)", "١. مڽاتاكن ڤڠرتين، حكوم دان ممباچ راوي ١."], 33: ["١١. ڤرسورتن جوهر (كوريندم ١٢)", "١. منرڠكن كاندوڠن كوريندم ١٢ دان تاج السلاطين."], 38: ["١٢. سمبليهن", "١. منجلسكن ڤڠرتين، دليل، حكوم دان شرط."] },
-            "Tafsir Al-Quran & Hadith": { 1: ["١. كلوارݢ سكينة (سورة الروم)", "١. ممباچ آيات دان مقصود دڠن بتول."], 4: ["٢. لارڠن ڤرتاپاءن يڠ ملمڤاو", "١. ممباچ حديث دان مقصود دڠن بتول."], 8: ["٣. نصيحت لقمان الحكيم", "١. ممباچ آيات دان مقصود دڠن بتول."], 11: ["٤. چيري٢ دعاء يڠ دمقبولكن", "١. ممباچ حديث دان مقصود دڠن بتول."], 19: ["٥. سقسي دهاري اخيرة (سورة يس)", "١. ممباچ آيات دان مقصود دڠن بتول."], 22: ["٦. تيڠݢلكن ڤركارا يڠ مراݢوكن", "١. ممباچ حديث دان مقصود دڠن بتول."], 25: ["٧. كواجيبن برمشوارت (سورة الشورى)", "١. ممباچ آيات دان مقصود دڠن بتول."], 28: ["٨. منيڠݢلكن ڤركارا يڠ تيدق ڤرلو", "١. ممباچ حديث دان مقصود دڠن بتول."], 33: ["٩. ادب منريما دان مڽيباركن بريتا", "١. ممباچ حديث دان مقصود دڠن بتول."], 35: ["١٠. كسمڤورناءن ايمان", "١. ممباچ حديث دان مقصود دڠن بتول."] },
-            "Jenayat": { 1: ["١. منچروبوه (الصيال)", "١. مڽاتاكن ارتي منچروبوه ڤد بهاس دان ايستيله."], 7: ["٢. مرتد (الردة)", "١. مڽاتاكن ارتي مرتد ڤد بهاس دان ايستيله."], 19: ["٣. ڤمبرونتق (البغاة)", "١. مڽاتاكن ارتي ڤمبرونتق ڤد بهاس دان ايستيله."], 25: ["٤. برلومبا دان ممانه", "١. مڽاتاكن ارتي المسابقة دان المناضلة."], 33: ["٥. الجهاد", "١. مڽاتاكن ارتي الجهاد ڤد بهاس دان ايستيله."] },
-            "Munakahat": { 1: ["١. ڤڠنلن رجوع", "١. مڽبوت ڤڠنلن رجوع دان شرط-شرطڽ."], 3: ["٢. حكوم رجوع", "١. منرڠكن حكوم رجوع دالم إسلام."], 5: ["٣. إدة", "١. منجلسكن مقصود إدة دان جنيس-جنيسڽ."], 19: ["٤. ظهار", "١. مڽاتاكن ڤڠنلن ظهار دان حكومڽ."], 25: ["٥. لعان", "١. منرڠكن مقصود لعان دان شرط-شرطڽ."], 33: ["٦. حضانة", "١. منجلسكن مقصود حضانة دان حق penjagaan anak."] },
-            "Muamalat": { 1: ["١. المخابرة دان المزارعة", "١. منجلسكن ڤڠرتين المخابرة دان المزارعة."], 5: ["٢. المضاربة", "١. مڽاتاكن ڤڠرتين المضاربة دان ركونڽ."], 11: ["٣. المساقاة", "١. منرڠكن ڤڠرتين المساقاة دان شرطڽ."], 19: ["٤. اللقطة (بارڠ جومڤاءن)", "١. منرڠكن ڤڠرتين اللقطة دان حكومڽ."], 25: ["٥. الوديعة", "١. منجلسكن ڤڠرتين الوديعة دان جنيسڽ."], 33: ["٦. العارية (ڤينجمن)", "١. مڽاتاكن ڤڠرتين العارية دان ركونڽ."] },
-            "Faraid": { 1: ["١. ڤڠنلن وصيت", "١. منرڠكن ڤڠرتين وصيت دان ركونڽ."], 5: ["٢. شرط وصيت", "١. منجلسكن شرط-شرط وصيت يڠ صح."], 11: ["٣. ڤوساك اصحاب الفروض", "١. منرڠكن ݢولوڠن يڠ برحق منريما ڤوساك."], 19: ["٤. ڤوساك حواشي", "١. منتعريفكن مقصود حواشي دالم ڤوساك."], 25: ["٥. حجوب", "١. منجلسكن مقصود حجوب دان جنيسڽ."], 33: ["٦. ڤڠيراءن ڤوساك", "١. منونجوقكن چارا اسس ڤڠيراءن ڤوساك."] },
-            "Ibadat": { 1: ["١. حكوم برڤاكاين", "١. مڽبوت حكوم دان كأداءن يڠ دحرامكن مڠݢوناكن سوترا."], 2: ["٢. زكاة", "١. منتعريفكن ڤڠرتين زكاة ڤد بهاس دان ايستيله."], 6: ["٣. زكاة فطرة", "١. مينارايكن شرط-شرط واجب زكاة فطرة."], 9: ["٤. اصناف زكاة", "١. ممبينچڠكن هوراين لاڤن اصناف يڠ برحق منريما زكاة."], 10: ["٥. ڤواسا", "١. مڽبوت ڤڠرتين ڤواسا ڤد بهاس دان ايستيله شرع."], 19: ["٦. اعتكاف", "١. منتعريفكن كلمة اعتكاف ڤد بهاس دان ايستيله شرع."], 21: ["٧. حج دان عمرة", "١. منتعريفكن حج دان عمرة دري سݢي بهاس دان ايستيله."], 33: ["٨. بهاݢين حج دان دم", "١. منجلسكن چارا ملاكوكن حج دان عمرة."] }
-        };
-
-        const rptDatabase = { "Darjah 6": {} };
-        Object.keys(rawData).forEach(subj => {
-            rptDatabase["Darjah 6"][subj] = [];
-            let lastData = ["اولڠ كاجي دان ڤڠوكوهن", "١. لاتيه توبي دان اولڠ كاجي برفوكوس."];
-            
-            for(let i=1; i<=43; i++) {
-                let sk = "اولڠ كاجي دان ڤڠوكوهن";
-                let sp = "١. لاتيه توبي دان اولڠ كاجي برفوكوس.";
-                let cat = (i <= 18) ? pg1 : pg2;
-                
-                if (i>=14 && i<=18) { sk = "ڤڤريقساءن ستڠه تاهون"; sp = "Ujian Lisan / Bertulis"; cat = cPeperiksaan; }
-                else if (i===27) { sk = "ڤڤريقساءن ڤرچوباءن SDEA"; sp = "Ujian Percubaan"; cat = cPeperiksaan; }
-                else if (i===31 || i===32) { sk = "ڤڤريقساءن ليسن SDEA"; sp = "Ujian Lisan SDEA"; cat = cPeperiksaan; }
-                else if (i===42) { sk = "ڤڤريقساءن برتوليس SDEA"; sp = "Ujian Bertulis SDEA"; cat = cPeperiksaan; }
-                else if (i>=38 && i<=43 && i!==42) { sk = "اولڠ كاجي ڤڤريقساءن"; sp = "Minggu Ulang Kaji"; cat = cAkhir; }
-                else {
-                    if(rawData[subj][i]) { lastData = rawData[subj][i]; }
-                    sk = lastData[0];
-                    sp = lastData[1];
-                }
-                
-                rptDatabase["Darjah 6"][subj].push({
-                    minggu: i.toString(),
-                    tarikh: tarikhMinggu[i] ? tarikhMinggu[i].replace(" - ", "<br>hingga<br>") : "",
-                    stdKandungan: sk,
-                    stdPembelajaran: sp,
-                    catatan: cat
-                });
-            }
-        });
 
         /* -------------------------------------------------------------------------- */
         /* UI LOGIC (TABS, FILTERS, AUTOFILL)                                         */
@@ -908,7 +911,7 @@
         function updateUI() {
             document.getElementById('stat-subjek').innerText = JawiSubjekMap[currentSubjek] || currentSubjek;
             document.getElementById('stat-tahap').innerText = currentTahap.replace('Darjah ', '');
-            document.getElementById('rpt-table-title').innerText = `RPT ${currentSubjek} - ${currentTahap} (2026)`;
+            document.getElementById('rpt-table-title').innerText = `جدول RPT ${currentSubjek} - ${currentTahap} (2026)`;
             renderTable();
         }
 
@@ -997,7 +1000,7 @@
                     objSelect.appendChild(opt);
                     objSelect.selectedIndex = 1;
 
-                    paparModal("برجایا (Berjaya)", `Maklumat RPT Minggu ${minggu} berjaya dimuat turun ke dalam borang.`, "success");
+                    paparModal("برجاي (Berjaya)", `Maklumat RPT Minggu ${minggu} berjaya dimuat turun ke dalam borang.`, "success");
                     setTimeout(() => tutupModal(), 1500);
                 }
             }
@@ -1015,8 +1018,8 @@
             const activeNav = document.getElementById(`nav-${tabId}`);
             if(activeNav) activeNav.className = "w-full flex items-center gap-4 px-4 py-3 rounded-lg text-lg font-bold transition-colors bg-emerald-50 text-emerald-700";
 
-            let title = 'ڤاڤن موک';
-            if (tabId === 'rpt') title = 'جدوال RPT ٢٠٢٦';
+            let title = 'ڤاڤن موك';
+            if (tabId === 'rpt') title = 'جدول RPT ٢٠٢٦';
             if (tabId === 'laporan') title = 'لاڤورن ڤڠهنترن';
             if (tabId === 'erph') {
                 title = 'بورڠ إي-RPH';
@@ -1147,7 +1150,12 @@
             document.getElementById('sidebar-guru-name').innerText = guru;
             document.getElementById('sidebar-guru-school').innerText = sekolah;
             
-            paparModal("برجایا (Berjaya)", "Profil guru berjaya dikemas kini!", "success");
+            const cetakName = document.getElementById('cetak-guru-name');
+            const cetakSchool = document.getElementById('cetak-guru-school');
+            if (cetakName) cetakName.innerText = guru;
+            if (cetakSchool) cetakSchool.innerText = sekolah;
+            
+            paparModal("برجاي (Berjaya)", "Profil guru berjaya dikemas kini!", "success");
             switchTab('dashboard');
         }
 
@@ -1156,6 +1164,11 @@
             setupERPH();
             setupProfil();
             updateUI();
+            
+            const cetakName = document.getElementById('cetak-guru-name');
+            const cetakSchool = document.getElementById('cetak-guru-school');
+            if (cetakName) cetakName.innerText = document.getElementById('sidebar-guru-name').innerText;
+            if (cetakSchool) cetakSchool.innerText = document.getElementById('sidebar-guru-school').innerText;
         };
     </script>
 </body>
